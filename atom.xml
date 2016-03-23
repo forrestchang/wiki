@@ -4,7 +4,7 @@
   <title><![CDATA[Wiki]]></title>
   <link href="https://forrestchang.github.io/wiki/atom.xml" rel="self"/>
   <link href="https://forrestchang.github.io/wiki/"/>
-  <updated>2016-03-22T18:10:28+08:00</updated>
+  <updated>2016-03-23T11:24:01+08:00</updated>
   <id>https://forrestchang.github.io/wiki/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Linux]]></title>
-    <link href="https://forrestchang.github.io/wiki/14587025785185.html"/>
+    <link href="https://forrestchang.github.io/wiki/linux.html"/>
     <updated>2016-03-23T11:09:38+08:00</updated>
-    <id>https://forrestchang.github.io/wiki/14587025785185.html</id>
+    <id>https://forrestchang.github.io/wiki/linux.html</id>
     <content type="html"><![CDATA[
 <h2 id="toc_0">Shell</h2>
 
