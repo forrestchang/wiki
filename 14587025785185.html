@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
     
-  Python - Wiki
+  Linux - Wiki
   
   </title>
  <meta name="description" content="">
@@ -98,8 +98,101 @@
             <div class="large-9 medium-9 columns">
 
  <div class="markdown-body">
-<h1>Python</h1>
+<h1>Linux</h1>
 
+<h2 id="toc_0">Shell</h2>
+
+<h3 id="toc_1">常用快捷键</h3>
+
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>作用</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>Tab</code></td>
+<td>命令补全</td>
+</tr>
+<tr>
+<td><code>Ctrl+c</code></td>
+<td>强行终止当前程序</td>
+</tr>
+<tr>
+<td><code>Ctrl+d</code></td>
+<td>键盘输入结束或退出终端</td>
+</tr>
+<tr>
+<td><code>Ctrl+s</code></td>
+<td>暂定当前程序，暂停后按下任意键恢复运行</td>
+</tr>
+<tr>
+<td><code>Ctrl+z</code></td>
+<td>将当前程序放到后台运行，恢复到前台命令 <code>fg</code></td>
+</tr>
+<tr>
+<td><code>Ctrl+a</code></td>
+<td>将光标移动到行首</td>
+</tr>
+<tr>
+<td><code>Ctrl+e</code></td>
+<td>将光标移动到行尾</td>
+</tr>
+<tr>
+<td><code>Ctrl+k</code></td>
+<td>删除从光标所在位置到行末</td>
+</tr>
+<tr>
+<td><code>Alt+Backspace</code></td>
+<td>向前删除一个单词</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="toc_2">常用通配符</h3>
+
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>含义</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>*</code></td>
+<td>匹配0或多个字符</td>
+</tr>
+<tr>
+<td><code>?</code></td>
+<td>匹配任意一个字符</td>
+</tr>
+<tr>
+<td><code>[list]</code></td>
+<td>匹配 list 中的任意单一字符</td>
+</tr>
+<tr>
+<td><code>[!list]</code></td>
+<td>匹配除 list 中的任意单一字符以外的字符</td>
+</tr>
+<tr>
+<td><code>[c1-c2]</code></td>
+<td>匹配c1-c2中的任意单一字符，如[0-9][a-z]</td>
+</tr>
+<tr>
+<td><code>{string1,string2,...}</code></td>
+<td>匹配其中一个字符串</td>
+</tr>
+<tr>
+<td><code>{c2..c2</code></td>
+<td>匹配c1-c2中全部字符，如{1..10}</td>
+</tr>
+</tbody>
+</table>
 
 
 </div>
@@ -111,13 +204,14 @@
   <div class="large-6 columns">
 	<div class="text-left" style="padding:15px 0px;">
 		
-	        <a href="git-and-github.html"  title="Previous Post: Git & GitHub">&laquo; Git & GitHub</a>
-	    
 	</div>
   </div>
   <div class="large-6 columns">
 	<div class="text-right" style="padding:15px 0px;">
 		
+	        <a href="git-and-github.html" 
+	        title="Next Post: Git & GitHub">Git & GitHub &raquo;</a>
+	    
 	</div>
   </div>
 </div>
@@ -138,7 +232,7 @@ var disqus_shortname = 'tisogasnotes';
 </div>
 <script type="text/javascript">
 	$(function(){
-		var currentURL = 'python.html';
+		var currentURL = '14587025785185.html';
 		$('#side-nav a').each(function(){
 			if($(this).attr('href') == currentURL){
 				$(this).parent().addClass('active');
