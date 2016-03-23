@@ -100,7 +100,7 @@
  <div class="markdown-body">
 <h1>Linux</h1>
 
-<h2 id="toc_0">Shell</h2>
+<h2 id="toc_0">Shell 的基本操作</h2>
 
 <h3 id="toc_1">常用快捷键</h3>
 
@@ -193,6 +193,168 @@
 </tr>
 </tbody>
 </table>
+
+<h2 id="toc_3">用户管理</h2>
+
+<h3 id="toc_4">查看用户</h3>
+
+<pre><code>$ who am i
+</code></pre>
+
+<p>或者</p>
+
+<pre><code>$ who mon likes
+</code></pre>
+
+<p><code>who</code> 命令其他常用参数</p>
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>-a</code></td>
+<td>打印能打印的全部</td>
+</tr>
+<tr>
+<td><code>-d</code></td>
+<td>打印死掉的进程</td>
+</tr>
+<tr>
+<td><code>-m</code></td>
+<td>同 <code>am i</code>, <code>mom likes</code></td>
+</tr>
+<tr>
+<td><code>-q</code></td>
+<td>打印当前登陆用户数及用户名</td>
+</tr>
+<tr>
+<td><code>-u</code></td>
+<td>打印当前登陆用户登陆信息</td>
+</tr>
+<tr>
+<td><code>-r</code></td>
+<td>打印运行等级</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="toc_5">创建用户</h3>
+
+<p>创建用户需要 <code>root</code> 用户的权限，所以需要使用 <code>sudo</code> 这个命令。使用 <code>sudo</code> 名利需要满足两个条件：</p>
+
+<ol>
+<li>知道当前登陆用户的密码</li>
+<li>当前用户必须在 <code>sudo</code> 用户组</li>
+</ol>
+
+<pre><code>$ su &lt;user&gt; # 切换用户到 user
+</code></pre>
+
+<pre><code>$ sudo &lt;cmd&gt; # 以 root 权限运行命令
+</code></pre>
+
+<pre><code>$ su - &lt;user&gt; # 切换用户，并且环境变量同时改变到目标用户的环境变量
+</code></pre>
+
+<p>新建用户命令：</p>
+
+<pre><code>$ sudo adduser &lt;username&gt;
+</code></pre>
+
+<p>创建用户的同时会为用户创建 home 目录。</p>
+
+<h3 id="toc_6">用户组</h3>
+
+<p>在 Linux 中每个用户都有一个用户组，它们共享一些资源和权限，同时拥有私有资源。</p>
+
+<h4 id="toc_7">查看自己的用户组</h4>
+
+<pre><code>$ groups &lt;username&gt;
+</code></pre>
+
+<p>或者，查看<code>/etc/group</code>文件</p>
+
+<pre><code>$ cat /etc/group | sort
+</code></pre>
+
+<p><code>sort</code> 表示将读取的文本进行一个字典排序再输出。</p>
+
+<h5 id="toc_8"><code>etc/group</code> 文件格式说明</h5>
+
+<p>/etc/group 的内容包括用户组（Group）、用户组口令、GID 及该用户组所包含的用户（User），每个用户组一条记录。格式如下：</p>
+
+<blockquote>
+<p>group_name:password:GID:user_list</p>
+</blockquote>
+
+<h4 id="toc_9">将其他用户加入 sudo 用户组</h4>
+
+<p>使用 <code>usermod</code> 命令可以为用户组添加用户，使用该命令需要有 root 权限。</p>
+
+<p>使用一个具有 root 权限的用户为一个不具有 root 权限的用户添加 <code>sudo</code> 权限：</p>
+
+<pre><code>$ sudo usermod -G sudo &lt;username&gt;
+</code></pre>
+
+<h3 id="toc_10">删除用户</h3>
+
+<pre><code>$ sudo deluser &lt;username&gt; --remove-home
+</code></pre>
+
+<h2 id="toc_11">文件权限</h2>
+
+<h3 id="toc_12">查看文件权限</h3>
+
+<pre><code>$ ls -l
+</code></pre>
+
+<p><img src="media/14587025785185/14587048876862.jpg" alt=""/></p>
+
+<p><img src="media/14587025785185/14587049042865.jpg" alt=""/></p>
+
+<p><img src="media/14587025785185/14587049141674.jpg" alt=""/></p>
+
+<h4 id="toc_13">文件类型</h4>
+
+<p>Linux 里面一切皆文件。</p>
+
+<h4 id="toc_14">文件权限</h4>
+
+<ul>
+<li>读权限：可以读取某个文件的内容</li>
+<li>写权限：可以编辑和修改某个文件</li>
+<li>执行权限：通常指可以运行的二进制程序文件或者脚本文件</li>
+</ul>
+
+<p>注：一个目录要同时具有读权限和执行权限才可以打开，要有写权限才允许在其中创建其他文件。Linux 不是用过文件的后缀名来区分文件的类型。</p>
+
+<h4 id="toc_15">链接数</h4>
+
+<p>链接到该文件所在的 inode 结点的文件名数目。</p>
+
+<h3 id="toc_16">修改文件权限</h3>
+
+<h4 id="toc_17">方法1：二进制数字表示</h4>
+
+<p><img src="media/14587025785185/14587054006459.jpg" alt=""/></p>
+
+<p>修改<filename>只能自己使用：</p>
+
+<pre><code>$ chmod 700 &lt;filename&gt;
+</code></pre>
+
+<h4 id="toc_18">方法2：加减赋值操作</h4>
+
+<pre><code>$ chmod go-rw &lt;filename&gt;
+</code></pre>
+
+<p>&#39;g&#39;&#39;o&#39;还有&#39;u&#39;，分别表示group，others，user，&#39;+&#39;，&#39;-&#39; 就分别表示增加和去掉相应的权限。</p>
 
 
 </div>
