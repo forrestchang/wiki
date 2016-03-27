@@ -4,7 +4,7 @@
   <title><![CDATA[Wiki]]></title>
   <link href="https://forrestchang.github.io/wiki/atom.xml" rel="self"/>
   <link href="https://forrestchang.github.io/wiki/"/>
-  <updated>2016-03-23T11:59:40+08:00</updated>
+  <updated>2016-03-24T21:23:03+08:00</updated>
   <id>https://forrestchang.github.io/wiki/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -404,6 +404,24 @@
 <p><img src="media/14587025785185/14587183045128.jpg" alt=""/></p>
 
 <p>这表示这是一个可执行文件。</p>
+
+<h2 id="toc_38">环境变量</h2>
+
+<h3 id="toc_39">变量</h3>
+
+<p>使用<code>declare</code>命令可以创建一个变量：</p>
+
+<pre><code>$ declare tmp
+</code></pre>
+
+<p>读取变量的值，使用<code>echo</code>命令和<code>$</code>符号：</p>
+
+<pre><code>$ echo $tmp
+</code></pre>
+
+<h3 id="toc_40">环境变量</h3>
+
+<p>环境变量就是作用域比自己定义的变量要大，如 Shell 的环境变量作用于自身和它的子进程。</p>
 
 ]]></content>
   </entry>
