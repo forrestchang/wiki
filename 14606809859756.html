@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
     
-  Home - Wiki
+  内存管理的相关笔记 - Wiki
   
   </title>
  <meta name="description" content="">
@@ -124,13 +124,110 @@
             <div class="large-9 medium-9 columns">
 
  <div class="markdown-body">
-<h1>Home</h1>
+<h1>内存管理的相关笔记</h1>
 
-<p>这里是个人 wiki 页面。</p>
+<p>ARC（Automatic Reference Counting，自动引用计数）<br/>
+GC（Garbage Collection，垃圾收集）</p>
+
+<p>自动引用计数的工作原理：</p>
+
+<p>当你每次创建一个类的新的实例的时候，ARC 会分配一块内存来存储该实例信息。当实例不再被使用的时候，ARC 释放实例所占用的内存。一般每个被管理的对象都会跟一个引用计数器相连，这个计数器保存着当前对象被引用的次数，一旦创建一个新的引用指向该对象，计数器就加 1，每当指向该对象的引用失效，计数器就减 1。引用计数器为 0 的时候，就立即释放对象所在的内存空间。</p>
+
+<p>使用引用计数的语言：Objective-C，Swift，CPython</p>
+
+<p>使用自动引用计数用什么优点：</p>
+
+<hr/>
+
+<p>早期的 iOS 开发中，因为传统的垃圾回收机制对于移动平台是十分低效的，所以苹果把内存管理的责任交给了开发者，开发者需要通过手动的方式增加或减少一个对象的引用计数。</p>
+
+<p>在 iOS 5 之后，引入了 ARC。</p>
+
+<p>使用 ARC 虽然不需要手动地调用 retain 和 release 这样的方法来管理引用计数，但是这些方法还是会被调用，只不过编译器在编译时在合适的地方帮我们加入了而已。</p>
+
+<hr/>
+
+<p>在 Swift 的 ARC 中，对引用描述的关键字有三个，strong，weak 和 unowned。所有的引用没有特殊说明都默认是 strong 强引用。</p>
+
+<p>在 ARC 中，只有当指向一个类实例的所有 strong 强引用都被断开了，这个实例才会被内存才会被释放。</p>
+
+<p>strong 强引用在下列情况下回被断开：</p>
+
+<ul>
+<li>当指向某一实例的变量被赋值为 nil</li>
+<li>当持有一个子类实例引用的父类变量被设为 nil，这样会同时断开父类和子类之间的相互引用</li>
+<li>当变量或常量离开了自己的作用域，比如在 if/else 或者 for 循环中初始化的某些变量，当程序执行完这些控制语句之后，相关引用就断开了，同时 ARC 会释放内存</li>
+</ul>
+
+<p>weak 引用和 unowned 引用：</p>
+
+<p>实例之间的关系：</p>
+
+<ol>
+<li>层级关系：父类指向子类（strong）</li>
+<li>可选，相互依赖（weak）</li>
+<li>强制，单项依赖（unowned）：两个类实例是互相联系的，但是其中的一个实例必须在另一个实例存在的前提下才能存在</li>
+</ol>
+
+<hr/>
+
+<ul>
+<li>在开始担心是用strong，weak 还是 unowned之前，先考虑一下是不是在和引用类型打交道，结构体和枚举不属于引用类型，所以不用考虑这些。</li>
+<li>strong 强引用类型适用于父对象指向子对象，但反过来不能用强引用。</li>
+<li>当两个实例是 optional 关联到一起时，确保其中的一个实例使用 weak 弱引用指向另一个实例。</li>
+<li>两个实例 A 和 B，如果实例 A 必须在实例 B 存在的前提下才能存在，那么实例 A 必须用 unowned 无主引用指向实例 B。也就是说，有强制依赖性的那个实例必须对另一个实例持有无主引用。</li>
+</ul>
+
+<hr/>
 
 
 </div>
-<br /><br /> 
+
+<br /><br />
+<hr />
+
+<div class="row clearfix">
+  <div class="large-6 columns">
+	<div class="text-left" style="padding:15px 0px;">
+		
+	        <a href="14609604963906.html"  title="Previous Post: Optional Chaining">&laquo; Optional Chaining</a>
+	    
+	</div>
+  </div>
+  <div class="large-6 columns">
+	<div class="text-right" style="padding:15px 0px;">
+		
+	        <a href="linux-basic.html" 
+	        title="Next Post: Linux 基础">Linux 基础 &raquo;</a>
+	    
+	</div>
+  </div>
+</div>
+
+<div class="row">
+<div style="padding:0px 0.93em;" class="share-comments">
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+var disqus_shortname = 'tisogasnotes';
+(function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+         })();
+</script>
+
+</div>
+</div>
+<script type="text/javascript">
+	$(function(){
+		var currentURL = '14606809859756.html';
+		$('#side-nav a').each(function(){
+			if($(this).attr('href') == currentURL){
+				$(this).parent().addClass('active');
+			}
+		});
+	});
+</script>  
 </div></div>
 
 
