@@ -4,7 +4,7 @@
   <title><![CDATA[Wiki]]></title>
   <link href="https://forrestchang.github.io/wiki/atom.xml" rel="self"/>
   <link href="https://forrestchang.github.io/wiki/"/>
-  <updated>2016-04-27T11:39:33+08:00</updated>
+  <updated>2016-05-04T20:07:48+08:00</updated>
   <id>https://forrestchang.github.io/wiki/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,21 @@
   </author>
   <generator uri="http://www.mweb.im">MWeb</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[2016 Week 19]]></title>
+    <link href="https://forrestchang.github.io/wiki/14623638528114.html"/>
+    <updated>2016-05-04T20:10:52+08:00</updated>
+    <id>https://forrestchang.github.io/wiki/14623638528114.html</id>
+    <content type="html"><![CDATA[
+<h2 id="toc_0"><a href="http://swift.gg/2016/05/03/preparing-for-3-0-api-pruning/">准备好迎接 3.0 API 变化</a></h2>
+
+<p>在即将发布的 Swift 3 将在 Cocoa 和 CocoaTouch 上做出重大改变。</p>
+
+<p>某些 API 的名字变得更加简洁了。</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[高级运算符]]></title>
