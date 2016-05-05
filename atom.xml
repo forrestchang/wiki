@@ -4,7 +4,7 @@
   <title><![CDATA[Wiki]]></title>
   <link href="https://forrestchang.github.io/wiki/atom.xml" rel="self"/>
   <link href="https://forrestchang.github.io/wiki/"/>
-  <updated>2016-05-05T23:02:30+08:00</updated>
+  <updated>2016-05-05T23:07:21+08:00</updated>
   <id>https://forrestchang.github.io/wiki/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -725,7 +725,7 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[内存管理的相关笔记]]></title>
+    <title type="html"><![CDATA[内存管理]]></title>
     <link href="https://forrestchang.github.io/wiki/14606809859756.html"/>
     <updated>2016-04-15T08:43:05+08:00</updated>
     <id>https://forrestchang.github.io/wiki/14606809859756.html</id>
