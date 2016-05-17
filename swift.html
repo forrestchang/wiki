@@ -47,6 +47,8 @@
         <li><label>Swift</label></li>
 
           
+            <li><a title="字符串和字符" href="14634546001476.html">字符串和字符</a></li>
+          
             <li><a title="属性" href="14631242333306.html">属性</a></li>
           
             <li><a title="集合类型" href="14627836147810.html">集合类型</a></li>
@@ -112,6 +114,8 @@
                     
                       <li class="side-title"><span>Swift</span></li>
                         
+                          <li><a title="字符串和字符" href="14634546001476.html">字符串和字符</a></li>
+                        
                           <li><a title="属性" href="14631242333306.html">属性</a></li>
                         
                           <li><a title="集合类型" href="14627836147810.html">集合类型</a></li>
@@ -166,70 +170,91 @@
 
 	
 		<div class="markdown-body">
-		<h1>属性</h1>
+		<h1>字符串和字符</h1>
 
-		<p>属性将值跟特定的类、结构或枚举关联。存储常量或变量作为实例的一部分，而计算属性（不是存储）一个值。</p>
+		<h2 id="toc_0">字符串是值类型</h2>
+
+<p>使用字符串会进行值拷贝。</p>
+
+<p>在实际的编译时，Swift 编译器会优化字符串的使用，使实际的复制只发生在绝对必要的情况下，这意味着将字符串作为值类型的同时可以获得极高的性能。</p>
+
+<h2 id="toc_1">Working with Characters</h2>
+
+<p>可以使用 <code>for-in</code> 循环来遍历字符串中的 <code>characters</code> 属性来获取每一个字符的值。</p>
+
+<p>字符串可以通过传递一个值类型为 <code>Character</code> 的数组作为自变量来初始化。</p>
+
+<h2 id="toc_2">连接字符串和字符</h2>
+
+<p>字符串可以通过加法运算符相加在一起创建一个新的字符串。</p>
+
+<p><code>append()</code> 方法可以将一个字符附加到一个字符串变量的尾部。</p>
+
+<h2 id="toc_3">Unicode</h2>
+
+<h3 id="toc_4">Unicode Scalars（Unicode 标量）</h3>
+
+<p>Swift 的 <code>String</code> 类型是基于 Unicode 标量建立的。Unicode 标量是对应字符或者修饰符的唯一的 21 位数字。</p>
+
+<p>Unicode 码位（code poing）的范围是 <code>U+0000</code> 到 <code>U+1F425</code> 或者 <code>U+E000</code> 到 <code>U+10FFFF</code>。Unicode 标量不包括 Unicode 代理项（surrogate pair）码位，其码位范围是 <code>U+D800</code> 到 <code>U+DFFF</code>。</p>
+
+<p>注意，并不是所有的 21 位 Unicode 标量都表示一个字符，因为有一些标量是留作未来分配的。</p>
+
+<h3 id="toc_5">字符串字面量的特殊字符（Special Character in String Literals）</h3>
+
+<p><img src="media/14634546001476/14634553799193.jpg" alt=""/></p>
+
+<h3 id="toc_6">可扩展的字形群集（Extended Grapheme Clusters）</h3>
+
+<p>每一个 Swift 的 Character 类型代表一个可扩展的字形群。一个可扩展的字形群是一个或多个可生成人类可读的字符 Unicode 标量的有序排列。</p>
+
+<h3 id="toc_7">计算字符数量</h3>
+
+<p>如果想要获得一个字符串中的 <code>Character</code> 值得数量，可以使用字符串的 <code>characters</code> 属性的 <code>count</code> 属性。</p>
+
+<p>注意在 Swift 中，使用可拓展的字符群集作为 <code>Character</code> 值来连接或改变字符串时，并不一定会更改字符串的字符数量。</p>
+
+<h2 id="toc_8">访问和修改字符串</h2>
+
+<h3 id="toc_9">字符串索引</h3>
+
+<p>使用 <code>startIndex</code> 属性可以获取一个 <code>String</code> 的第一个 <code>Character</code> 的索引。使用 <code>endIndex</code> 属性可以获取最后一个 <code>Character</code> 的后一个位置的索引，所以 <code>endIndex</code> 属性不能作为一个字符串的有效下标。如果 <code>String</code> 是空串，两者是相等的。</p>
+
+<p><code>String.Index.predecessor()</code> 获得前一个索引，<code>successor()</code> 获得后一个索引。</p>
+
+<p><code>Characters</code> 属性的 <code>indices</code> 属性会创建一个包含全部索引的范围（<code>Range</code>），用来在一个字符串中访问单个字符。</p>
+
+<h3 id="toc_10">插入和删除</h3>
 
 <ul>
-<li>计算属性：类、结构体、枚举</li>
-<li>存储属性：类、结构体</li>
+<li><code>insert(_:atIndex:)</code>：在一个字符串的制定索引插入一个字符</li>
+<li><code>insertContentsOf(_:at:)</code>：在一个字符串的指定索引插入一个字符串</li>
+<li>`removeAtIndex(_:)：在一个字符串的指定索引删除一个字符</li>
+<li><code>removeRange(_:)</code>：在一个字符串的指定索引删除一个子字符串</li>
 </ul>
 
-<h2 id="toc_0">存储属性</h2>
+<h2 id="toc_11">比较字符串</h2>
 
-<h3 id="toc_1">延迟存储属性</h3>
+<h3 id="toc_12">字符串/字符相等</h3>
 
-<p>延迟存储属性是指当第一次被调用的时候才会计算其初始值的属性。在属性声明前使用 <code>lazy</code> 来标记一个延迟存储属性。</p>
+<p>使用 <code>==</code> 和 <code>!=</code> 来比较两个字符/字符串是否相等/不等。</p>
 
-<p>必须将延迟存储属性声明称变量，因为属性的初始值可能在实例构造完成之后才会得到。<strong>而常量属性在构造过程完成之前必须要有初始值，因此无法声明称延迟属性。</strong></p>
-
-<p>延迟属性很有用，当属性的值依赖于在实例的构造过程结束后才会知道影响值得外部因素时，或者当获得属性的初始值需要复杂或大量计算时，可以只在需要的时候计算它。</p>
-
-<h2 id="toc_2">计算属性</h2>
-
-<p>计算属性不直接存储值，而是提供一个 getter 和一个可选的 setter，来间接获取和设置其他属性或变量的值。</p>
-
-<h3 id="toc_3">便捷 setter 声明</h3>
-
-<p>如果计算属性的 setter 没有定义表示新值的参数名，则可以使用默认名称 <code>newValue</code>。</p>
-
-<h3 id="toc_4">只读计算属性</h3>
-
-<p>只有 getter 没有 setter 的计算属性就是<strong>只读计算属性</strong>。只读计算属性总是返回一个值，可以通过点运算符访问，但不能设置新的值。</p>
-
-<h2 id="toc_5">属性观察器</h2>
-
-<p>属性观察器监控和响应属性值的变化，每次属性被设置新的值都会调用属性观察器，即使新值和当前值相同的时候也不例外。</p>
-
-<p>可以为除了延迟存储属性之外的其他存储属性添加属性观察器，也可以通过重写属性的方式为继承的属性（包括存储属性和计算属性）添加属性观察器。你不必为非重写的计算属性添加属性观察器，因为可以通过它的 setter 直接监控和响应值得变化。</p>
+<h3 id="toc_13">前缀/后缀相等</h3>
 
 <ul>
-<li><code>willSet</code> 在新的值被设置之前调用</li>
-<li><code>didSet</code> 在新的值被设置之后立即调用</li>
+<li><code>hasPrefix(_:)</code></li>
+<li><code>hasSuffix(_:)</code></li>
 </ul>
 
-<p><code>willSet</code> 观察器会将新的属性值作为常量参数传入，在 <code>willSet</code> 的实现代码中可以为这个参数指定一个名称，如果不指定则参数仍然可用，这时使用默认名称 <code>newValue</code> 表示。</p>
+<h2 id="toc_14">字符串的 Unicode 表示形式（Unicode Representations of Strings）</h2>
 
-<p><code>didSet</code> 观察器会将旧的属性值作为参数传入，可以为该参数名或者使用默认参数名 <code>oldValue</code>。如果在 <code>didSet</code> 方法中再次对该属性赋值，那么新值会覆盖旧的值。</p>
-
-<p>父类的属性在子类的构造器中被赋值时，它在父类中的 <code>willSet</code> 和 <code>didSet</code> 观察器会被调用，随后才会调用子类的观察器。在父类初始化方法调用之前，子类给属性赋值时，观察器不会被调用。</p>
-
-<p>如果将属性通过 in-out 方式传入函数， <code>willSet</code> 和 <code>didSet</code> 也会被调用。这是因为 in-out 参数采用了拷入拷出模式：即在函数内部使用的是参数的 copy，函数结束后，又对参数重新赋值。</p>
-
-<h2 id="toc_6">全局变量和局部变量</h2>
-
-<p>计算属性和属性观察器所描述的功能也可以用于全局变量和局部变量。全局变量是在函数、方法、闭包或任何类型之外定义的变量。局部变量是在函数、方法或闭包内部定义的变量。</p>
-
-<p>全局的常量或变量都是延迟计算的，跟延迟存储属性相似，不同的地方在于，全局的常量或变量不需要标记 <code>lazy</code>   修饰符。</p>
-
-<p>局部范围的常量或变量从不延迟计算。</p>
-
-<h2 id="toc_7">类型属性</h2>
-
-<p>存储型类型属性是延迟初始化的，它们只有在第一次被访问的时候才会被初始化。即使它们被多个线程同时访问，系统也保证只会对其进行一次初始化，并且不需要对其使用 <code>lazy</code> 修饰符。</p>
+<p>当一个 Unicode 字符串被写进文本文件或其他存储时，字符串中的 Unicode 标量会用 Unicode 定义的几种编码格式（encoding forms）编码。每一个字符串中的小块编码都被称为 <code>code units</code>。这些包括 UTF-8,UTF-16,UTF-32 编码格式。</p>
 
 
 		</div>
+	
+
+ 
 	
 
  
