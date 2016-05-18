@@ -47,6 +47,8 @@
         <li><label>Swift</label></li>
 
           
+            <li><a title="控制流" href="14635617646524.html">控制流</a></li>
+          
             <li><a title="字符串和字符" href="14634546001476.html">字符串和字符</a></li>
           
             <li><a title="属性" href="14631242333306.html">属性</a></li>
@@ -114,6 +116,8 @@
                     
                       <li class="side-title"><span>Swift</span></li>
                         
+                          <li><a title="控制流" href="14635617646524.html">控制流</a></li>
+                        
                           <li><a title="字符串和字符" href="14634546001476.html">字符串和字符</a></li>
                         
                           <li><a title="属性" href="14631242333306.html">属性</a></li>
@@ -170,88 +174,72 @@
 
 	
 		<div class="markdown-body">
-		<h1>字符串和字符</h1>
+		<h1>控制流</h1>
 
-		<h2 id="toc_0">字符串是值类型</h2>
+		<h2 id="toc_0">Repeat-While</h2>
 
-<p>使用字符串会进行值拷贝。</p>
+<p><code>repeat-while</code> 在 <code>while</code> 判断循环条件之前，先执行一次循环的代码块，和其他语言中的 <code>do-while</code> 是类似的。</p>
 
-<p>在实际的编译时，Swift 编译器会优化字符串的使用，使实际的复制只发生在绝对必要的情况下，这意味着将字符串作为值类型的同时可以获得极高的性能。</p>
+<pre><code class="language-swift">repeat {
+    statements
+} while condition
+</code></pre>
 
-<h2 id="toc_1">Working with Characters</h2>
+<h2 id="toc_1">Switch</h2>
 
-<p>可以使用 <code>for-in</code> 循环来遍历字符串中的 <code>characters</code> 属性来获取每一个字符的值。</p>
+<p><code>switch</code> 语句会尝试把某个值与若干个模式（pattern）进行匹配。根据第一个匹配成功的模式，<code>switch</code>语句会执行对应的代码。当有可能的情况较多时，通常用 <code>switch</code> 语句替换 <code>if</code> 语句。</p>
 
-<p>字符串可以通过传递一个值类型为 <code>Character</code> 的数组作为自变量来初始化。</p>
+<p><code>switch</code> 语句必须是完备的，每一个可能的值都必须至少有一个 case 分支与之对应。在某些不可能涵盖所有值得情况下，你可以使用默认（<code>default</code>）分支满足该要求，这个默认分支必须在 <code>switch</code> 语句的最后面。</p>
 
-<h2 id="toc_2">连接字符串和字符</h2>
+<h3 id="toc_2">不存在隐式的贯穿（No Implicit Fallthrouth）</h3>
 
-<p>字符串可以通过加法运算符相加在一起创建一个新的字符串。</p>
+<p>和其他语言的 Switch 不同，在 Swift 中，当匹配的 case 分支中的代码执行完毕后，程序会终止 <code>switch</code> 语句，而不会继续执行下一个 case 分支。所以，不需要再 case 分支中显式地使用 <code>break</code> 语句。</p>
 
-<p><code>append()</code> 方法可以将一个字符附加到一个字符串变量的尾部。</p>
+<p>如果想要贯穿到特定的 case 分支中，请使用 <code>fallthrough</code> 语句。</p>
 
-<h2 id="toc_3">Unicode</h2>
+<h3 id="toc_3">区间匹配</h3>
 
-<h3 id="toc_4">Unicode Scalars（Unicode 标量）</h3>
+<p>case 分支的模式也可以是一个值得区间。</p>
 
-<p>Swift 的 <code>String</code> 类型是基于 Unicode 标量建立的。Unicode 标量是对应字符或者修饰符的唯一的 21 位数字。</p>
+<h3 id="toc_4">元组</h3>
 
-<p>Unicode 码位（code poing）的范围是 <code>U+0000</code> 到 <code>U+1F425</code> 或者 <code>U+E000</code> 到 <code>U+10FFFF</code>。Unicode 标量不包括 Unicode 代理项（surrogate pair）码位，其码位范围是 <code>U+D800</code> 到 <code>U+DFFF</code>。</p>
+<p>可以只用元组在同一个 <code>switch</code> 语句中测试多个值，元组中的元素可以是值，也可以是区间，使用下划线 <code>_</code> 来匹配所有可能的值。</p>
 
-<p>注意，并不是所有的 21 位 Unicode 标量都表示一个字符，因为有一些标量是留作未来分配的。</p>
+<h3 id="toc_5">值绑定</h3>
 
-<h3 id="toc_5">字符串字面量的特殊字符（Special Character in String Literals）</h3>
+<p>case 分支的模式允许将匹配的值绑定到一个临时的常量或变量，这些常量或变量在该 case 分支里就可以被引用了。</p>
 
-<p><img src="media/14634546001476/14634553799193.jpg" alt=""/></p>
+<p>case 分支的模式可以使用 <code>where</code> 语句来判断额外的条件。</p>
 
-<h3 id="toc_6">可扩展的字形群集（Extended Grapheme Clusters）</h3>
+<h2 id="toc_6">控制转移语句</h2>
 
-<p>每一个 Swift 的 Character 类型代表一个可扩展的字形群。一个可扩展的字形群是一个或多个可生成人类可读的字符 Unicode 标量的有序排列。</p>
+<h3 id="toc_7">continue</h3>
 
-<h3 id="toc_7">计算字符数量</h3>
+<p><code>continue</code> 语句告诉一个循环体立刻停止本次循环迭代，重现开始下次循环迭代。</p>
 
-<p>如果想要获得一个字符串中的 <code>Character</code> 值得数量，可以使用字符串的 <code>characters</code> 属性的 <code>count</code> 属性。</p>
+<h3 id="toc_8">break</h3>
 
-<p>注意在 Swift 中，使用可拓展的字符群集作为 <code>Character</code> 值来连接或改变字符串时，并不一定会更改字符串的字符数量。</p>
+<p><code>break</code> 语句会立即结束整个控制流的执行。</p>
 
-<h2 id="toc_8">访问和修改字符串</h2>
+<h2 id="toc_9">带标签的语句</h2>
 
-<h3 id="toc_9">字符串索引</h3>
+<p>在 Swift 中，你可以在循环体和 <code>switch</code> 代码块中嵌套循环体和 <code>switch</code> 代码块来创造复杂的控制流结构。然而，循环体和 <code>switch</code> 代码块亮着都可以使用 <code>break</code> 语句来提前结束整个方法。因此，显式地指明 <code>break</code> 语句想要终止是哪个循环体或者 <code>switch</code> 代码块，会很有用。</p>
 
-<p>使用 <code>startIndex</code> 属性可以获取一个 <code>String</code> 的第一个 <code>Character</code> 的索引。使用 <code>endIndex</code> 属性可以获取最后一个 <code>Character</code> 的后一个位置的索引，所以 <code>endIndex</code> 属性不能作为一个字符串的有效下标。如果 <code>String</code> 是空串，两者是相等的。</p>
+<p>为了实现这个目的，可以使用标签来标记一个循环体或者 <code>switch</code> 代码块，当使用 <code>break</code> 或者 <code>continue</code> 时，带上这个标签，可以控制该标签代表对象的中断或者执行。</p>
 
-<p><code>String.Index.predecessor()</code> 获得前一个索引，<code>successor()</code> 获得后一个索引。</p>
+<p>语法：</p>
 
-<p><code>Characters</code> 属性的 <code>indices</code> 属性会创建一个包含全部索引的范围（<code>Range</code>），用来在一个字符串中访问单个字符。</p>
+<pre><code class="language-swift label"></code></pre>
 
-<h3 id="toc_10">插入和删除</h3>
+<h2 id="toc_10">提前退出</h2>
 
-<ul>
-<li><code>insert(_:atIndex:)</code>：在一个字符串的制定索引插入一个字符</li>
-<li><code>insertContentsOf(_:at:)</code>：在一个字符串的指定索引插入一个字符串</li>
-<li>`removeAtIndex(_:)：在一个字符串的指定索引删除一个字符</li>
-<li><code>removeRange(_:)</code>：在一个字符串的指定索引删除一个子字符串</li>
-</ul>
-
-<h2 id="toc_11">比较字符串</h2>
-
-<h3 id="toc_12">字符串/字符相等</h3>
-
-<p>使用 <code>==</code> 和 <code>!=</code> 来比较两个字符/字符串是否相等/不等。</p>
-
-<h3 id="toc_13">前缀/后缀相等</h3>
-
-<ul>
-<li><code>hasPrefix(_:)</code></li>
-<li><code>hasSuffix(_:)</code></li>
-</ul>
-
-<h2 id="toc_14">字符串的 Unicode 表示形式（Unicode Representations of Strings）</h2>
-
-<p>当一个 Unicode 字符串被写进文本文件或其他存储时，字符串中的 Unicode 标量会用 Unicode 定义的几种编码格式（encoding forms）编码。每一个字符串中的小块编码都被称为 <code>code units</code>。这些包括 UTF-8,UTF-16,UTF-32 编码格式。</p>
+<p>像 <code>if</code> 语句一样， <code>guard</code> 的执行取决于一个表达式的布尔值。我们可以使用 <code>guard</code> 语句来要求条件必须为真时，以执行 <code>guard</code> 语句后的代码。不同于 <code>if</code> 语句，一个 <code>guard</code> 语句总是有一个 <code>else</code> 分句，如果条件不为真则执行 <code>else</code> 分句中的代码。</p>
 
 
 		</div>
+	
+
+ 
 	
 
  
