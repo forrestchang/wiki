@@ -4,7 +4,7 @@
   <title><![CDATA[Wiki]]></title>
   <link href="https://forrestchang.github.io/wiki/atom.xml" rel="self"/>
   <link href="https://forrestchang.github.io/wiki/"/>
-  <updated>2016-05-18T17:21:45+08:00</updated>
+  <updated>2016-05-19T16:00:11+08:00</updated>
   <id>https://forrestchang.github.io/wiki/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -140,6 +140,55 @@
 <li>为什么看不懂？1. 你看得不够使劲。对于这类情况，仔仔细细地再多读两遍，多试着去理解两遍，往往会恍然大悟。2. 其中涉及到了你不懂得概念，这是技术性的不理解，这种情况就需要 Cross Reference。如果一句话中用到了你不懂得概念，那就去查。奇怪的是很多人看不懂也不分析一下为什么不懂，就直接放弃了。正如解决问题一样，问题卡住解决不了了，第一时间要做的就是分析为什么解决不了，而不是直接求救。3. 作者讲述的顺序不对，你接着往下看，也许看到后面就明白前面的了。</li>
 <li>如何搜寻到好书。1. 同作者的著作。2. Amazon 相关推荐和主题相关的书列。3. 一本好的著作（或一份好的资料——不管是书还是网页）在参考资料里面重点提到的其他著作。4. 有时对于一个主题，可以搜索到好心人总结的参考资源导引，那是最好不过的。</li>
 </ol>
+
+<h2 id="toc_2"><a href="http://matt.might.net/articles/what-cs-majors-should-know/">What every computer science major should know</a></h2>
+
+<ul>
+<li>What should every student know to get a good job?</li>
+<li>Waht should every student know to maintain lifelong employment?</li>
+<li>What should every student know to enter graduate school?</li>
+<li>What should every student know to benefit society?</li>
+</ul>
+
+<p><strong>Portfolio versus resume</strong></p>
+
+<p>Every computer science major should build a portfolio.</p>
+
+<p>A portfolio could be as simple as a personal blog, with a post for each project or accomplishment. A better portfolio would include per-project pages, and publicly browsable code (hosted perhaps on github or Google code).</p>
+
+<p>Contributions to open source shold be linked and documented.</p>
+
+<p>A code portflolio allows employers to direcctly judge ablility. GPAs and resumes do not.</p>
+
+<p><strong>Technical communication</strong></p>
+
+<p>I would recommend that students master a presentation tool like PowerPoint or (my favorite) Keynote.</p>
+
+<p>For producing beautiful mathematival documentation, \(LaTex\) has not equal. All written assignments in techical courses should be submitted in LaTex.</p>
+
+<p><strong>An engineering core</strong></p>
+
+<p><strong>The Unix philosophy</strong></p>
+
+<p>The Unix philosophy is one that emphassizes linguistic abstraction and composition in order to effect computation.</p>
+
+<p><strong>Systems administration</strong></p>
+
+<p><strong>Programming Language</strong></p>
+
+<p><strong>Discrete mathematics</strong></p>
+
+<p><strong>Data structures and algorithms</strong></p>
+
+<p><strong>Theory</strong></p>
+
+<p><strong>Architecture</strong></p>
+
+<p><strong>Operating System</strong></p>
+
+<p><strong>Networking</strong></p>
+
+<p><strong>Security</strong></p>
 
 ]]></content>
   </entry>
