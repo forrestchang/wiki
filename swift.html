@@ -47,6 +47,8 @@
         <li><label>Swift</label></li>
 
           
+            <li><a title="函数" href="14635655021406.html">函数</a></li>
+          
             <li><a title="控制流" href="14635617646524.html">控制流</a></li>
           
             <li><a title="字符串和字符" href="14634546001476.html">字符串和字符</a></li>
@@ -95,6 +97,8 @@
         <li><label>Weekly Reading</label></li>
 
           
+            <li><a title="2016 Week 21" href="14636395892916.html">2016 Week 21</a></li>
+          
             <li><a title="2016 Week 19" href="14623638528114.html">2016 Week 19</a></li>
           
 
@@ -115,6 +119,8 @@
 
                     
                       <li class="side-title"><span>Swift</span></li>
+                        
+                          <li><a title="函数" href="14635655021406.html">函数</a></li>
                         
                           <li><a title="控制流" href="14635617646524.html">控制流</a></li>
                         
@@ -158,6 +164,8 @@
                     
                       <li class="side-title"><span>Weekly Reading</span></li>
                         
+                          <li><a title="2016 Week 21" href="14636395892916.html">2016 Week 21</a></li>
+                        
                           <li><a title="2016 Week 19" href="14623638528114.html">2016 Week 19</a></li>
                         
 
@@ -174,69 +182,14 @@
 
 	
 		<div class="markdown-body">
-		<h1>控制流</h1>
+		<h1>函数</h1>
 
-		<h2 id="toc_0">Repeat-While</h2>
-
-<p><code>repeat-while</code> 在 <code>while</code> 判断循环条件之前，先执行一次循环的代码块，和其他语言中的 <code>do-while</code> 是类似的。</p>
-
-<pre><code class="language-swift">repeat {
-    statements
-} while condition
-</code></pre>
-
-<h2 id="toc_1">Switch</h2>
-
-<p><code>switch</code> 语句会尝试把某个值与若干个模式（pattern）进行匹配。根据第一个匹配成功的模式，<code>switch</code>语句会执行对应的代码。当有可能的情况较多时，通常用 <code>switch</code> 语句替换 <code>if</code> 语句。</p>
-
-<p><code>switch</code> 语句必须是完备的，每一个可能的值都必须至少有一个 case 分支与之对应。在某些不可能涵盖所有值得情况下，你可以使用默认（<code>default</code>）分支满足该要求，这个默认分支必须在 <code>switch</code> 语句的最后面。</p>
-
-<h3 id="toc_2">不存在隐式的贯穿（No Implicit Fallthrouth）</h3>
-
-<p>和其他语言的 Switch 不同，在 Swift 中，当匹配的 case 分支中的代码执行完毕后，程序会终止 <code>switch</code> 语句，而不会继续执行下一个 case 分支。所以，不需要再 case 分支中显式地使用 <code>break</code> 语句。</p>
-
-<p>如果想要贯穿到特定的 case 分支中，请使用 <code>fallthrough</code> 语句。</p>
-
-<h3 id="toc_3">区间匹配</h3>
-
-<p>case 分支的模式也可以是一个值得区间。</p>
-
-<h3 id="toc_4">元组</h3>
-
-<p>可以只用元组在同一个 <code>switch</code> 语句中测试多个值，元组中的元素可以是值，也可以是区间，使用下划线 <code>_</code> 来匹配所有可能的值。</p>
-
-<h3 id="toc_5">值绑定</h3>
-
-<p>case 分支的模式允许将匹配的值绑定到一个临时的常量或变量，这些常量或变量在该 case 分支里就可以被引用了。</p>
-
-<p>case 分支的模式可以使用 <code>where</code> 语句来判断额外的条件。</p>
-
-<h2 id="toc_6">控制转移语句</h2>
-
-<h3 id="toc_7">continue</h3>
-
-<p><code>continue</code> 语句告诉一个循环体立刻停止本次循环迭代，重现开始下次循环迭代。</p>
-
-<h3 id="toc_8">break</h3>
-
-<p><code>break</code> 语句会立即结束整个控制流的执行。</p>
-
-<h2 id="toc_9">带标签的语句</h2>
-
-<p>在 Swift 中，你可以在循环体和 <code>switch</code> 代码块中嵌套循环体和 <code>switch</code> 代码块来创造复杂的控制流结构。然而，循环体和 <code>switch</code> 代码块亮着都可以使用 <code>break</code> 语句来提前结束整个方法。因此，显式地指明 <code>break</code> 语句想要终止是哪个循环体或者 <code>switch</code> 代码块，会很有用。</p>
-
-<p>为了实现这个目的，可以使用标签来标记一个循环体或者 <code>switch</code> 代码块，当使用 <code>break</code> 或者 <code>continue</code> 时，带上这个标签，可以控制该标签代表对象的中断或者执行。</p>
-
-<p>语法：</p>
-
-<pre><code class="language-swift label"></code></pre>
-
-<h2 id="toc_10">提前退出</h2>
-
-<p>像 <code>if</code> 语句一样， <code>guard</code> 的执行取决于一个表达式的布尔值。我们可以使用 <code>guard</code> 语句来要求条件必须为真时，以执行 <code>guard</code> 语句后的代码。不同于 <code>if</code> 语句，一个 <code>guard</code> 语句总是有一个 <code>else</code> 分句，如果条件不为真则执行 <code>else</code> 分句中的代码。</p>
-
+		
 
 		</div>
+	
+
+ 
 	
 
  
