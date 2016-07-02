@@ -2,7 +2,12 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
   <loc>https://forrestchang.github.io/wiki/</loc>
-  <lastmod>2016-05-19T16:32:43+08:00</lastmod>
+  <lastmod>2016-07-02T16:04:14+08:00</lastmod>
+</url>
+
+<url>
+  <loc>https://forrestchang.github.io/wiki/14674443542637.html</loc>
+  <lastmod>2016-07-02T15:25:54+08:00</lastmod>
 </url>
 
 <url>
@@ -98,6 +103,10 @@
 
 
 <url>
+  <loc>https://forrestchang.github.io/wiki/daily-reading.html</loc>
+</url>
+
+<url>
   <loc>https://forrestchang.github.io/wiki/swift.html</loc>
 </url>
 
@@ -107,10 +116,6 @@
 
 <url>
   <loc>https://forrestchang.github.io/wiki/linux.html</loc>
-</url>
-
-<url>
-  <loc>https://forrestchang.github.io/wiki/week-reading.html</loc>
 </url>
 
 
