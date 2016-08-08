@@ -4,17 +4,16 @@
   <title><![CDATA[Wiki]]></title>
   <link href="https://forrestchang.github.io/wiki/atom.xml" rel="self"/>
   <link href="https://forrestchang.github.io/wiki/"/>
-  <updated>2016-07-02T16:04:14+08:00</updated>
+  <updated>2016-08-08T20:08:18+08:00</updated>
   <id>https://forrestchang.github.io/wiki/</id>
   <author>
     <name><![CDATA[]]></name>
     
   </author>
-  <generator uri="http://www.mweb.im">MWeb</generator>
-
+  <generator uri="http://www.mweb.im/">MWeb</generator>
   
   <entry>
-    <title type="html"><![CDATA[2016/07/02]]></title>
+    <title type="html"><![CDATA[2016/07/02 阅读笔记]]></title>
     <link href="https://forrestchang.github.io/wiki/14674443542637.html"/>
     <updated>2016-07-02T15:25:54+08:00</updated>
     <id>https://forrestchang.github.io/wiki/14674443542637.html</id>
@@ -103,7 +102,7 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[2016 Week 21]]></title>
+    <title type="html"><![CDATA[2016 Week 21 阅读笔记]]></title>
     <link href="https://forrestchang.github.io/wiki/14636395892916.html"/>
     <updated>2016-05-19T14:33:09+08:00</updated>
     <id>https://forrestchang.github.io/wiki/14636395892916.html</id>
@@ -283,7 +282,7 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[控制流]]></title>
+    <title type="html"><![CDATA[Swift学习笔记：控制流]]></title>
     <link href="https://forrestchang.github.io/wiki/14635617646524.html"/>
     <updated>2016-05-18T16:56:04+08:00</updated>
     <id>https://forrestchang.github.io/wiki/14635617646524.html</id>
@@ -351,7 +350,7 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[字符串和字符]]></title>
+    <title type="html"><![CDATA[Swift 学习笔记：字符串和字符]]></title>
     <link href="https://forrestchang.github.io/wiki/14634546001476.html"/>
     <updated>2016-05-17T11:10:00+08:00</updated>
     <id>https://forrestchang.github.io/wiki/14634546001476.html</id>
@@ -438,7 +437,7 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[属性]]></title>
+    <title type="html"><![CDATA[Swift 学习笔记：属性]]></title>
     <link href="https://forrestchang.github.io/wiki/14631242333306.html"/>
     <updated>2016-05-13T15:23:53+08:00</updated>
     <id>https://forrestchang.github.io/wiki/14631242333306.html</id>
@@ -507,7 +506,7 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[集合类型]]></title>
+    <title type="html"><![CDATA[Swift 学习笔记：集合类型]]></title>
     <link href="https://forrestchang.github.io/wiki/14627836147810.html"/>
     <updated>2016-05-09T16:46:54+08:00</updated>
     <id>https://forrestchang.github.io/wiki/14627836147810.html</id>
@@ -608,7 +607,7 @@ let airportNames = [String](airports.values)
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[基本运算符]]></title>
+    <title type="html"><![CDATA[Swift 学习笔记：基本运算符]]></title>
     <link href="https://forrestchang.github.io/wiki/14627831551017.html"/>
     <updated>2016-05-09T16:39:15+08:00</updated>
     <id>https://forrestchang.github.io/wiki/14627831551017.html</id>
@@ -628,7 +627,7 @@ let airportNames = [String](airports.values)
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[2016 Week 19]]></title>
+    <title type="html"><![CDATA[2016 Week 19 阅读笔记]]></title>
     <link href="https://forrestchang.github.io/wiki/14623638528114.html"/>
     <updated>2016-05-04T20:10:52+08:00</updated>
     <id>https://forrestchang.github.io/wiki/14623638528114.html</id>
@@ -678,7 +677,7 @@ let airportNames = [String](airports.values)
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[高级运算符]]></title>
+    <title type="html"><![CDATA[Swift 学习笔记：高级运算符]]></title>
     <link href="https://forrestchang.github.io/wiki/14623593987548.html"/>
     <updated>2016-05-04T18:56:38+08:00</updated>
     <id>https://forrestchang.github.io/wiki/14623593987548.html</id>
@@ -847,7 +846,7 @@ let airportNames = [String](airports.values)
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[构造过程]]></title>
+    <title type="html"><![CDATA[Swift 学习笔记：构造过程]]></title>
     <link href="https://forrestchang.github.io/wiki/14617168482919.html"/>
     <updated>2016-04-27T08:27:28+08:00</updated>
     <id>https://forrestchang.github.io/wiki/14617168482919.html</id>
@@ -1030,7 +1029,7 @@ let airportNames = [String](airports.values)
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[访问控制]]></title>
+    <title type="html"><![CDATA[Swift 学习笔记：访问控制]]></title>
     <link href="https://forrestchang.github.io/wiki/14616582990381.html"/>
     <updated>2016-04-26T16:11:39+08:00</updated>
     <id>https://forrestchang.github.io/wiki/14616582990381.html</id>
@@ -1131,7 +1130,7 @@ let airportNames = [String](airports.values)
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[错误处理]]></title>
+    <title type="html"><![CDATA[Swift 学习笔记：错误处理]]></title>
     <link href="https://forrestchang.github.io/wiki/14616560170869.html"/>
     <updated>2016-04-26T15:33:37+08:00</updated>
     <id>https://forrestchang.github.io/wiki/14616560170869.html</id>
@@ -1182,7 +1181,7 @@ let airportNames = [String](airports.values)
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[泛型]]></title>
+    <title type="html"><![CDATA[Swift 学习笔记：泛型]]></title>
     <link href="https://forrestchang.github.io/wiki/14615726488001.html"/>
     <updated>2016-04-25T16:24:08+08:00</updated>
     <id>https://forrestchang.github.io/wiki/14615726488001.html</id>
@@ -1214,7 +1213,7 @@ let airportNames = [String](airports.values)
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[协议]]></title>
+    <title type="html"><![CDATA[Swift 学习笔记：协议]]></title>
     <link href="https://forrestchang.github.io/wiki/14615467401189.html"/>
     <updated>2016-04-25T09:12:20+08:00</updated>
     <id>https://forrestchang.github.io/wiki/14615467401189.html</id>
@@ -1338,20 +1337,7 @@ let airportNames = [String](airports.values)
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Optional Chaining]]></title>
-    <link href="https://forrestchang.github.io/wiki/14609604963906.html"/>
-    <updated>2016-04-18T14:21:36+08:00</updated>
-    <id>https://forrestchang.github.io/wiki/14609604963906.html</id>
-    <content type="html"><![CDATA[
-<p>可选链式调用（Optional Chaining）是一种可以在当前值可能为nil的可选值上请求和调用属性、方法及下标的方法。如果可选值有值，那么调用就会成功；如果可选值是nil，那么调用将返回nil。多个调用可以连接在一起形成一个调用链，如果其中任何一个节点为nil，整个调用链都会失败，即返回nil。</p>
-
-<h2 id="toc_0">使用可选链式调用代替强制展开</h2>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[内存管理]]></title>
+    <title type="html"><![CDATA[Swift 学习笔记：内存管理]]></title>
     <link href="https://forrestchang.github.io/wiki/14606809859756.html"/>
     <updated>2016-04-15T08:43:05+08:00</updated>
     <id>https://forrestchang.github.io/wiki/14606809859756.html</id>
@@ -1414,7 +1400,7 @@ GC（Garbage Collection，垃圾收集）</p>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Linux 基础]]></title>
+    <title type="html"><![CDATA[Linux 基础笔记]]></title>
     <link href="https://forrestchang.github.io/wiki/linux-basic.html"/>
     <updated>2016-03-23T11:09:38+08:00</updated>
     <id>https://forrestchang.github.io/wiki/linux-basic.html</id>
@@ -1961,21 +1947,6 @@ GC（Garbage Collection，垃圾收集）</p>
 </tr>
 </tbody>
 </table>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Git & GitHub]]></title>
-    <link href="https://forrestchang.github.io/wiki/git-and-github.html"/>
-    <updated>2016-03-22T18:04:26+08:00</updated>
-    <id>https://forrestchang.github.io/wiki/git-and-github.html</id>
-    <content type="html"><![CDATA[
-<h2 id="toc_0">教程资源</h2>
-
-<ul>
-<li><a href="http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000">Git教程（廖雪峰）</a></li>
-</ul>
 
 ]]></content>
   </entry>

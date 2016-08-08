@@ -5,20 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
     
-  错误处理 - Wiki
+  Swift 学习笔记：错误处理 - Wiki
   
   </title>
- <meta name="description" content="">
- <link href="atom.xml" rel="alternate" title="Wiki" type="application/atom+xml">
+  
+  
+  <link href="atom.xml" rel="alternate" title="Wiki" type="application/atom+xml">
     <link rel="stylesheet" href="asset/css/foundation.min.css" />
     <link rel="stylesheet" href="asset/css/docs.css" />
-
     <script src="asset/js/vendor/modernizr.js"></script>
     <script src="asset/js/vendor/jquery.js"></script>
-    <script src="asset/highlightjs/highlight.pack.js"></script>
-    <link href="asset/highlightjs/styles/github.css" media="screen, projection" rel="stylesheet" type="text/css">
-    <script>hljs.initHighlightingOnLoad();</script>
-    
+  <script src="asset/highlightjs/highlight.pack.js"></script>
+  <link href="asset/highlightjs/styles/github.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script>hljs.initHighlightingOnLoad();</script>
+<script type="text/javascript">
+  function before_search(){
+    var searchVal = 'site:forrestchang.github.io/wiki ' + document.getElementById('search_input').value;
+    document.getElementById('search_q').value = searchVal;
+    return true;
+  }
+</script>
   </head>
   <body class="antialiased hide-extras">
     
@@ -28,11 +34,32 @@
 
 <nav class="top-bar docs-bar hide-for-small" data-topbar>
 
-<div id="header">
-    <h1><a href="index.html">Wiki</a></h1>
-</div>
+
+  <section class="top-bar-section">
+  <div class="row">
+      <div style="position: relative;width:100%;"><div style="position: absolute; width:100%;">
+        <ul id="main-menu" class="left">
+        
+        <li id=""><a target="self" href="index.html">Home</a></li>
+        
+        <li id=""><a target="_self" href="archives.html">Archives</a></li>
+        
+        </ul>
+
+        <ul class="right" id="search-wrap">
+          <li>
+<form target="_blank" onsubmit="return before_search();" action="http://google.com/search" method="get">
+    <input type="hidden" id="search_q" name="q" value="" />
+    <input tabindex="1" type="search" id="search_input"  placeholder="Search"/>
+</form>
+</li>
+          </ul>
+      </div></div>
+  </div>
+  </section>
 
 </nav>
+
         <nav class="tab-bar show-for-small">
   <a href="javascript:void(0)" class="left-off-canvas-toggle menu-icon">
     <span> &nbsp; Wiki</span>
@@ -41,146 +68,62 @@
 
 <aside class="left-off-canvas-menu">
       <ul class="off-canvas-list">
-      <li><a href="index.html">Home</a></li>
-      
-        <li class="divider"></li>
-        <li><label>Swift</label></li>
+       
+       <li><a href="index.html">HOME</a></li>
+    <li><a href="archives.html">Archives</a></li>
+    <li><a href="about.html">ABOUT</a></li>
 
-          
-            <li><a title="控制流" href="14635617646524.html">控制流</a></li>
-          
-            <li><a title="字符串和字符" href="14634546001476.html">字符串和字符</a></li>
-          
-            <li><a title="属性" href="14631242333306.html">属性</a></li>
-          
-            <li><a title="集合类型" href="14627836147810.html">集合类型</a></li>
-          
-            <li><a title="基本运算符" href="14627831551017.html">基本运算符</a></li>
-          
-            <li><a title="高级运算符" href="14623593987548.html">高级运算符</a></li>
-          
-            <li><a title="构造过程" href="14617168482919.html">构造过程</a></li>
-          
-            <li><a title="访问控制" href="14616582990381.html">访问控制</a></li>
-          
-            <li><a title="错误处理" href="14616560170869.html">错误处理</a></li>
-          
-            <li><a title="泛型" href="14615726488001.html">泛型</a></li>
-          
-            <li><a title="协议" href="14615467401189.html">协议</a></li>
-          
-            <li><a title="Optional Chaining" href="14609604963906.html">Optional Chaining</a></li>
-          
-            <li><a title="内存管理" href="14606809859756.html">内存管理</a></li>
-          
+    <li><label>Categories</label></li>
 
-      
-        <li class="divider"></li>
-        <li><label>Tools</label></li>
+        
+            <li><a href="swift.html">Swift</a></li>
+        
+            <li><a href="linux.html">Linux</a></li>
+        
+            <li><a href="reading-notes.html">Reading Notes</a></li>
+         
 
-          
-            <li><a title="Git & GitHub" href="git-and-github.html">Git & GitHub</a></li>
-          
-
-      
-        <li class="divider"></li>
-        <li><label>Linux</label></li>
-
-          
-            <li><a title="Linux 基础" href="linux-basic.html">Linux 基础</a></li>
-          
-
-      
-        <li class="divider"></li>
-        <li><label>Reading Notes</label></li>
-
-          
-            <li><a title="2016/07/02" href="14674443542637.html">2016/07/02</a></li>
-          
-            <li><a title="2016 Week 21" href="14636395892916.html">2016 Week 21</a></li>
-          
-            <li><a title="2016 Week 19" href="14623638528114.html">2016 Week 19</a></li>
-          
-
-      
       </ul>
     </aside>
 
 <a class="exit-off-canvas" href="#"></a>
 
+
         <section id="main-content" role="main" class="scroll-container">
+        
+       
 
-          <div class="row">
-            <div class="large-3 medium-3 columns">
-              <div class="hide-for-small">
-                <div class="sidebar">
-                <nav>
-                  <ul id="side-nav" class="side-nav">
+ <script type="text/javascript">
+  $(function(){
+    $('#menu_item_index').addClass('is_active');
+  });
+</script>
+<div class="row">
+  <div class="large-8 medium-8 columns">
+      <div class="markdown-body article-wrap">
+       <div class="article">
+          
+          <h1>Swift 学习笔记：错误处理</h1>
+     
+        <div class="read-more clearfix">
+          <span class="date">2016/4/26</span>
 
-                    
-                      <li class="side-title"><span>Swift</span></li>
-                        
-                          <li><a title="控制流" href="14635617646524.html">控制流</a></li>
-                        
-                          <li><a title="字符串和字符" href="14634546001476.html">字符串和字符</a></li>
-                        
-                          <li><a title="属性" href="14631242333306.html">属性</a></li>
-                        
-                          <li><a title="集合类型" href="14627836147810.html">集合类型</a></li>
-                        
-                          <li><a title="基本运算符" href="14627831551017.html">基本运算符</a></li>
-                        
-                          <li><a title="高级运算符" href="14623593987548.html">高级运算符</a></li>
-                        
-                          <li><a title="构造过程" href="14617168482919.html">构造过程</a></li>
-                        
-                          <li><a title="访问控制" href="14616582990381.html">访问控制</a></li>
-                        
-                          <li><a title="错误处理" href="14616560170869.html">错误处理</a></li>
-                        
-                          <li><a title="泛型" href="14615726488001.html">泛型</a></li>
-                        
-                          <li><a title="协议" href="14615467401189.html">协议</a></li>
-                        
-                          <li><a title="Optional Chaining" href="14609604963906.html">Optional Chaining</a></li>
-                        
-                          <li><a title="内存管理" href="14606809859756.html">内存管理</a></li>
-                        
+          <span>posted in&nbsp;</span> 
+          
+              <span class="posted-in"><a href='swift.html'>Swift</a></span>
+           
+         
+          <span class="comments">
+            
 
-                    
-                      <li class="side-title"><span>Tools</span></li>
-                        
-                          <li><a title="Git & GitHub" href="git-and-github.html">Git & GitHub</a></li>
-                        
+            
+          </span>
 
-                    
-                      <li class="side-title"><span>Linux</span></li>
-                        
-                          <li><a title="Linux 基础" href="linux-basic.html">Linux 基础</a></li>
-                        
+        </div>
+      </div><!-- article -->
 
-                    
-                      <li class="side-title"><span>Reading Notes</span></li>
-                        
-                          <li><a title="2016/07/02" href="14674443542637.html">2016/07/02</a></li>
-                        
-                          <li><a title="2016 Week 21" href="14636395892916.html">2016 Week 21</a></li>
-                        
-                          <li><a title="2016 Week 19" href="14623638528114.html">2016 Week 19</a></li>
-                        
-
-                    
-                  </ul>
-                </nav>
-                </div>
-              </div>
-            </div>
-            <div class="large-9 medium-9 columns">
-
- <div class="markdown-body">
-<h1>错误处理</h1>
-
-<h2 id="toc_0">表示并抛出错误</h2>
+      <div class="article-content">
+      <h2 id="toc_0">表示并抛出错误</h2>
 
 <p>Swift 中的枚举类型尤为适合构建一组相关的错误状态，枚举的关联值还可以提供错误状态的额外信息。</p>
 
@@ -223,32 +166,31 @@
 <p>延迟执行的操作会按照它们被指定时的顺序的相反顺序执行。</p>
 
 
-</div>
+    
 
-<br /><br />
-<hr />
+      </div>
 
-<div class="row clearfix">
-  <div class="large-6 columns">
-	<div class="text-left" style="padding:15px 0px;">
-		
-	        <a href="14616582990381.html"  title="Previous Post: 访问控制">&laquo; 访问控制</a>
-	    
-	</div>
-  </div>
-  <div class="large-6 columns">
-	<div class="text-right" style="padding:15px 0px;">
-		
-	        <a href="14615726488001.html" 
-	        title="Next Post: 泛型">泛型 &raquo;</a>
-	    
-	</div>
-  </div>
-</div>
-
-<div class="row">
-<div style="padding:0px 0.93em;" class="share-comments">
-<div id="disqus_thread"></div>
+      <div class="row">
+        <div class="large-6 columns">
+        <p class="text-left" style="padding:15px 0px;">
+      
+          <a href="14616582990381.html" 
+          title="Previous Post: Swift 学习笔记：访问控制">&laquo; Swift 学习笔记：访问控制</a>
+      
+        </p>
+        </div>
+        <div class="large-6 columns">
+      <p class="text-right" style="padding:15px 0px;">
+      
+          <a  href="14615726488001.html" 
+          title="Next Post: Swift 学习笔记：泛型">Swift 学习笔记：泛型 &raquo;</a>
+      
+      </p>
+        </div>
+      </div>
+      <div class="comments-wrap">
+        <div class="share-comments">
+          <div id="disqus_thread"></div>
 <script type="text/javascript">
 var disqus_shortname = 'tisogasnotes';
 (function() {
@@ -258,50 +200,167 @@ var disqus_shortname = 'tisogasnotes';
          })();
 </script>
 
-</div>
-</div>
-<script type="text/javascript">
-	$(function(){
-		var currentURL = '14616560170869.html';
-		$('#side-nav a').each(function(){
-			if($(this).attr('href') == currentURL){
-				$(this).parent().addClass('active');
-			}
-		});
-	});
-</script>  
-</div></div>
+
+          
+
+          
+        </div>
+      </div>
+    </div><!-- article-wrap -->
+  </div><!-- large 8 -->
 
 
-<div class="page-bottom">
+
+
+ <div class="large-4 medium-4 columns">
+  <div class="hide-for-small">
+    <div id="sidebar" class="sidebar">
+          <div id="site-info" class="site-info">
+            
+                <h1>Wiki</h1>
+                <div class="site-des"></div>
+                <div class="social">
+
+
+
+
+
+
+
+
+
+
+
+  <a target="_blank" class="rss" href="atom.xml" title="RSS">RSS</a>
+                
+              	 </div>
+          	</div>
+
+             
+
+              <div id="site-categories" class="side-item ">
+                <div class="side-header">
+                  <h2>Categories</h2>
+                </div>
+                <div class="side-content">
+
+      	<p class="cat-list">
+        
+            <a href="swift.html"><strong>Swift</strong></a>
+        
+            <a href="linux.html"><strong>Linux</strong></a>
+        
+            <a href="reading-notes.html"><strong>Reading Notes</strong></a>
+         
+        </p>
+
+
+                </div>
+              </div>
+
+              <div id="site-categories" class="side-item">
+                <div class="side-header">
+                  <h2>Recent Posts</h2>
+                </div>
+                <div class="side-content">
+                <ul class="posts-list">
+	      
+		      
+			      <li class="post">
+			        <a href="14674443542637.html">2016/07/02 阅读笔记</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="14636395892916.html">2016 Week 21 阅读笔记</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="14635617646524.html">Swift学习笔记：控制流</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="14634546001476.html">Swift 学习笔记：字符串和字符</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="14631242333306.html">Swift 学习笔记：属性</a>
+			      </li>
+		     
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		   
+		  		</ul>
+                </div>
+              </div>
+        </div><!-- sidebar -->
+      </div><!-- hide for small -->
+</div><!-- large 4 -->
+
+</div><!-- row -->
+
+ <div class="page-bottom clearfix">
   <div class="row">
-  <hr />
-  <div class="small-9 columns">
-  <p class="copyright">Copyright &copy; 2015
+   <p class="copyright">Copyright &copy; 2015
 Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
 Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
-  </div>
-  <div class="small-3 columns">
-  <p class="copyright text-right"><a href="#header">TOP</a></p>
-  </div>
-   
   </div>
 </div>
 
         </section>
       </div>
     </div>
+
+  
     
-    
+
     <script src="asset/js/foundation.min.js"></script>
-    <script src="asset/js/foundation/foundation.offcanvas.js"></script>
     <script>
       $(document).foundation();
-
+      function fixSidebarHeight(){
+        var w1 = $('.markdown-body').height();
+          var w2 = $('#sidebar').height();
+          if (w1 > w2) { $('#sidebar').height(w1); };
+      }
+      $(function(){
+        fixSidebarHeight();
+      })
+      $(window).load(function(){
+          fixSidebarHeight();
+      });
      
     </script>
+
     
 <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({TeX: { equationNumbers: { autoNumber: "AMS" } }});</script>
+
 
   </body>
 </html>
