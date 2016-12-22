@@ -571,7 +571,7 @@ select {
     width: 58.33333%; }
 
   .medium-8 {
-    width: 66.66667%; }
+    width: 70.66667%; }
 
   .medium-9 {
     width: 75%; }
@@ -3793,7 +3793,7 @@ code {
   border-color: #dfdfdf;
   /*border-style: solid;*/
   border-width: 1px;
-  color: #333333;
+  color: #bf616a;
   font-family: Consolas, "Liberation Mono", Courier, monospace;
   font-weight: normal;
   padding: 0.125rem 0.3125rem 0.0625rem; }
@@ -3872,7 +3872,7 @@ blockquote {
   border-left: 1px solid #DDDDDD; }
   blockquote cite {
     display: block;
-    font-size: 0.8125rem;
+    font-size: 1rem;
     color: #555555; }
     blockquote cite:before {
       content: "\2014 \0020"; }
@@ -3883,7 +3883,8 @@ blockquote {
 blockquote,
 blockquote p {
   line-height: 1.6;
-  color: #6f6f6f; }
+  color: #6f6f6f;
+}
 
 /* Microformats */
 .vcard {
@@ -5321,7 +5322,7 @@ table {
     table thead tr th,
     table thead tr td {
       color: #222222;
-      font-size: 0.875rem;
+      font-size: 1.1rem;
       font-weight: bold;
       padding: 0.5rem 0.625rem 0.625rem; }
   table tfoot {
@@ -5335,7 +5336,7 @@ table {
   table tr th,
   table tr td {
     color: #222222;
-    font-size: 0.875rem;
+    font-size: 1.1rem;
     padding: 0.5625rem 0.625rem;
     text-align: left; }
   table tr.even, table tr.alt, table tr:nth-of-type(even) {

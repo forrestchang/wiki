@@ -507,7 +507,6 @@ font-family: "PT Sans", "SF UI Display", ".PingFang SC","PingFang SC", "Neue Haa
 }
 
 .markdown-body p,
-.markdown-body blockquote,
 .markdown-body ul,
 .markdown-body ol,
 .markdown-body dl,
@@ -515,7 +514,12 @@ font-family: "PT Sans", "SF UI Display", ".PingFang SC","PingFang SC", "Neue Haa
 .markdown-body pre {
   margin-top: 0;
   margin-bottom: 16px;
-  font-size: 120%;
+  font-size: 100%;
+}
+
+.markdown-body blockquote {
+  margin-top: 0;
+  margin-bottom: 16px;
 }
 
 .markdown-body hr {
@@ -612,7 +616,7 @@ font-family: "PT Sans", "SF UI Display", ".PingFang SC","PingFang SC", "Neue Haa
   padding-top: 0.2rem;
   padding-bottom: 0.2rem;
   margin: 0;
-  font-size: 85%;
+  font-size: 100%;
   background-color: #f9f9f9;
   border-radius: 3px;
 }
@@ -641,7 +645,7 @@ font-family: "PT Sans", "SF UI Display", ".PingFang SC","PingFang SC", "Neue Haa
 .markdown-body pre {
   padding: 16px;
   overflow: auto;
-  font-size: 85%;
+  font-size: 100%;
   line-height: 1.45;
   background-color: #f7f7f7;
   border-radius: 3px;
