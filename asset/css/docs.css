@@ -14,7 +14,7 @@
 
 .top-bar-section ul li{ background: transparent;}
 .top-bar-section li:not(.has-form){   display: inline-block;
-    margin-right: 20px; 
+    margin-right: 20px;
 }
 .top-bar-section li{ }
 #sidebar{ margin-top: 0px;}
@@ -26,7 +26,7 @@
     font-size: 12px;
     text-transform: uppercase;
 
-   margin:0; 
+   margin:0;
   font-family: "jaf-bernino-sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Verdana,sans-serif;
   letter-spacing: .1rem;
   padding: 28px 0 0px 0;
@@ -37,20 +37,20 @@
 
 .top-bar-section li:not(.has-form) a:not(.button):hover {
   background: transparent;
-  color: #333; 
+  color: #333;
   font-weight: normal;
-  
+
 }
 .top-bar-section li.is_active:not(.has-form) a:not(.button) {
     background: transparent;
     font-weight: 700;
-    color: #333; 
+    color: #333;
     border-bottom: 2px rgba(0,0,0,0.8) solid;
 }
 .top-bar-section li.is_active:not(.has-form) a:not(.button):hover {
     background: transparent;
     font-weight: 700;
-    color: #333; 
+    color: #333;
     border-bottom: 2px rgba(0,0,0,0.8) solid;
 }
 #main-menu{ padding-left: 0.93rem; padding-right: 0.93rem;}
@@ -124,7 +124,7 @@ padding: 8px 0px; margin: 0;
 
 #site-categories .posts-list{ list-style: none; padding: 0; margin: 0; }
 #site-categories .posts-list li{
-    
+
     margin: 0; padding: 12px 0;
     display: block;
     border-bottom: 1px solid #eee; font-size: 12px;
@@ -136,7 +136,7 @@ padding: 8px 0px; margin: 0;
 #site-categories .posts-list li:first-child{padding-top: 0px;}
 #site-categories .posts-list li:last-child{ border-bottom: none;}
 #site-categories .posts-list li a{    color: #666;
-    text-decoration: none;  white-space: nowrap; 
+    text-decoration: none;  white-space: nowrap;
     cursor: pointer;
   }
 #site-categories .posts-list li a:hover{text-decoration: underline;}
@@ -198,13 +198,14 @@ padding: 8px 0px; margin: 0;
   -webkit-text-size-adjust: 100%;
   color: #333;
   overflow: hidden;
-  font-family: "SF UI Display", ".PingFang SC","PingFang SC", "Neue Haas Grotesk Text Pro", "Arial Nova", "Segoe UI", "Microsoft YaHei", "Microsoft JhengHei", "Helvetica Neue", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "Hiragino Sans GB", sans-serif;
+  font-family: ".PingFang SC","PingFang SC", "Neue Haas Grotesk Text Pro", "Arial Nova", "Segoe UI", "Microsoft YaHei", "Microsoft JhengHei", "Helvetica Neue", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "Hiragino Sans GB", sans-serif;
 
 
   font-size: 16px;
   line-height: 1.6;
   word-wrap: break-word;
 }
+
 
 .markdown-body a {
   background: transparent;
@@ -241,7 +242,7 @@ padding: 8px 0px; margin: 0;
 .markdown-body code,
 .markdown-body kbd,
 .markdown-body pre {
-  font-family: monospace, monospace;
+  font-family: Menlo;
   font-size: 1rem;
 }
 
@@ -514,7 +515,7 @@ font-family: "PT Sans", "SF UI Display", ".PingFang SC","PingFang SC", "Neue Haa
 .markdown-body pre {
   margin-top: 0;
   margin-bottom: 16px;
-
+  font-size: 120%;
 }
 
 .markdown-body hr {
@@ -612,7 +613,7 @@ font-family: "PT Sans", "SF UI Display", ".PingFang SC","PingFang SC", "Neue Haa
   padding-bottom: 0.2rem;
   margin: 0;
   font-size: 85%;
-  background-color: rgba(0,0,0,0.04);
+  background-color: #f9f9f9;
   border-radius: 3px;
 }
 
