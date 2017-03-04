@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
     
-  Archives - Tisoga's Wiki
+  Python - Tisoga's Wiki
   
   </title>
  <meta name="description" content="">
@@ -83,43 +83,71 @@
             </div>
             <div class="large-9 medium-9 columns">
 
- <div class="markdown-body">
+ 
+
+
 	
-		 
-		  	<h2>2017</h2>
-		
-		
-			<div>
-				<h3><a href="14875051504774.html">位运算</a></h3>
-				<p>
-					<time datetime="2017-02-19T19:52:30+08:00" pubdate><span class='month'>Feb</span> <span class='day'>19</span> <span class='year'>2017</span></time>
-					&nbsp;&nbsp;
-				  <span class="categories">posted in 
-				  
-					    <a class='category' href='python.html'>Python</a>&nbsp;
-				   
-				  </span>
+		<div class="markdown-body">
+		<h1>位运算</h1>
 
-				</p>
-			</div>
- 	
-		
-		
-			<div>
-				<h3><a href="14872260244406.html">Python Cookbook 阅读笔记</a></h3>
-				<p>
-					<time datetime="2017-02-16T14:20:24+08:00" pubdate><span class='month'>Feb</span> <span class='day'>16</span> <span class='year'>2017</span></time>
-					&nbsp;&nbsp;
-				  <span class="categories">posted in 
-				  
-					    <a class='category' href='python.html'>Python</a>&nbsp;
-				   
-				  </span>
+		<h2 id="toc_0">一元运算符</h2>
 
-				</p>
-			</div>
- 	 
-</div>  
+<ol>
+<li>取反（NOT，<code>~</code>）</li>
+</ol>
+
+<pre><code>NOT 0001 =&gt; 1110
+</code></pre>
+
+<h2 id="toc_1">二元运算符</h2>
+
+<ol>
+<li>按位或（OR，<code>|</code>）</li>
+</ol>
+
+<pre><code>        0101
+OR      1001
+=&gt;      1101
+</code></pre>
+
+<ol>
+<li><p>按位异或（XOR，<code>^</code>）</p>
+
+<p>如果某位不同则该位为 1，否则该位为 0。</p></li>
+</ol>
+
+<pre><code>        0101
+XOR     1001
+=&gt;      1100
+</code></pre>
+
+<ol>
+<li><p>按位与（AND，<code>&amp;</code>）</p>
+
+<p>两位都为 1，结果为 1，否则为 0。</p></li>
+</ol>
+
+<pre><code>        0101
+AND     1011
+=&gt;      0001
+</code></pre>
+
+<h2 id="toc_2">移位操作</h2>
+
+<ul>
+<li>逻辑移位：连标志位（正负号）一起操作，所以可能会改变正负号，移位后空缺的部分补 0。</li>
+<li>算数移位：固定标志位，移动其他的位，不会改变正负号，空缺的位是补 0 还是补 1 看标志位是什么。</li>
+</ul>
+
+
+		</div>
+	
+
+ 
+	
+
+  
+  
 </div></div>
 
 
