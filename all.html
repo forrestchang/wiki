@@ -59,6 +59,35 @@
                 
                 <li class="entry-item" itemscope="" itemtype="http://schema.org/Article">
                     <div class="entry-meta">
+                        <time class="updated" datetime="2017/3/7">2017/3/7</time>
+                    </div>
+                    <div class="detail">
+                        <h2 itemprop="name"><a itemprop="url" href="14888872084322.html">Algorithms 4ed 题解</a></h2>
+                        <div itemprop="description">
+                            
+                                <ul>
+<li>
+<a href="#toc_0">1.3 背包、队列和栈</a>
+<ul>
+<li>
+<a href="#toc_1">1.3.1</a>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<h2 id="toc_0">1.3 背包、队列和栈</h2>
+
+<h3 id="toc_1">1.3.1</h3>
+
+                            
+                        </div>
+                    </div>
+                </li>
+                
+                <li class="entry-item" itemscope="" itemtype="http://schema.org/Article">
+                    <div class="entry-meta">
                         <time class="updated" datetime="2017/3/6">2017/3/6</time>
                     </div>
                     <div class="detail">
@@ -129,6 +158,34 @@
 </li>
 <li>
 <a href="#toc_19">1.3.3.10 背包的实现</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#toc_20">1.3.4 综述</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#toc_21">1.4 算法分析</a>
+<ul>
+<li>
+<a href="#toc_22">1.4.1 科学方法</a>
+</li>
+<li>
+<a href="#toc_23">1.4.3 数学模型</a>
+</li>
+<li>
+<a href="#toc_24">1.4.4 增长数量级的分类</a>
+</li>
+<li>
+<a href="#toc_25">1.4.5 设计更快的算法</a>
+</li>
+<li>
+<a href="#toc_26">1.4.7 注意事项</a>
+<ul>
+<li>
+<a href="#toc_27">1.4.7.1 大常数</a>
 </li>
 </ul>
 </li>
@@ -611,7 +668,234 @@ class Stack(object):
 
 <p>背包的实现：</p>
 
-<pre><code class="language-python"></code></pre>
+<pre><code class="language-python">class Bag(object):
+    def __init__(self):
+        self.first = None
+        self.N = 0
+        
+    def isEmpty(self):
+        return self.first is None
+    
+    def add(self, item):
+        oldfirst = self.first
+        self.first = Node(item)
+        self.first.next = oldfirst
+        self.N += 1
+        
+    def __len__(self):
+        return self.N
+        
+    def __iter__(self):
+        return _BagIterator(self.first)
+
+class _BagIterator(object):
+    def __init__(self, listhead):
+        self.current = listhead
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.current is None:
+            raise StopIteration
+        item = self.current.item
+        self.current = self.current.next
+        return item
+</code></pre>
+
+<p>这份代码中实现了迭代器（可以使用 for-in 来遍历），Stack 和 Queue 可以使用同样的方法来实现。</p>
+
+<h3 id="toc_20">1.3.4 综述</h3>
+
+<p>基础数据结构：</p>
+
+<table>
+<thead>
+<tr>
+<th>数据结构</th>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>数组</td>
+<td>通过索引可以直接访问任意元素</td>
+<td>在初始化时就需要知道元素的数量</td>
+</tr>
+<tr>
+<td>链表</td>
+<td>使用的空间大小和元素数量成正比</td>
+<td>需要通过引用访问任意元素</td>
+</tr>
+</tbody>
+</table>
+
+<p>我们在本节中研究背包、队列和栈时描述数据结构和算法的方式是全书的原型。在研究一个新的应用领域时，我们将会按照以下步骤识别目标并使用数据抽象解决问题：</p>
+
+<ol>
+<li>定义 API</li>
+<li>根据特定的应用场景开发用例代码</li>
+<li>描述一种数据结构（一组值得表示），并在 API 所对应的抽象数据类型的实现中根据它定义类的实例变量</li>
+<li>描述算法（实现一组操作的方式），并根据它实现类中的实例方法</li>
+<li>分析算法的性能特点</li>
+</ol>
+
+<p>本书中所给出的数据结构举例：</p>
+
+<table>
+<thead>
+<tr>
+<th>数据结构</th>
+<th>抽象数据类型</th>
+<th>数据表示</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>父链接数</td>
+<td>UnionFind</td>
+<td>整形数组</td>
+</tr>
+<tr>
+<td>二分查找树</td>
+<td>BST</td>
+<td>含有两个链接的结点</td>
+</tr>
+<tr>
+<td>字符串</td>
+<td>String</td>
+<td>数组、偏移量和长度</td>
+</tr>
+<tr>
+<td>二插堆</td>
+<td>PQ</td>
+<td>对象数组</td>
+</tr>
+<tr>
+<td>散列表（拉链法）</td>
+<td>SeparateChainingHashST</td>
+<td>链表数组</td>
+</tr>
+<tr>
+<td>散列表（线性探测法）</td>
+<td>LinerProbingHashST</td>
+<td>两个对象数组</td>
+</tr>
+<tr>
+<td>图的邻接链表</td>
+<td>Graph</td>
+<td>Bag 对象数组</td>
+</tr>
+<tr>
+<td>单词查找树</td>
+<td>TrieST</td>
+<td>含有链接数组的结点</td>
+</tr>
+<tr>
+<td>三向单词查找树</td>
+<td>TST</td>
+<td>含有三个链接的结点</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="toc_21">1.4 算法分析</h2>
+
+<h3 id="toc_22">1.4.1 科学方法</h3>
+
+<p>科学家用来理解自然世界的方法对于研究计算机程序的运行时间同样有效：</p>
+
+<ul>
+<li>细致地观察真实世界的特点，通常还要有精确的测量</li>
+<li>根据观察结果提出假设模型</li>
+<li>根据模型预测未来的事件</li>
+<li>继续观察并核实预测的准确性</li>
+<li>如此反复直到确认预测和观察一致</li>
+</ul>
+
+<h3 id="toc_23">1.4.3 数学模型</h3>
+
+<p>一个程序运行的总时间主要和两点有关：</p>
+
+<ul>
+<li>执行每条语句的耗时</li>
+<li>执行每条语句的频率</li>
+</ul>
+
+<h3 id="toc_24">1.4.4 增长数量级的分类</h3>
+
+<p>对增长数量级常见假设的总结：</p>
+
+<table>
+<thead>
+<tr>
+<th>描述</th>
+<th>增长的数量级</th>
+<th>说明</th>
+<th>举例</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>常数级别</td>
+<td>1</td>
+<td>普通语句</td>
+<td>将两个数相加</td>
+</tr>
+<tr>
+<td>对数级别</td>
+<td>\(logN\)</td>
+<td>二分策略</td>
+<td>二分查找</td>
+</tr>
+<tr>
+<td>线性级别</td>
+<td>\(N\)</td>
+<td>循环</td>
+<td>找出最大元素</td>
+</tr>
+<tr>
+<td>线性对数级别</td>
+<td>\(NlogN\)</td>
+<td>分治</td>
+<td>归并排序</td>
+</tr>
+<tr>
+<td>平方级别</td>
+<td>\(N^2\)</td>
+<td>双层循环</td>
+<td>检查所有元素对</td>
+</tr>
+<tr>
+<td>立方级别</td>
+<td>\(N^3\)</td>
+<td>三层循环</td>
+<td>检查所有三元组</td>
+</tr>
+<tr>
+<td>指数级别</td>
+<td>\(2^N\)</td>
+<td>穷举查找</td>
+<td>检查所有子集</td>
+</tr>
+</tbody>
+</table>
+
+<p><img src="http://omaacpco9.bkt.clouddn.com/2017-03-07-124852.jpg" alt=""/></p>
+
+<h3 id="toc_25">1.4.5 设计更快的算法</h3>
+
+<p>学习程序的增长数量级的一个重要动力就是为了帮助我们为同一个问题设计更快地算法。</p>
+
+<h3 id="toc_26">1.4.7 注意事项</h3>
+
+<h4 id="toc_27">1.4.7.1 大常数</h4>
+
+<p>在首项近似中，我们一般会忽略低级项中的常数系数，但这可能是错的。例如，当我们取函数 \(2N^2+cN\) 的近似为 ~\(2N^2\) 时，我们的假设是 c 很小。如果事实不是这样（比如 c 可能是 \(10^6\)），该近似就是错误的。因此，我们要对可能的大常数保持敏感。</p>
 
                             
                         </div>
