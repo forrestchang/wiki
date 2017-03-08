@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+         计算机网络 - Wiki 
+    </title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+
+    <link rel="stylesheet" type="text/css" href="asset/yue.css">
+    <link rel="stylesheet" type="text/css" href="asset/main.css">
+    <link rel="stylesheet" type="text/css" href="asset/tomorrow.css">
+
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Wiki">
+
+    <script src="asset/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+<body>
+    <header class="yue site-header">
+        <div class="wrapper">
+            <a class="site-title" href="index.html">Wiki</a>
+            <nav class="site-nav">
+                <a href="#" class="menu-icon">
+                    
+                    <svg viewBox="0 0 18 15">
+                        <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"
+                        />
+                        <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"
+                        />
+                        <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"
+                        />
+                    </svg>
+
+                </a>
+                <div class="trigger">
+                    
+                        <a class="page-link" href="index.html">INDEX</a>
+                    
+                        <a class="page-link" href="archives.html">ARCHIVES</a>
+                    
+                </div>
+            </nav>
+        </div>
+    </header>
+</body>
+
+</html> <div class="page-content yue">
+    <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+            <header class="post-header">
+                <h1 class="post-title" itemprop="name headline">计算机网络</h1>
+            </header>
+            <div class="post-content" itemprop="articleBody">
+                <h2 id="toc_0">HTTP 协议</h2>
+
+<h3 id="toc_1">HTTP 的特性</h3>
+
+<ul>
+<li>HTTP 构建于 TCP/IP 协议之上</li>
+<li>HTTP 是无连接状态的</li>
+</ul>
+
+<h3 id="toc_2">HTTP 报文</h3>
+
+<h4 id="toc_3">请求报文</h4>
+
+<p>HTTP 定义了与服务器交互的不同方法，最基本的方法有 4 种，分别是 <code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code>. <code>URL</code> 全称是资源描述符，我们可以这样任务，一个 URL 地址，它用于描述一个网络上的资源，而 HTTP 中的 GET、POST、PUT、DELETE 就对应着对这个资源的差、改、增、删 4 个操作。</p>
+
+<ol>
+<li><p>GET 用于信息获取，而且应该是<strong>安全的</strong>和<strong>幂等的</strong></p>
+
+<p>所谓安全的意味着该操作用于获取信息而非修改信息。换句话说，GET 请求一般不应产生副作用，不会影响资源的状态。</p>
+
+<p>幂等的意味着对同一 URL 的多个请求应该返回同样的结果。</p>
+
+<p>GET 请求报文示例：</p>
+
+<pre><code>GET /books/?sex=man&amp;name=Professional HTTP/1.1
+Host: www.wrox.com
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7.6)
+Gecko/20050225 Firefox/1.0.1
+Connection: Keep-Alive
+</code></pre></li>
+<li><p>POST 表示可能修改服务器上的资源</p>
+
+<pre><code>POST / HTTP/1.1
+Host: www.wrox.com
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7.6)
+Gecko/20050225 Firefox/1.0.1
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 40
+Connection: Keep-Alive
+
+sex=man&amp;name=Professional
+</code></pre></li>
+<li><p>注意</p>
+
+<ul>
+<li>GET 可提交的数据量受 URL 长度的限制，HTTP 协议规范没有对 URL 长度进行限制。这个限制是特定的浏览器对它的限制</li>
+<li>理论上讲，POST 是没有大小限制的，HTTP 协议规范也没有进行大小限制，处于安全考虑，服务器软件在实现时会做一定限制</li>
+<li>参考上面的报文示例，可以发现 GET 和 POST 数据内容是一模一样的，只是位置不同，一个在 URL 里，一个在 HTTP 包的包体里</li>
+</ul></li>
+</ol>
+
+<h4 id="toc_4">响应报文</h4>
+
+<p>HTTP 响应与 HTTP 请求相似，HTTP 响应也由 3 个部分构成，分别是：</p>
+
+<ul>
+<li>状态行</li>
+<li>响应头（Response Header）</li>
+<li>响应正文</li>
+</ul>
+
+<p>状态行由协议版本、数字形式的状态代码、及相应的状态描述，各元素之间以空格分隔。</p>
+
+<p>常见的状态码有如下几种：</p>
+
+<ul>
+<li>200 OK：客户端请求成功</li>
+<li>302 Moved Temporirily：请求重定向</li>
+<li>304 Not Modified：文件未修改，可以直接使用缓存文件</li>
+<li>400 Bad Request：由于客户端请求有语法错误，不能被服务器所理解</li>
+<li>401 Unauthonzed：请求未经授权。这个状态码必须和 WWW-Authenticate 报头域一起使用</li>
+<li>403 Forbidden：服务器收到请求，但是拒绝提供服务。服务器通常会在响应正文中给出不提供服务的原因</li>
+<li>404 Not Found：请求的资源不存在，例如输入了错误的 URL</li>
+<li>500 Internal Server Error：服务器发生不可预期的错误，导致无法完成客户端的请求</li>
+<li>503 Service Unavailable：服务器当前不能够处理客户端的请求，在一段时间之后，服务器可能会回复正常</li>
+</ul>
+
+<p>下面是一个 HTTP 响应的例子：</p>
+
+<pre><code>HTTP/1.1 200 OK
+Server:Apache Tomcat/5.0.12
+Data: Mon,60ct2003 13:23:52 GMT
+Content-Length:112
+
+&lt;html&gt;...
+</code></pre>
+
+<h4 id="toc_5">条件 GET</h4>
+
+<p>HTTP 条件 GET 是 HTTP 协议为了减少不必要的贷款浪费，提出的一种方案。详见：RFC2616</p>
+
+<ol>
+<li><p>HTTP 条件 GET 使用的时机</p>
+
+<p>客户端之前已经访问过某网站，并打算再次访问该网站</p></li>
+<li><p>HTTP 条件 GET 使用的方法</p>
+
+<p>客户端想服务器发送一个包询问是否在上一次访问网站的时间后更改了页面，如果服务器没有更新，显然不需要把整个网页传给客户端，客户端只要使用本地缓存即可，如果服务器对照客户端给出的时间已经更新了客户端请求的网页，则发送这个更新了的网页给用户。</p></li>
+</ol>
+
+<p>下面是一个具体的发送接收报文的示例：</p>
+
+<p>客户端发送请求：</p>
+
+<pre><code>GET / HTTP/1.1
+Host: www.sina.com.cn:80
+If-Modified-Since:Thu, 4 Feb 2010 20:39:13 GMT
+Connection: Close
+</code></pre>
+
+<p>第一次请求时，服务器端发送请求数据，之后的请求，服务器根据请求中的 If-Modified-Since 字段判断响应文件没有更新，如果没有更新，服务器返回一个 304 Not Modified 响应，告诉浏览器请求的资源在浏览器上没有更新，可以使用已缓存的上次获取的文件。</p>
+
+<pre><code>HTTP/1.0 304 Not Modified
+Date: Thu, 04 Feb 2010 12:38:41 GMT
+Content-Type: text/html
+Expires: Thu, 04 Feb 2010 12:39:41 GMT
+Last-Modified: Thu, 04 Feb 2010 12:29:04 GMT
+Age: 28
+X-Cache: HIT from sy32-21.sina.com.cn
+Connection: close
+</code></pre>
+
+<p>如果服务器端资源已经更新的话，就返回正常的响应。</p>
+
+<h3 id="toc_6">持久连接</h3>
+
+<p>我们知道 HTTP 协议采用 「请求-应答」模式，当使用普通模式，即非 Keep-Alive 模式时，每个请求/应答客户和服务器都要新建一个连击，完成之后立即断开连接（HTTP 协议为无连接协议）；当使用 Keep-Alive 模式（又称持久连接、连接重用）时，Keep-Alive 功能使客户端到服务器端的连接持续有效，当出现对服务器的后续请求时，Keep-Alive 功能避免了建立或者重新建立连接。</p>
+
+            </div>
+            <div>
+                <script type="text/javascript">
+    var disqus_shortname = 'tisogasnotes'; 
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?001e800887eba2f8f57ec8059aafdad6";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+                
+                
+            </div>
+        </article>
+    </div>
+</div>  <footer id="footer" class="yue">
+    <div class="wrapper">
+        <p>© Copyright 2014 - 2017 by <a href="https://twitter.com/Tisoga">@Tisoga</a> and powered by <a href="http://zh.mweb.im/">Mweb</a></p>
+    </div>
+</footer>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({TeX: { equationNumbers: { autoNumber: "AMS" } }});</script>
