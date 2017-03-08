@@ -65,7 +65,58 @@
                         <h2 itemprop="name"><a itemprop="url" href="14889309726832.html">计算机网络</a></h2>
                         <div itemprop="description">
                             
-                                <h2 id="toc_0">HTTP 协议</h2>
+                                <ul>
+<li>
+<a href="#toc_0">HTTP 协议</a>
+<ul>
+<li>
+<a href="#toc_1">HTTP 的特性</a>
+</li>
+<li>
+<a href="#toc_2">HTTP 报文</a>
+<ul>
+<li>
+<a href="#toc_3">请求报文</a>
+</li>
+<li>
+<a href="#toc_4">响应报文</a>
+</li>
+<li>
+<a href="#toc_5">条件 GET</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#toc_6">持久连接</a>
+</li>
+<li>
+<a href="#toc_7">HTTP Pipelining（HTTP 管线化）</a>
+</li>
+<li>
+<a href="#toc_8">会话跟踪</a>
+</li>
+<li>
+<a href="#toc_9">跨站攻击</a>
+<ul>
+<li>
+<a href="#toc_10">如何防范 CSRF 攻击？</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#toc_11">XSS（Cross Site Scripting，跨站脚本攻击）</a>
+<ul>
+<li>
+<a href="#toc_12">如何防御 XSS 攻击？</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<h2 id="toc_0">HTTP 协议</h2>
 
 <h3 id="toc_1">HTTP 的特性</h3>
 
@@ -324,7 +375,7 @@ Connection: close
 
 <p>如果不需要用户输入 HTML，可以直接对用户输入进行 HTML escape。</p>
 
-<p>当我们需要用户输入 HTML 的时候，需要对用户输入的内容做更加小心细致的处理。仅仅粗暴地去掉 script 标签是没有用的，任何一个合法的 HTML 标签都可以添加 onclick </p>
+<p>当我们需要用户输入 HTML 的时候，需要对用户输入的内容做更加小心细致的处理。仅仅粗暴地去掉 script 标签是没有用的，任何一个合法的 HTML 标签都可以添加 onclick 一类的事件属性来执行 JavaScript。更好的方法可能是，将用户输入使用 HTML 解析库进行解析，获取其中的数据。然后根据用户原有的标签属性，重新构建 HTML 元素树。构建的过程中，所有的标签、属性都只从白名单中拿去。   </p>
 
                             
                         </div>
