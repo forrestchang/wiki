@@ -59,6 +59,83 @@
                 
                 <li class="entry-item" itemscope="" itemtype="http://schema.org/Article">
                     <div class="entry-meta">
+                        <time class="updated" datetime="2017/3/10">2017/3/10</time>
+                    </div>
+                    <div class="detail">
+                        <h2 itemprop="name"><a itemprop="url" href="14891114444883.html">LeetCode 刷题笔记</a></h2>
+                        <div itemprop="description">
+                            
+                                <ul>
+<li>
+<a href="#toc_0">001 Two Sum [Easy]</a>
+<ul>
+<li>
+<a href="#toc_1">题目</a>
+</li>
+<li>
+<a href="#toc_2">时间复杂度</a>
+</li>
+<li>
+<a href="#toc_3">思路</a>
+</li>
+<li>
+<a href="#toc_4">代码</a>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<h2 id="toc_0">001 Two Sum [Easy]</h2>
+
+<h3 id="toc_1">题目</h3>
+
+<p>Given an array of integers, return indices of the two numbers such that they add up to a specific target.</p>
+
+<p>You may assume that each input would have exactly one solution, and you may not use the same element twice.</p>
+
+<p>Example：</p>
+
+<pre><code>Given nums = [2, 7, 11, 15], target = 9,
+
+Because nums[0] + nums[1] = 2 + 7 = 9,
+return [0, 1].
+</code></pre>
+
+<h3 id="toc_2">时间复杂度</h3>
+
+<p>\(O(n)\)</p>
+
+<h3 id="toc_3">思路</h3>
+
+<p>比较暴力的做法就是用两个循环来穷举，这样的话时间复杂度会达到 \(O(n^2)\)。</p>
+
+<p>另外一种思路就是使用一个 dict 来保存外循环中 target 与 num 的差值，而在 dic 查找的时间复杂度为 \(O(1)\)。</p>
+
+<h3 id="toc_4">代码</h3>
+
+<pre><code class="language-python">class Solution(object):
+    def twoSum(self, nums, target):
+        &quot;&quot;&quot;
+        :type nums: List[int]
+        :type target: int
+        :rtype: List[int]
+        &quot;&quot;&quot;
+        dic = {}
+        for i, num in enumerate(nums):
+            if num in dic:
+                return [dic[num], i]
+            else:
+                dic[target - num] = i
+</code></pre>
+
+                            
+                        </div>
+                    </div>
+                </li>
+                
+                <li class="entry-item" itemscope="" itemtype="http://schema.org/Article">
+                    <div class="entry-meta">
                         <time class="updated" datetime="2017/3/8">2017/3/8</time>
                     </div>
                     <div class="detail">

@@ -3,12 +3,85 @@
   <title><![CDATA[Wiki]]></title>
   <link href="http://forresthcang.com/wiki/atom.xml" rel="self"/>
   <link href="http://forresthcang.com/wiki/"/>
-  <updated>2017-03-09T20:12:06+08:00</updated>
+  <updated>2017-03-10T09:37:21+08:00</updated>
   <id>http://forresthcang.com/wiki/</id>
   <author>
     <name><![CDATA[]]></name>
   </author>
   <generator uri="http://www.coderforart.com/">CoderForArt</generator>
+  
+  <entry>
+    <title type="html"><![CDATA[LeetCode 刷题笔记]]></title>
+    <link href="http://forresthcang.com/wiki/14891114444883.html"/>
+    <updated>2017-03-10T10:04:04+08:00</updated>
+    <id>http://forresthcang.com/wiki/14891114444883.html</id>
+    <content type="html">
+<![CDATA[<ul>
+<li>
+<a href="#toc_0">001 Two Sum [Easy]</a>
+<ul>
+<li>
+<a href="#toc_1">题目</a>
+</li>
+<li>
+<a href="#toc_2">时间复杂度</a>
+</li>
+<li>
+<a href="#toc_3">思路</a>
+</li>
+<li>
+<a href="#toc_4">代码</a>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<h2 id="toc_0">001 Two Sum [Easy]</h2>
+
+<h3 id="toc_1">题目</h3>
+
+<p>Given an array of integers, return indices of the two numbers such that they add up to a specific target.</p>
+
+<p>You may assume that each input would have exactly one solution, and you may not use the same element twice.</p>
+
+<p>Example：</p>
+
+<pre><code>Given nums = [2, 7, 11, 15], target = 9,
+
+Because nums[0] + nums[1] = 2 + 7 = 9,
+return [0, 1].
+</code></pre>
+
+<h3 id="toc_2">时间复杂度</h3>
+
+<p>\(O(n)\)</p>
+
+<h3 id="toc_3">思路</h3>
+
+<p>比较暴力的做法就是用两个循环来穷举，这样的话时间复杂度会达到 \(O(n^2)\)。</p>
+
+<p>另外一种思路就是使用一个 dict 来保存外循环中 target 与 num 的差值，而在 dic 查找的时间复杂度为 \(O(1)\)。</p>
+
+<h3 id="toc_4">代码</h3>
+
+<pre><code class="language-python">class Solution(object):
+    def twoSum(self, nums, target):
+        &quot;&quot;&quot;
+        :type nums: List[int]
+        :type target: int
+        :rtype: List[int]
+        &quot;&quot;&quot;
+        dic = {}
+        for i, num in enumerate(nums):
+            if num in dic:
+                return [dic[num], i]
+            else:
+                dic[target - num] = i
+</code></pre>
+]]>
+    </content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[计算机网络]]></title>
