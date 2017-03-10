@@ -95,6 +95,9 @@
 <li>
 <a href="#toc_8">代码</a>
 </li>
+<li>
+<a href="#toc_9">笔记</a>
+</li>
 </ul>
 </li>
 </ul>
@@ -200,6 +203,46 @@ class Solution(object):
             first.next = oldfirst
         return first
 </code></pre>
+
+<h3 id="toc_9">笔记</h3>
+
+<p>翻了一下 discuss，发现我的解法实在是太 dirty 了。</p>
+
+<p>下面这一段代码我认为还是非常优美的实现：</p>
+
+<pre><code class="language-python">class Solution:
+    def addTwoNumbers(self, l1, l2):
+        def toint(node):
+            return node.val + 10 * toint(node.next) if node else 0
+        def tolist(n):
+            node = ListNode(n % 10)
+            if n &gt; 9:
+                node.next = tolist(n // 10)
+            return node
+        return tolist(toint(l1) + toint(l2))
+</code></pre>
+
+<p>非递归版本：</p>
+
+<pre><code class="language-python">class Solution:
+    def addTwoNumbers(self, l1, l2):
+        def toint(node):
+            return node.val + 10 * toint(node.next) if node else 0
+        n = toint(l1) + toint(l2)
+        first = last = ListNode(n % 10)
+        while n &gt; 9:
+            n /= 10
+            last.next = last = ListNode(n % 10)
+        return first
+</code></pre>
+
+<p>解释一下思路。</p>
+
+<p>首先 <code>toint(node)</code> 函数是将链表转化成 <code>int</code> 类型的数据，因为 Python 中 <code>int</code> 可以存非常大的数，所以不用考虑链表的长度。算法也很简单，因为链表是转置的，所以高位在链表后面，依次乘以 10 的 n 次方再相加就可以了。</p>
+
+<p><code>tolist(n)</code> 函数式将计算好的数据转化成链表，再纸上拿一个一个例子画一个图就很好理解了。<code>node = ListNode(n % 10)</code> 每一次递归都创建一个节点来存放某一位的数据，<code>tolist(n // 10)</code> 每一次递归都截取一位数字。</p>
+
+<p>非递归的方法类似。</p>
 
                             
                         </div>
