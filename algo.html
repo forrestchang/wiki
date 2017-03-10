@@ -83,6 +83,20 @@
 </li>
 </ul>
 </li>
+<li>
+<a href="#toc_5">002 Add Two Numbers [Medium]</a>
+<ul>
+<li>
+<a href="#toc_6">时间复杂度</a>
+</li>
+<li>
+<a href="#toc_7">思路</a>
+</li>
+<li>
+<a href="#toc_8">代码</a>
+</li>
+</ul>
+</li>
 </ul>
 
 
@@ -127,6 +141,64 @@ return [0, 1].
                 return [dic[num], i]
             else:
                 dic[target - num] = i
+</code></pre>
+
+<h2 id="toc_5">002 Add Two Numbers [Medium]</h2>
+
+<p>You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order and each of their nodes contain a single digit. Add the two numbers and return it as a linked list.</p>
+
+<p>You may assume the two numbers do not contain any leading zero, except the number 0 itself.</p>
+
+<p>Example:</p>
+
+<pre><code>Input: (2 -&gt; 4 -&gt; 3) + (5 -&gt; 6 -&gt; 4)
+Output: 7 -&gt; 0 -&gt; 8
+</code></pre>
+
+<h3 id="toc_6">时间复杂度</h3>
+
+<p>\(O(n)\)</p>
+
+<h3 id="toc_7">思路</h3>
+
+<p>把两个数相加存在链表里，这两个数字的每一位都存在链表中，并且链表是反转的。思路很简单，就是遍历链表，把数取出来，然后加完后再添加到链表中。</p>
+
+<p>代码写得很直白。</p>
+
+<h3 id="toc_8">代码</h3>
+
+<pre><code class="language-python"># Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution(object):
+    def addTwoNumbers(self, l1, l2):
+        &quot;&quot;&quot;
+        :type l1: ListNode
+        :type l2: ListNode
+        :rtype: ListNode
+        &quot;&quot;&quot;
+        num1 = []
+        num2 = []
+        current = l1
+        while current != None:
+            num1.append(str(current.val))
+            current = current.next
+        current = l2
+        while current != None:
+            num2.append(str(current.val))
+            current = current.next
+        num1 = &#39;&#39;.join(num1)[::-1]
+        num2 = &#39;&#39;.join(num2)[::-1]
+        sum = int(num1) + int(num2)
+        first = ListNode(str(sum)[0])
+        for i in str(sum)[1:]:
+            oldfirst = first
+            first = ListNode(i)
+            first.next = oldfirst
+        return first
 </code></pre>
 
                             
