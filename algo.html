@@ -100,6 +100,20 @@
 </li>
 </ul>
 </li>
+<li>
+<a href="#toc_10">007 Reverse Integer [Easy]</a>
+<ul>
+<li>
+<a href="#toc_11">题目</a>
+</li>
+<li>
+<a href="#toc_12">思路</a>
+</li>
+<li>
+<a href="#toc_13">代码</a>
+</li>
+</ul>
+</li>
 </ul>
 
 
@@ -243,6 +257,42 @@ class Solution(object):
 <p><code>tolist(n)</code> 函数式将计算好的数据转化成链表，再纸上拿一个一个例子画一个图就很好理解了。<code>node = ListNode(n % 10)</code> 每一次递归都创建一个节点来存放某一位的数据，<code>tolist(n // 10)</code> 每一次递归都截取一位数字。</p>
 
 <p>非递归的方法类似。</p>
+
+<h2 id="toc_10">007 Reverse Integer [Easy]</h2>
+
+<h3 id="toc_11">题目</h3>
+
+<p>Reverse digits of an integer.</p>
+
+<p>The input is assumed to be a 32-bit signed integer. Your function should return 0 when the reversed integer overflows.</p>
+
+<p>Ex：</p>
+
+<pre><code>Example1: x = 123, return 321
+Example2: x = -123, return -321
+</code></pre>
+
+<h3 id="toc_12">思路</h3>
+
+<p>这道题很简单，但是要考虑转置之后会不会溢出，但是 Python 的 <code>int</code> 是不会溢出的，所以就需要手动判断一下，INT32 最大值是 \(2^{31}-1\)，用十六进制表示就是 <code>0x7FFFFFFF</code>。</p>
+
+<h3 id="toc_13">代码</h3>
+
+<pre><code class="language-python">class Solution(object):
+    def reverse(self, x):
+        &quot;&quot;&quot;
+        :type x: int
+        :rtype: int
+        &quot;&quot;&quot;
+        if x &lt; 0:
+            result = -(int(str(x).lstrip(&#39;-&#39;)[::-1]))
+        else:
+            result = int(str(x)[::-1])
+        
+        if abs(result) &gt; 0x7FFFFFFF:
+            return 0
+        return result
+</code></pre>
 
                             
                         </div>

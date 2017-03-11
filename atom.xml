@@ -3,12 +3,237 @@
   <title><![CDATA[Wiki]]></title>
   <link href="http://forresthcang.com/wiki/atom.xml" rel="self"/>
   <link href="http://forresthcang.com/wiki/"/>
-  <updated>2017-03-10T11:13:46+08:00</updated>
+  <updated>2017-03-10T15:46:20+08:00</updated>
   <id>http://forresthcang.com/wiki/</id>
   <author>
     <name><![CDATA[]]></name>
   </author>
   <generator uri="http://www.coderforart.com/">CoderForArt</generator>
+  
+  <entry>
+    <title type="html"><![CDATA[Python 面试笔记]]></title>
+    <link href="http://forresthcang.com/wiki/14892052747708.html"/>
+    <updated>2017-03-11T12:07:54+08:00</updated>
+    <id>http://forresthcang.com/wiki/14892052747708.html</id>
+    <content type="html">
+<![CDATA[<ul>
+<li>
+<a href="#toc_0">Python 语言特性</a>
+<ul>
+<li>
+<a href="#toc_1">Python 的函数参数传递</a>
+</li>
+<li>
+<a href="#toc_2">Python 中的元类</a>
+</li>
+<li>
+<a href="#toc_3">@staticmethod 和 @classmethod</a>
+</li>
+<li>
+<a href="#toc_4">类变量和实例变量</a>
+</li>
+<li>
+<a href="#toc_5">Python 自省</a>
+</li>
+<li>
+<a href="#toc_6">字典推导式</a>
+</li>
+<li>
+<a href="#toc_7">Python 中单下划线与双下划线的区别</a>
+</li>
+<li>
+<a href="#toc_8">迭代器和生成器</a>
+</li>
+<li>
+<a href="#toc_9"><code>*args</code> 和 <code>**kwargs</code></a>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<h2 id="toc_0">Python 语言特性</h2>
+
+<h3 id="toc_1">Python 的函数参数传递</h3>
+
+<p>所有的变量都可以理解为内存中一个对象的引用。</p>
+
+<p>类型是属于对象的，而不是变量。而对象有两种，「可更改」（mutable） 与「不可更改」（inmutable） 对象。<mark>在 Python 中，strings, tuples, numbers 是不可更改的对象，list, dict 则是可以更改的对象。</mark></p>
+
+<p>当一个引用传递给函数的时候，函数自动复制一份引用，这个函数里的引用就和外部的引用没有关系了。而在函数内的引用指向的是可变对象的时候，对它的操作就和定位了指针地址一样，可以直接在内存里进行修改。</p>
+
+<p>参考阅读：<a href="http://stackoverflow.com/questions/986006/how-do-i-pass-a-variable-by-reference">http://stackoverflow.com/questions/986006/how-do-i-pass-a-variable-by-reference</a></p>
+
+<h3 id="toc_2">Python 中的元类</h3>
+
+<p>ORM 中会用到。</p>
+
+<p>详细的解释：<a href="http://stackoverflow.com/questions/100003/what-is-a-metaclass-in-python">http://stackoverflow.com/questions/100003/what-is-a-metaclass-in-python</a></p>
+
+<h3 id="toc_3">@staticmethod 和 @classmethod</h3>
+
+<p>Python 有三个方法：即静态方法（staticmethod）、类方法（classmethod）和实例方法。</p>
+
+<pre><code class="language-python">def foo(x):
+    print &quot;executing foo(%s)&quot;%(x)
+
+class A(object):
+    def foo(self,x):
+        print &quot;executing foo(%s,%s)&quot;%(self,x)
+
+    @classmethod
+    def class_foo(cls,x):
+        print &quot;executing class_foo(%s,%s)&quot;%(cls,x)
+
+    @staticmethod
+    def static_foo(x):
+        print &quot;executing static_foo(%s)&quot;%x
+
+a=A()
+</code></pre>
+
+<p><code>self</code> 和 <code>cls</code> 是对类或者实例的绑定。对于一般的函数我们可以这么调用 <code>foo(x)</code>，这个函数就是最常用的，它的工作和任何东西（类、实例）无关。对于实例方法，我们知道在类中每次定义方法都需要绑定这个实例，即 <code>foo(self, x)</code> ，因为实例方法的调用离不开实例，我们需要把实例自己传给函数，调用的时候是这样的 <code>a.foo(x)</code>（其实是 <code>foo(a, x)</code>）。类方法一样，只不过它传递的是类而不是实例，<code>A.class_foo(x)</code>。注意这里的 self 和 cls 可以替换成别的参数，但是 Python 的约定就是这两个，所以还是不要改比较好。</p>
+
+<p>对于静态方法其实和普通方法一样，不需要对谁进行绑定，唯一的区别就是需要使用 <code>a.static_foo(x)</code> 或者 <code>A.static_foo(x)</code> 这样的方式来调用。</p>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th>实例方法</th>
+<th>类方法</th>
+<th>静态方法</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>a = A()</td>
+<td>a.foo(x)</td>
+<td>a.class_foo(x)</td>
+<td>a.static_foo(x)</td>
+</tr>
+<tr>
+<td>A</td>
+<td>不可用</td>
+<td>A.class_foo(x)</td>
+<td>A.static_foo(x)</td>
+</tr>
+</tbody>
+</table>
+
+<p>详细讨论：<a href="http://stackoverflow.com/questions/136097/what-is-the-difference-between-staticmethod-and-classmethod-in-python">http://stackoverflow.com/questions/136097/what-is-the-difference-between-staticmethod-and-classmethod-in-python</a></p>
+
+<h3 id="toc_4">类变量和实例变量</h3>
+
+<pre><code class="language-python">class Person:
+    name=&quot;aaa&quot;
+
+p1=Person()
+p2=Person()
+p1.name=&quot;bbb&quot;
+print p1.name  # bbb
+print p2.name  # aaa
+print Person.name  # aaa
+</code></pre>
+
+<p>类变量就是供类使用的变量，实例变量就是供实例使用的。</p>
+
+<p>这里的 <code>p1.name=&quot;bbb&quot;</code> 是实例调用了类变量，这和上面的一个问题一样，就是函数传参的问题，<code>p1.name</code> 一开始指向的是类变量 <code>Person.name</code>，但在实例的作用域里把类变量的引用改变了，就变成了一个实例变量。</p>
+
+<p>可以对比一下下面这个例子：</p>
+
+<pre><code class="language-python">class Person:
+    name=[]
+
+p1=Person()
+p2=Person()
+p1.name.append(1)
+print p1.name  # [1]
+print p2.name  # [1]
+print Person.name  # [1]
+</code></pre>
+
+<p>参考：<a href="http://stackoverflow.com/questions/6470428/catch-multiple-exceptions-in-one-line-except-block">http://stackoverflow.com/questions/6470428/catch-multiple-exceptions-in-one-line-except-block</a></p>
+
+<h3 id="toc_5">Python 自省</h3>
+
+<p>自省就是面向对象的语言所写的程序在运行时，所能知道对象的类型。简单讲就是运行时能够获得对象的类型，比如 <code>type()</code>, <code>dir()</code>, <code>getattr()</code>, <code>hasattr()</code>, <code>isinstance()</code>。</p>
+
+<h3 id="toc_6">字典推导式</h3>
+
+<p>2.7 中加入的内容。</p>
+
+<pre><code class="language-python">d = {key: value for (key, value) in iterable}
+</code></pre>
+
+<h3 id="toc_7">Python 中单下划线与双下划线的区别</h3>
+
+<pre><code class="language-python">&gt;&gt;&gt; class MyClass():
+...     def __init__(self):
+...             self.__superprivate = &quot;Hello&quot;
+...             self._semiprivate = &quot;, world!&quot;
+...
+&gt;&gt;&gt; mc = MyClass()
+&gt;&gt;&gt; print mc.__superprivate
+Traceback (most recent call last):
+  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+AttributeError: myClass instance has no attribute &#39;__superprivate&#39;
+&gt;&gt;&gt; print mc._semiprivate
+, world!
+&gt;&gt;&gt; print mc.__dict__
+{&#39;_MyClass__superprivate&#39;: &#39;Hello&#39;, &#39;_semiprivate&#39;: &#39;, world!&#39;}
+</code></pre>
+
+<ul>
+<li><code>__foo__</code>：一种约定，Python 内部的名字，用来区别其他用户自定义的命名，以防冲突</li>
+<li><code>_foo</code>：一种约定，用来指定变量是私有变量</li>
+<li><code>__foo</code>：解析器用 <code>_classname__foo</code> 来代替这个名字，以区别和其他类相同的命名。</li>
+</ul>
+
+<p>参考：</p>
+
+<ul>
+<li><a href="http://stackoverflow.com/questions/1301346/the-meaning-of-a-single-and-a-double-underscore-before-an-object-name-in-python">http://stackoverflow.com/questions/1301346/the-meaning-of-a-single-and-a-double-underscore-before-an-object-name-in-python</a></li>
+<li><a href="http://www.zhihu.com/question/19754941">http://www.zhihu.com/question/19754941</a></li>
+</ul>
+
+<h3 id="toc_8">迭代器和生成器</h3>
+
+<p>详细解释：<a href="https://taizilongxu.gitbooks.io/stackoverflow-about-python/content/1/README.html">https://taizilongxu.gitbooks.io/stackoverflow-about-python/content/1/README.html</a></p>
+
+<h3 id="toc_9"><code>*args</code> 和 <code>**kwargs</code></h3>
+
+<p>使用 <code>*args</code> 和 <code>**kwargs</code> 只是为了方便，并没有强制使用它们。</p>
+
+<p>当你不确定函数中将要传入多少个参数时可以使用 <code>*args</code> ，它可以传递任意数量的参数。</p>
+
+<p><code>**kwargs</code> 允许你使用事先未定义的参数名。</p>
+
+<p>你也可混着使用，命名参数首先获得参数值，然后其他所有的参数都传给 <code>*args</code> 和 <code>**kwargs</code>。命名参数在列表的最前端：</p>
+
+<pre><code class="language-python">def table_things(titlestring, **kwargs)
+</code></pre>
+
+<p><code>*args</code> 和 <code>**kwargs</code> 可以同时在函数的定义中，但是 <code>*args</code> 必须在 <code>**kwargs</code> 前面。</p>
+
+<p>在调用函数时也可以使用 <code>*</code> 和 <code>**</code> 语法，例如：</p>
+
+<pre><code class="language-python">&gt;&gt;&gt; def print_three_things(a, b, c):
+...     print &#39;a = {0}, b = {1}, c = {2}&#39;.format(a,b,c)
+...
+&gt;&gt;&gt; mylist = [&#39;aardvark&#39;, &#39;baboon&#39;, &#39;cat&#39;]
+&gt;&gt;&gt; print_three_things(*mylist)
+
+a = aardvark, b = baboon, c = cat
+</code></pre>
+
+<p>它可以传递列表（或元组）并将它们解包。注意必须与它们在函数中的参数相吻合</p>
+
+<p>参考：<a href="http://stackoverflow.com/questions/3394835/args-and-kwargs">http://stackoverflow.com/questions/3394835/args-and-kwargs</a></p>
+]]>
+    </content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[LeetCode 刷题笔记]]></title>
@@ -48,6 +273,20 @@
 </li>
 <li>
 <a href="#toc_9">笔记</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#toc_10">007 Reverse Integer [Easy]</a>
+<ul>
+<li>
+<a href="#toc_11">题目</a>
+</li>
+<li>
+<a href="#toc_12">思路</a>
+</li>
+<li>
+<a href="#toc_13">代码</a>
 </li>
 </ul>
 </li>
@@ -194,6 +433,42 @@ class Solution(object):
 <p><code>tolist(n)</code> 函数式将计算好的数据转化成链表，再纸上拿一个一个例子画一个图就很好理解了。<code>node = ListNode(n % 10)</code> 每一次递归都创建一个节点来存放某一位的数据，<code>tolist(n // 10)</code> 每一次递归都截取一位数字。</p>
 
 <p>非递归的方法类似。</p>
+
+<h2 id="toc_10">007 Reverse Integer [Easy]</h2>
+
+<h3 id="toc_11">题目</h3>
+
+<p>Reverse digits of an integer.</p>
+
+<p>The input is assumed to be a 32-bit signed integer. Your function should return 0 when the reversed integer overflows.</p>
+
+<p>Ex：</p>
+
+<pre><code>Example1: x = 123, return 321
+Example2: x = -123, return -321
+</code></pre>
+
+<h3 id="toc_12">思路</h3>
+
+<p>这道题很简单，但是要考虑转置之后会不会溢出，但是 Python 的 <code>int</code> 是不会溢出的，所以就需要手动判断一下，INT32 最大值是 \(2^{31}-1\)，用十六进制表示就是 <code>0x7FFFFFFF</code>。</p>
+
+<h3 id="toc_13">代码</h3>
+
+<pre><code class="language-python">class Solution(object):
+    def reverse(self, x):
+        &quot;&quot;&quot;
+        :type x: int
+        :rtype: int
+        &quot;&quot;&quot;
+        if x &lt; 0:
+            result = -(int(str(x).lstrip(&#39;-&#39;)[::-1]))
+        else:
+            result = int(str(x)[::-1])
+        
+        if abs(result) &gt; 0x7FFFFFFF:
+            return 0
+        return result
+</code></pre>
 ]]>
     </content>
   </entry>
