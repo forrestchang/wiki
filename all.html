@@ -96,6 +96,88 @@
 <li>
 <a href="#toc_9"><code>*args</code> 和 <code>**kwargs</code></a>
 </li>
+<li>
+<a href="#toc_10">面向切面编程 AOP 和装饰器</a>
+</li>
+<li>
+<a href="#toc_11">鸭子类型</a>
+</li>
+<li>
+<a href="#toc_12">Python 中的重载</a>
+</li>
+<li>
+<a href="#toc_13">新式类和旧式类</a>
+</li>
+<li>
+<a href="#toc_14"><code>__new__</code> 和 <code>__init__</code></a>
+</li>
+<li>
+<a href="#toc_15">单例模式</a>
+<ul>
+<li>
+<a href="#toc_16">什么是单例模式</a>
+</li>
+<li>
+<a href="#toc_17">1. 使用 <code>__new__</code> 方法</a>
+</li>
+<li>
+<a href="#toc_18">2. 共享属性</a>
+</li>
+<li>
+<a href="#toc_19">3. 装饰器版本</a>
+</li>
+<li>
+<a href="#toc_20">4. import 方法</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#toc_21">Python 中的作用域</a>
+</li>
+<li>
+<a href="#toc_22">GIL 线程全局锁</a>
+</li>
+<li>
+<a href="#toc_23">协程</a>
+</li>
+<li>
+<a href="#toc_24">闭包</a>
+</li>
+<li>
+<a href="#toc_25">lambda 函数</a>
+</li>
+<li>
+<a href="#toc_26">Python 函数式编程</a>
+</li>
+<li>
+<a href="#toc_27">Python 里的拷贝</a>
+</li>
+<li>
+<a href="#toc_28">Python 垃圾回收机制</a>
+<ul>
+<li>
+<a href="#toc_29">1. 引用计数</a>
+</li>
+<li>
+<a href="#toc_30">2. 「标记-清除」机制</a>
+</li>
+<li>
+<a href="#toc_31">3. 分代技术</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#toc_32">Python 中 list 的实现</a>
+</li>
+<li>
+<a href="#toc_33">Python 的 is</a>
+</li>
+<li>
+<a href="#toc_34">read/readline/readlines</a>
+</li>
+<li>
+<a href="#toc_35">Python 2 和 3 的区别</a>
+</li>
 </ul>
 </li>
 </ul>
@@ -280,6 +362,277 @@ a = aardvark, b = baboon, c = cat
 <p>它可以传递列表（或元组）并将它们解包。注意必须与它们在函数中的参数相吻合</p>
 
 <p>参考：<a href="http://stackoverflow.com/questions/3394835/args-and-kwargs">http://stackoverflow.com/questions/3394835/args-and-kwargs</a></p>
+
+<h3 id="toc_10">面向切面编程 AOP 和装饰器</h3>
+
+<p>装饰器是一个很著名的设计模式，经常被用于有切面需求的场景，较为经典的有插入日志、性能测试、事务处理等。装饰器是解决这类问题的绝佳设计，有了装饰器，我们就可以抽离出大量函数中与函数本身无关的雷同代码并继续重用。概括来讲，<mark>装饰器的作用就是为已经存在的对象添加额外的功能</mark>。</p>
+
+<p>详细参考：</p>
+
+<ul>
+<li><a href="http://stackoverflow.com/questions/739654/how-can-i-make-a-chain-of-function-decorators-in-python">http://stackoverflow.com/questions/739654/how-can-i-make-a-chain-of-function-decorators-in-python</a></li>
+<li><a href="http://taizilongxu.gitbooks.io/stackoverflow-about-python/content/3/README.html">http://taizilongxu.gitbooks.io/stackoverflow-about-python/content/3/README.html</a></li>
+<li><a href="https://www.zhihu.com/question/24863332">https://www.zhihu.com/question/24863332</a></li>
+</ul>
+
+<p>什么是 AOP：</p>
+
+<blockquote>
+<p>面向切面编程（AOP是Aspect Oriented Program的首字母缩写） ，我们知道，面向对象的特点是继承、多态和封装。而封装就要求将功能分散到不同的对象中去，这在软件设计中往往称为职责分配。实际上也就是说，让不同的类设计不同的方法。这样代码就分散到一个个的类中去了。这样做的好处是降低了代码的复杂程度，使类可重用。<br/><br/>
+但是人们也发现，在分散代码的同时，也增加了代码的重复性。什么意思呢？比如说，我们在两个类中，可能都需要在每个方法中做日志。按面向对象的设计方法，我们就必须在两个类的方法中都加入日志的内容。也许他们是完全相同的，但就是因为面向对象的设计让类与类之间无法联系，而不能将这些重复的代码统一起来。<br/><br/>
+也许有人会说，那好办啊，我们可以将这段代码写在一个独立的类独立的方法里，然后再在这两个类中调用。但是，这样一来，这两个类跟我们上面提到的独立的类就有耦合了，它的改变会影响这两个类。那么，有没有什么办法，能让我们在需要的时候，随意地加入代码呢？<mark>这种在运行时，动态地将代码切入到类的指定方法、指定位置上的编程思想就是面向切面的编程。</mark><br/><br/>
+一般而言，我们管切入到指定类指定方法的代码片段称为切面，而切入到哪些类、哪些方法则叫切入点。有了AOP，我们就可以把几个类共有的代码，抽取到一个切片中，等到需要时再切入对象中去，从而改变其原有的行为。这样看来，AOP其实只是OOP的补充而已。OOP从横向上区分出一个个的类来，而AOP则从纵向上向对象中加入特定的代码。有了AOP，OOP变得立体了。如果加上时间维度，AOP使OOP由原来的二维变为三维了，由平面变成立体了。从技术上来说，AOP基本上是通过代理机制实现的。<br/><br/>
+AOP在编程历史上可以说是里程碑式的，对OOP编程是一种十分有益的补充。</p>
+</blockquote>
+
+<h3 id="toc_11">鸭子类型</h3>
+
+<blockquote>
+<p>当看到一只鸟走起来像鸭子、游泳起来像鸭子、叫起来也像鸭子，那么这只鸟就可以被称为鸭子。</p>
+</blockquote>
+
+<p>我们不关心对象是什么类型，到底是不是鸭子，只关心行为。</p>
+
+<p>比如在 Python 中，有很多 file-like 的东西，StringIO/GzipFile/socket。它们有很多相同的方法，我们把它们都当做文件使用。</p>
+
+<p>鸭子类型在动态语言中经常使用，非常灵活。使得 Python 不必像 Java 那样专门弄一堆设计模式。</p>
+
+<h3 id="toc_12">Python 中的重载</h3>
+
+<p><mark>Python 不支持函数重载</mark>。</p>
+
+<p>函数重载主要是为了解决两个问题：</p>
+
+<ul>
+<li>可变参数类型</li>
+<li>可变参数个数</li>
+</ul>
+
+<p>另外，一个基本的设计原则是，仅仅当两个函数除了参数类型和参数个数不同以外，其功能是完全相同的，此时才使用函数重载，如果两个函数其实功能不同，那么不应当使用重载，而应当使用一个名字不同的函数。</p>
+
+<p>对于情况 1，函数功能相同，但参数类型不同， 在 Python 中根本不需要处理，因为 Python 可以接受任何类型的参数，如果函数功能相同，那么不同的参数类型在 Python 中很可能是相同的代码，没有必要写成两个不同的函数。</p>
+
+<p>对于情况 2，函数功能相同，但参数个数不同，Python 中处理的方式是使用缺省参数。对那些缺少的参数设定为缺省参数即可。</p>
+
+<p>鉴于情况 1 和情况 2 Python 都有解决方案，所以就不需要重载了。</p>
+
+<p>但是 Python 也可以实现重载的功能。</p>
+
+<p>参考：<a href="http://www.zhihu.com/question/20053359">http://www.zhihu.com/question/20053359</a></p>
+
+<h3 id="toc_13">新式类和旧式类</h3>
+
+<p>详细参考：</p>
+
+<ul>
+<li><a href="http://stackoverflow.com/questions/54867/what-is-the-difference-between-old-style-and-new-style-classes-in-python">http://stackoverflow.com/questions/54867/what-is-the-difference-between-old-style-and-new-style-classes-in-python</a></li>
+<li><a href="http://www.cnblogs.com/btchenguang/archive/2012/09/17/2689146.html">http://www.cnblogs.com/btchenguang/archive/2012/09/17/2689146.html</a></li>
+</ul>
+
+<h3 id="toc_14"><code>__new__</code> 和 <code>__init__</code></h3>
+
+<ul>
+<li><code>__new__</code> 是一个静态方法，而 <code>__init__</code> 是一个实例方法</li>
+<li><code>__new__</code> 方法会返回一个创建的实例，而 <code>__init__</code> 什么都不返回</li>
+<li>只有在 <code>__new__</code> 返回一个 cls 实例时后面的 <code>__init__</code> 才能被调用</li>
+<li>当创建一个新实例时调用 <code>__new__</code>，初始化一个实例时用 <code>__init__</code></li>
+</ul>
+
+<p>参考：<a href="http://stackoverflow.com/questions/674304/pythons-use-of-new-and-init">http://stackoverflow.com/questions/674304/pythons-use-of-new-and-init</a></p>
+
+<h3 id="toc_15">单例模式</h3>
+
+<p>Important！</p>
+
+<h4 id="toc_16">什么是单例模式</h4>
+
+<p>单例模式，也叫单子模式，是一种常用的软件设计模式。<mark>在应用这个模式时，单例对象的类必须保证只有一个实例存在。许多时候整个系统只需要拥有一个的全局对象，这样有利于我们协调系统整体的行为。</mark>比如在某个服务器程序中，该服务器的配置信息存放在一个文件中，这些配置数据由一个单例对象统一读取，然后服务进程中的其他对象再通过这个单例对象获取这些配置信息。这种方式简化了在复杂环境下的配置管理。</p>
+
+<p>实现单例模式的思路是：一个类能返回对象一个引用(永远是同一个)和一个获得该实例的方法（必须是静态方法，通常使用getInstance这个名称）；当我们调用这个方法时，如果类持有的引用不为空就返回这个引用，如果类保持的引用为空就创建该类的实例并将实例的引用赋予该类保持的引用；同时我们还将该类的构造函数定义为私有方法，这样其他处的代码就无法通过调用该类的构造函数来实例化该类的对象，只有通过该类提供的静态方法来得到该类的唯一实例。</p>
+
+<p>单例模式在多线程的应用场合下必须小心使用。如果当唯一实例尚未创建时，有两个线程同时调用创建方法，那么它们同时没有检测到唯一实例的存在，从而同时各自创建了一个实例，这样就有两个实例被构造出来，从而违反了单例模式中实例唯一的原则。 解决这个问题的办法是为指示类是否已经实例化的变量提供一个互斥锁(虽然这样会降低效率)。</p>
+
+<h4 id="toc_17">1. 使用 <code>__new__</code> 方法</h4>
+
+<pre><code class="language-python">class Singleton(object):
+    def __new__(cls, *args, **kw):
+        if not hasattr(cls, &#39;_instance&#39;):
+            orig = super(Singleton, cls)
+            cls._instance = orig.__new__(cls, *args, **kw)
+        return cls._instance
+
+class MyClass(Singleton):
+    a = 1
+</code></pre>
+
+<h4 id="toc_18">2. 共享属性</h4>
+
+<p>创建实例时把所有实例的 <code>__dict__</code> 指向同一个字典，这样它们具有相同的属性和方法。</p>
+
+<pre><code class="language-python">class Borg(object):
+    _state = {}
+    def __new__(cls, *args, **kw):
+        ob = super(Borg, cls).__new__(cls, *args, **kw)
+        ob.__dict__ = cls._state
+        return ob
+
+class MyClass2(Borg):
+    a = 1
+</code></pre>
+
+<h4 id="toc_19">3. 装饰器版本</h4>
+
+<pre><code class="language-python">def singleton(cls, *args, **kw):
+    instances = {}
+    def getinstance():
+        if cls not in instances:
+            instances[cls] = cls(*args, **kw)
+        return instances[cls]
+    return getinstance
+
+@singleton
+class MyClass:
+  ...
+</code></pre>
+
+<h4 id="toc_20">4. import 方法</h4>
+
+<pre><code class="language-python"># mysingleton.py
+class My_Singleton(object):
+    def foo(self):
+        pass
+
+my_singleton = My_Singleton()
+
+# to use
+from mysingleton import my_singleton
+
+my_singleton.foo()
+</code></pre>
+
+<p>作为 Python 的模块是天然的单例方法。</p>
+
+<h3 id="toc_21">Python 中的作用域</h3>
+
+<p>Python 中，一个变量的作用域总是由在代码中被赋值的地方所决定的。</p>
+
+<p>当 Python 遇到一个变量的话它会按照如下顺序进行搜索：</p>
+
+<p>本地作用域（Local） -&gt; 当前作用域没嵌入的作用域（Enclosing locals） -&gt; 全局/模块作用域（Global） -&gt; 内置作用域（Built-in）</p>
+
+<h3 id="toc_22">GIL 线程全局锁</h3>
+
+<p>线程全局锁（Global Interpreter Lock），即 Python 为了保证线程安全而采取的独立线程运行的机制，说白了就是一个核只能在同一时间运行一个线程。</p>
+
+<p>解决办法就是多进程和下面的协程（协程也只是单 CPU，但能减小切换代价提升性能）。</p>
+
+<p>参考：<a href="http://www.oschina.net/translate/pythons-hardest-problem">http://www.oschina.net/translate/pythons-hardest-problem</a></p>
+
+<h3 id="toc_23">协程</h3>
+
+<p>待补充</p>
+
+<h3 id="toc_24">闭包</h3>
+
+<p>闭包（Closure）是函数式编程中的重要语法结构。</p>
+
+<p><mark>当一个内嵌函数引用其外部作用域的变量，我们就会得到一个闭包。</mark> 创建一个闭包必须满足以下几点：</p>
+
+<ul>
+<li>必须有一个内嵌函数</li>
+<li>内嵌函数必须引用外部函数的变量</li>
+<li>外部函数的返回值必须是内嵌函数</li>
+</ul>
+
+<h3 id="toc_25">lambda 函数</h3>
+
+<p>Python 中的 lambda 函数即匿名函数。</p>
+
+<p>参考：<a href="https://www.zhihu.com/question/20125256">https://www.zhihu.com/question/20125256</a></p>
+
+<h3 id="toc_26">Python 函数式编程</h3>
+
+<p>详细参考：<a href="http://coolshell.cn/articles/10822.html">http://coolshell.cn/articles/10822.html</a></p>
+
+<h3 id="toc_27">Python 里的拷贝</h3>
+
+<p>引用和 <code>copy()</code>, <code>deepcopy()</code> 的区别：</p>
+
+<pre><code class="language-python">import copy
+a = [1, 2, 3, 4, [&#39;a&#39;, &#39;b&#39;]]  #原始对象
+
+b = a  #赋值，传对象的引用
+c = copy.copy(a)  #对象拷贝，浅拷贝
+d = copy.deepcopy(a)  #对象拷贝，深拷贝
+
+a.append(5)  #修改对象a
+a[4].append(&#39;c&#39;)  #修改对象a中的[&#39;a&#39;, &#39;b&#39;]数组对象
+
+print &#39;a = &#39;, a
+print &#39;b = &#39;, b
+print &#39;c = &#39;, c
+print &#39;d = &#39;, d
+
+输出结果：
+a =  [1, 2, 3, 4, [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;], 5]
+b =  [1, 2, 3, 4, [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;], 5]
+c =  [1, 2, 3, 4, [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]]
+d =  [1, 2, 3, 4, [&#39;a&#39;, &#39;b&#39;]]
+</code></pre>
+
+<h3 id="toc_28">Python 垃圾回收机制</h3>
+
+<p>Python GC 主要使用引用计数（reference counting）来跟踪和回收垃圾。在引用基础上，通过「标记-清除」（mark and sweep）解决容器对象可能产生的循环引用问题，通过「分代回收」（generation collection）以空间换时间的方法提高垃圾回收效率。</p>
+
+<h4 id="toc_29">1. 引用计数</h4>
+
+<p>PyObject 是每个对象必有的内容，其中，<code>ob_refcnt</code> 就是作为引用计数。当一个对象有新的引用时，它的 <code>ob_refcnt</code> 就会增加，当引用它的对象呗删除，它的 <code>ob_refcnt</code> 就会减少。引用计数为 0 时，该对象的生命就结束了。</p>
+
+<p>优点：</p>
+
+<ul>
+<li>简单</li>
+<li>实时性</li>
+</ul>
+
+<p>缺点：</p>
+
+<ul>
+<li>维护引用计数消耗资源</li>
+<li>循环引用</li>
+</ul>
+
+<h4 id="toc_30">2. 「标记-清除」机制</h4>
+
+<p>基本思路是先按需分配，等到没有空闲内存的时候从寄存器和程序栈上的引用出发，遍历以对象为结点、以引用为边构成的图，把所有可以访问到的对象打上标记，然后清扫一遍内存空间，把所有没标记的对象释放。</p>
+
+<h4 id="toc_31">3. 分代技术</h4>
+
+<p>分代回收的整体思想是：将系统中的所有内存块根据其存活时间划分为不同的集合，每个集合就成为一个「代」，垃圾收集频率随着「代」存货时间的增大而减小，存货时间通常利用经过几次垃圾回收来度量。</p>
+
+<p>Python 默认定义了三代对象集合，索引数越大，对象存货时间越长。</p>
+
+<p>举例：当某些内存块 M 经过了 3 此垃圾收集的清洗之后还存活时，我们就将内存块 M 划分到一个集合 A 中去，而新分配的内存都划分到集合 B 中去。当垃圾收集开始工作时，大多数情况都只对集合 B 进行垃圾回收，而对集合 A 进行垃圾回收要隔相当长一段时间后才进行，这就使得垃圾收集机制需要处理的内存减少了，效率自然就提高了。在这个过程中，集合 B 中的某些内存块由于存货时间长而会被转移到集合 A 中，当然，集合 A 中实际上也存在一些垃圾，这些垃圾的回收会因为这种分代机制而被延迟。</p>
+
+<h3 id="toc_32">Python 中 list 的实现</h3>
+
+<p>详细参考：<a href="http://www.jianshu.com/p/J4U6rR">Python 中 List 的实现</a></p>
+
+<h3 id="toc_33">Python 的 is</h3>
+
+<p><code>is</code> 是对比地址，<code>==</code> 是对比值</p>
+
+<h3 id="toc_34">read/readline/readlines</h3>
+
+<ul>
+<li>read 读取整个文件</li>
+<li>readline 读取下一行，使用生成器的方式</li>
+<li>readlines 读取整个文件到一个迭代器以供我们遍历</li>
+</ul>
+
+<h3 id="toc_35">Python 2 和 3 的区别</h3>
+
+<p>详细参考：<a href="http://chenqx.github.io/2014/11/10/Key-differences-between-Python-2-7-x-and-Python-3-x/">http://chenqx.github.io/2014/11/10/Key-differences-between-Python-2-7-x-and-Python-3-x/</a></p>
 
                             
                         </div>
