@@ -3,7 +3,7 @@
   <title><![CDATA[Wiki]]></title>
   <link href="http://forresthcang.com/wiki/atom.xml" rel="self"/>
   <link href="http://forresthcang.com/wiki/"/>
-  <updated>2017-03-11T16:13:45+08:00</updated>
+  <updated>2017-03-12T10:43:52+08:00</updated>
   <id>http://forresthcang.com/wiki/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -2234,6 +2234,7 @@ Connection: close
             vals.push(v)
         else:
             vals.push(s)
+    return vals[0]
 </code></pre>
 
 <h3 id="toc_9">1.3.2 集合数据类型的实现</h3>
