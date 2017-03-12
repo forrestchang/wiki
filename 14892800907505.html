@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+         《Python 核心编程》笔记 · 网络编程 - Wiki 
+    </title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+
+    <link rel="stylesheet" type="text/css" href="asset/yue.css">
+    <link rel="stylesheet" type="text/css" href="asset/main.css">
+    <link rel="stylesheet" type="text/css" href="asset/tomorrow.css">
+
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Wiki">
+
+    <script src="asset/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+<body>
+    <header class="yue site-header">
+        <div class="wrapper">
+            <a class="site-title" href="index.html">Wiki</a>
+            <nav class="site-nav">
+                <a href="#" class="menu-icon">
+                    
+                    <svg viewBox="0 0 18 15">
+                        <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"
+                        />
+                        <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"
+                        />
+                        <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"
+                        />
+                    </svg>
+
+                </a>
+                <div class="trigger">
+                    
+                        <a class="page-link" href="index.html">INDEX</a>
+                    
+                        <a class="page-link" href="archives.html">ARCHIVES</a>
+                    
+                </div>
+            </nav>
+        </div>
+    </header>
+</body>
+
+</html> <div class="page-content yue">
+    <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+            <header class="post-header">
+                <h1 class="post-title" itemprop="name headline">《Python 核心编程》笔记 · 网络编程</h1>
+            </header>
+            <div class="post-content" itemprop="articleBody">
+                <ul>
+<li>
+<a href="#toc_0">2.3 套接字</a>
+<ul>
+<li>
+<a href="#toc_1">2.3.1 套接字</a>
+</li>
+<li>
+<a href="#toc_2">2.3.2 套接字地址：主机-端口对</a>
+</li>
+<li>
+<a href="#toc_3">2.3.3 面向连接的套接字与无连接的套接字</a>
+<ul>
+<li>
+<a href="#toc_4">1. 面向连接的套接字</a>
+</li>
+<li>
+<a href="#toc_5">2. 无连接的套接字</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href="#toc_6">2.4 Python 中的网络编程</a>
+<ul>
+<li>
+<a href="#toc_7">2.4.1 socket() 模块函数</a>
+</li>
+<li>
+<a href="#toc_8">2.4.2 套接字对象（内置）方法</a>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<h2 id="toc_0">2.3 套接字</h2>
+
+<p>本节内容：</p>
+
+<ul>
+<li>介绍套接字（socket），以及其背景知识</li>
+<li>讨论各种类型的套接字</li>
+<li>如何利用它们与运行在不同计算机上的进程相互通信</li>
+</ul>
+
+<h3 id="toc_1">2.3.1 套接字</h3>
+
+<p>套接字是计算机网络数据结构，它体现了上节中所描述得「通信端点」<sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>的概念。在任何类型的通信开始之前，网络应用程序必须创建套接字。</p>
+
+<p>套接字最初是为同一主机上的应用程序所创建，使得主机上运行的一个进程与另一个运行的进程进行通信，这就是所谓的<strong>进程间通信</strong>（Inter Process Communication，IPC）。有两种类型的套接字：基于文件的和面向网络的。</p>
+
+<p>UNIX 套接字使我们所讲的套接字的第一个家族，并且拥有一个「家族名字」AF_UNIX（又名 AF_LOCAL，在 POSIX1.g 标准中指定），它代表地址家族（address family）：UNIX。包括 Python 在内的大多数受欢迎的平台都使用术语「地址家族」及其所写 AF。</p>
+
+<p>因为两个进程运行在同一台计算机上，所以这些套接字都是基于文件的，这意味着文件系统支持它们的底层基础结构。</p>
+
+<p>第二种类型的套接字是基于网络的，它也有自己的家族名字 AF_INET，或者「地址家族」：因特网。另一个地址家族 AF_INET6 用于第 6 版因特网协议（IPv6）寻址。</p>
+
+<h3 id="toc_2">2.3.2 套接字地址：主机-端口对</h3>
+
+<p>一个网络地址由主机名和端口号组成，而这是网络通信所需要的。</p>
+
+<p>有效地端口号范围为 0~65536（小于 1024 的端口号预留给了系统）。</p>
+
+<p>可以查看 <code>\etc\services</code> 文件查看预留端口号的列表（以及服务器、协议和套接字类型）。</p>
+
+<h3 id="toc_3">2.3.3 面向连接的套接字与无连接的套接字</h3>
+
+<h4 id="toc_4">1. 面向连接的套接字</h4>
+
+<p>不管采用哪种地址家族，都有两种不同风格的套接字连接。第一种是面向连接的，这意味着在通信前必须先建立一个连接。这种类型的通信业称为「虚拟电路」或「流套接字」。</p>
+
+<p>面向连接的通信提供序列化的、可靠的和不重复的数据交互，而没有记录边界。这基本上意味着每条消息可以拆分成多个片段，并且每条消息片段都确保能够达到目的，然后按照顺序将它们组合到一起，最后将完整的消息传递给正在等待的应用程序。</p>
+
+<p>实现这种连接类型的主要协议是「传输控制协议」（TCP 协议）。为了创建 TCP 套接字，必须使用 SOCK_STREAM 作为套接字类型。TCP 套接字的名字 SOCK_STREAM 是基于流套接字的一种表示。因为这些套接字（AF_INET） 的网络版本使用「因特网协议」（IP） 来搜寻网络中的主机，所以整个系统通常结合着两种协议（TCP 和 IP） 来进行。</p>
+
+<h4 id="toc_5">2. 无连接的套接字</h4>
+
+<p>与虚拟电路形成鲜明对比的是数据报类型的套接字，它是一种无连接的套接字。这意味着，在通信开始之前不需要建立连接。</p>
+
+<p>此时，在数据传输的过程中并无法保证它的顺序性、可靠性或重复性。然而，数据报确实保存了记录边界，这就意味着消息是以整体发送的，而非首先分成多个片段。</p>
+
+<p>由于面向连接的的套接字所提供的保证，因此它们的设置以及对虚拟电路连接的维护需要大量的开销。数据报不需要这些，所以它的成本更加低廉。因此，它们通常能提供更好的性能。</p>
+
+<p>实现这种无连接类型的主要协议是「用户数据报协议」（UDP）。为了创建 UDP 套接字，必须使用 SOCK_DGRAM （来源于单词 datagram）作为套接字类型。因为这些套接字也使用因特网协议来寻找网络中的主机，所以这个系统也有一个更加普通的名字，即 UDP/IP。</p>
+
+<h2 id="toc_6">2.4 Python 中的网络编程</h2>
+
+<h3 id="toc_7">2.4.1 socket() 模块函数</h3>
+
+<p>要创建套接字，必须使用 socket.socket() 函数，它的一般语法如下：</p>
+
+<pre><code class="language-python">socket(socket_family, socket_type, protocol=0)
+</code></pre>
+
+<p>其中，<code>socket_family</code> 是 AF_UNIX 或 AF_INET，<code>socket_type</code> 是 SOCKET_STREAM 或 SOCK_DGRAM。<code>protocol</code> 通常省略，默认为 0。</p>
+
+<pre><code class="language-python">tcpSock = socket.socket(socket.AF_INET, sock.SOCK_STREAM)
+udpSock = socket.socket(socket.AF_INET, sock.SOCK_DGRAM)
+</code></pre>
+
+<p>一旦有了一个套接字对象，那么使用套接字对象的方法将可以进行进一步交互。</p>
+
+<h3 id="toc_8">2.4.2 套接字对象（内置）方法</h3>
+
+<ul>
+<li>服务器套接字方法
+
+<ul>
+<li>s.bind(): 将地址（主机名、端口号对）绑定到套接字上</li>
+<li>s.listen(): 设置并启动 TCP 监听器</li>
+<li>s.accept(): 被动接受 TCP 客户端连接，一直等待知道连接到达</li>
+</ul></li>
+<li>客户端套接字方法
+
+<ul>
+<li>s.connect(): 主动发起 TCP 服务器连接</li>
+<li>s.connect_ex(): connect() 的扩展版本，此时会以错误码的形式返回问题，而不是抛出一个异常</li>
+</ul></li>
+<li>普通套接字方法
+
+<ul>
+<li>s.recv(): 接受 TCP 消息</li>
+<li>s.recv_into(): 接受 TCP 消息到指定的缓冲区</li>
+<li>s.send(): 发送 TCP 消息</li>
+<li>s.sendall(): 完整地发送 TCP 消息</li>
+<li>s.recvfrom(): 接受 UDP 消息</li>
+<li>s.recvfrom_into(): 接收 UDP 消息到指定的缓冲区</li>
+<li>s.sendto(): 发送 UDP 消息</li>
+<li>s.getpeername(): 连接到套接字（TCP） 的远程地址</li>
+<li>s.getsockname(): 当前套接字地址</li>
+<li>s.getsockopt(): 返回给定套接字选项的值</li>
+<li>s.setsockopt(): 设置给定套接字选项的值</li>
+<li>s.shutdown(): 关闭连接</li>
+<li>s.close(): 关闭套接字</li>
+<li>s.detach(): 在未关闭文件描述符的情况下关闭套接字，返回文件描述符</li>
+<li>s.ioctl(): 控制套接字的模式（仅支持 Windows）</li>
+</ul></li>
+<li>面向阻塞的套接字方法
+
+<ul>
+<li>s.setblocking(): 设置套接字的阻塞或非阻塞模式</li>
+<li>s.settimeout(): 设置阻塞套接字操作的超时时间</li>
+<li>s.gettimeout(): 获取阻塞套接字操作的超时时间</li>
+</ul></li>
+<li>面向文件的套接字方法
+
+<ul>
+<li>s.fileno(): 套接字文件描述符</li>
+<li>s.makefile(): 创建于套接字关联的文件对象</li>
+</ul></li>
+<li>数据属性
+
+<ul>
+<li>s.family: 套接字家族</li>
+<li>s.type: 套接字类型</li>
+<li>s.proto: 套接字协议</li>
+</ul></li>
+</ul>
+
+<div class="footnotes">
+<hr/>
+<ol>
+
+<li id="fn1">
+<p>在服务器响应客户端请求之前，必须进行一些初步的设置流程来为之后的工作准备。首先会创造一个通信端点，它能够使服务器监听请求。&nbsp;<a href="#fnref1" rev="footnote">&#8617;</a></p>
+</li>
+
+</ol>
+</div>
+
+            </div>
+            <div>
+                <script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://tisogas-wiki.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+                
+                
+            </div>
+        </article>
+    </div>
+</div>  <footer id="footer" class="yue">
+    <div class="wrapper">
+        <p>© Copyright 2014 - 2017 by <a href="https://twitter.com/Tisoga">@Tisoga</a> and powered by <a href="http://zh.mweb.im/">Mweb</a></p>
+    </div>
+</footer>
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({TeX: { equationNumbers: { autoNumber: "AMS" } }});</script>
