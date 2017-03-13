@@ -3,12 +3,22 @@
   <title><![CDATA[Wiki]]></title>
   <link href="http://forresthcang.com/wiki/atom.xml" rel="self"/>
   <link href="http://forresthcang.com/wiki/"/>
-  <updated>2017-03-12T10:43:52+08:00</updated>
+  <updated>2017-03-12T13:51:57+08:00</updated>
   <id>http://forresthcang.com/wiki/</id>
   <author>
     <name><![CDATA[]]></name>
   </author>
   <generator uri="http://www.coderforart.com/">CoderForArt</generator>
+  
+  <entry>
+    <title type="html"><![CDATA[面试复习笔记]]></title>
+    <link href="http://forresthcang.com/wiki/14893300995528.html"/>
+    <updated>2017-03-12T22:48:19+08:00</updated>
+    <id>http://forresthcang.com/wiki/14893300995528.html</id>
+    <content type="html">
+<![CDATA[]]>
+    </content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[《Python 核心编程》笔记 · 网络编程]]></title>
