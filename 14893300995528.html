@@ -56,7 +56,35 @@
                 <h1 class="post-title" itemprop="name headline">面试复习笔记</h1>
             </header>
             <div class="post-content" itemprop="articleBody">
-                
+                <ul>
+<li>
+<a href="#toc_0">Docker</a>
+<ul>
+<li>
+<a href="#toc_1">Vagrant</a>
+</li>
+<li>
+<a href="#toc_2">Docker</a>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<h2 id="toc_0">Docker</h2>
+
+<h3 id="toc_1">Vagrant</h3>
+
+<p>Vagrant 是一款用来构建虚拟开发环境的工具，非常适合 php/python/ruby/java 这类语言开发 web 应用，“代码在我机子上运行没有问题”这种说辞将成为历史。</p>
+
+<p>我们可以通过 Vagrant 封装一个 Linux 的开发环境，分发给团队成员。成员可以在自己喜欢的桌面系统（Mac/Windows/Linux）上开发程序，代码却能统一在封装好的环境里运行，非常霸气。</p>
+
+<h3 id="toc_2">Docker</h3>
+
+<p>Docker是一种增加了高级API的LinuX Container（LXC）技术，提供了能够独立运行Unix进程的轻量级虚拟化解决方案。它提供了一种在安全、可重复的环境中自动部署软件的方式。Docker使用标准化容器的概念，能够容纳软件组件及其依赖关系——二进制文件、类库、配置文件、脚本、Virtualenv、jar包、gem包、原始码等——而且可以在任何支持cgroups的64位（针对x64）Linux内核上运行。</p>
+
+<p>Linux Container，是一个轻量级系统虚拟化机制。有时被人称为：“chroot on steroids”，你也可以拿chroot来理解这个概念。而Docker是用go语言实现的Linux Container包装。</p>
+
             </div>
             <div>
                 <script>
