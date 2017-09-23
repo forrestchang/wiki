@@ -3,7 +3,7 @@
 
 <head>
     <title>
-         Index - Wiki 
+         《流利的 Python》笔记 - Wiki 
     </title>
 
     <meta charset="UTF-8">
@@ -53,55 +53,41 @@
 
 </html> <div class="page-content yue">
     <div class="wrapper">
-        <article class="post">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
             <header class="post-header">
-                <h1 class="post-title">Index</h1>
+                <h1 class="post-title" itemprop="name headline">《流利的 Python》笔记</h1>
             </header>
-            <div class="post-content">
-                <p>Just some notes here.</p>
+            <div class="post-content" itemprop="articleBody">
+                <h2 id="toc_0">第 16 章：协程</h2>
 
-<h2 id="toc_0">Programming Languages</h2>
+<p>从句法上来看，协程与生成器类似，都是定义体中包含 yield 关键字的函数。但在协程中，yield 通常出现在表达式的右边（例如 <code>datum = yield</code>），可以产出值，也可以不产出——如果 yield 关键字后面没有表达式，那么生成器产出 None。</p>
 
-<ul>
-<li>Python
+            </div>
+            <div>
+                <script>
 
-<ul>
-<li><a href="14892052747708.html">Python 面试笔记</a></li>
-<li><a href="14872260244406.html">Python Cookbook Notes</a></li>
-<li><a href="14871569977647.html">Python 风格指南笔记</a></li>
-<li><a href="mweblib://14824097975366">virtualenv 相关笔记</a></li>
-</ul></li>
-</ul>
-
-<h2 id="toc_1">Network</h2>
-
-<ul>
-<li><a href="14889309726832.html">计算机网络</a></li>
-</ul>
-
-<h2 id="toc_2">Algorithms &amp; Data Structures</h2>
-
-<ul>
-<li><a href="14887608416607.html">《算法》笔记</a></li>
-<li><a href="mweblib://14891114444883">LeetCode 刷题笔记</a></li>
-</ul>
-
-<h2 id="toc_3">Readings</h2>
-
-<ul>
-<li><a href="mweblib://14886163941964">March 2017 Reading Notes</a></li>
-</ul>
-
-<h2 id="toc_4">Linux</h2>
-
-<ul>
-<li><a href="http://forrestchang.com/old-blog/pro-git.html">Pro Git Notes</a></li>
-</ul>
-
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://tisogas-wiki.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+                
+                
             </div>
         </article>
     </div>
-</div> <footer id="footer" class="yue">
+</div>  <footer id="footer" class="yue">
     <div class="wrapper">
         <p>© Copyright 2014 - 2017 by <a href="https://twitter.com/Tisoga">@Tisoga</a> and powered by <a href="http://zh.mweb.im/">Mweb</a></p>
     </div>
