@@ -175,15 +175,38 @@ IN VN BD FR DE JP CN ID BR PH EG NG ET MX IR RU US CD PK TR
 
 <p>Future 是 concurrent.futures 模块和 asyncio 包的重要组件，作为这两个库的用户，我们有时却见不到 Future。</p>
 
-<p>从 Python 3.4 起，标准库中有两个名为 Future 的类：concurrent.futures.Future 和 asyncio.Future。这两个雷的作用相同：两个 Future 类的实例都表示可能已经完成或者尚未完成的延迟计算。这与 Twisted 引擎中的 Deferred 类、Tornado 框架中的 Future 类，以及多个 JavaScript 库中的 Promise 对象类似。</p>
+<p>从 Python 3.4 起，标准库中有两个名为 Future 的类：concurrent.futures.Future 和 asyncio.Future。这两个类的作用相同：<strong>两个 Future 类的实例都表示可能已经完成或者尚未完成的延迟计算</strong>。这与 Twisted 引擎中的 Deferred 类、Tornado 框架中的 Future 类，以及多个 JavaScript 库中的 Promise 对象类似。</p>
 
-<p>Future 封装待完成的操作，可以放入队列，完成的状态可以查询，得到结果（或抛出异常），后可以获取结果（或异常）。</p>
+<p><strong>Future 封装待完成的操作，可以放入队列，完成的状态可以查询，得到结果（或抛出异常），后可以获取结果（或异常）</strong><sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>。</p>
 
-<p>我们要记住一件事：通常情况下自己不应该创建 Future，而只能由并发框架（concurrent.futures 或 asyncio）实例化。原因很简单：Future 表示终将发生的事情，而确定某件事会发生的卫衣方式是执行的时间已经排定。因此，只有排定把某事件交给 concurrent.futures.Executor 子类处理时，才会创建 concurrent.futures.Future 实例。例如，Executor.submit() 方法的参数时一个可调用的对象，调用这个方法后会为传入的可调用对象排期，并返回一个 Future。</p>
+<p>我们要记住一件事：通常情况下自己不应该创建 Future，而只能由并发框架（concurrent.futures 或 asyncio）实例化。原因很简单：Future 表示终将发生的事情，而<strong>确定某件事会发生的唯一方式是执行的时间已经排定</strong><sup id="fnref2"><a href="#fn2" rel="footnote">2</a></sup>。因此，只有排定把某事件交给 concurrent.futures.Executor 子类处理时，才会创建 concurrent.futures.Future 实例。例如，Executor.submit() 方法的参数时一个可调用的对象，调用这个方法后会为传入的可调用对象排期，并返回一个 Future。</p>
 
 <p>客户端代码不应该改变 Future 的状态，并发框架在 Future 表示的延迟计算结束后会改变 Future 的状态，而我们无法控制计算何时结束。</p>
 
 <p>这两种 Future 都有 .done() 方法，这个方法不阻塞，返回值是布尔值，指明 Future 链接的可调用对象是否已经执行。客户端代码通常不会询问 Future 是否运行结束，而是会等待通知。因此，两个 Future 类都有 .add_done_callback() 方法：这个方法只有一个参数，类型是可调用的对象，Future 运行结束后会调用指定的可调用对象。</p>
+
+<p>此外，还有 .result() 方法。在 Future 运行结束后调用的话，这个方法在两个 Future 类中的作用相同：返回可调用对象的结果，或者重新抛出执行可调用的对象时抛出的异常。</p>
+
+<p>但是，如果 Future 没有运行结束，result 方法在两个 Future 类中的行为相差很大。对于 concurrenct.futures.Future 实例来说，调用 f.result() 方法会阻塞调用方所在的线程，直到有结果可返回。此时，result 方法可以接收可选的 timeout 参数，如果在指定的时间内 Future 没有运行完毕，会抛出 TimeoutError 异常。asyncio.Future.result 方法不支持设定超时时间，在那个库中获取 Future 的结果最好使用 yield from 结构。不过，对 concurrent.futures.Future 实例不能这么做。</p>
+
+<p>这两个库中有几个函数会返回 Future，其他函数则使用 Future，以用户易于理解的方式实现自身。使用 Executor.map 方法属于后者：返回值是一个迭代器，迭代器的 <code>__next__</code> 方法调用各个 Future 的 result 方法，因此我们得到的是各个 Future 的结果，而非 Future 本身。</p>
+
+<p>为了从使用的角度理解 Future，我们可以使用 concurrent.futures.as_completed 函数重写上节的示例，这个函数的参数是一个 Future 列表，返回值是一个迭代器，在 Future 运行结束后产出 Future。</p>
+
+<div class="footnotes">
+<hr/>
+<ol>
+
+<li id="fn1">
+<p>什么是脚注。&nbsp;<a href="#fnref1" rev="footnote">&#8617;</a></p>
+</li>
+
+<li id="fn2">
+<p>something interesting.&nbsp;<a href="#fnref2" rev="footnote">&#8617;</a></p>
+</li>
+
+</ol>
+</div>
 
             </div>
             <div>
