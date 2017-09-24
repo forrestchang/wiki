@@ -3,7 +3,7 @@
   <title><![CDATA[Wiki]]></title>
   <link href="http://forresthcang.com/wiki/atom.xml" rel="self"/>
   <link href="http://forresthcang.com/wiki/"/>
-  <updated>2017-09-22T13:17:32+08:00</updated>
+  <updated>2017-09-23T21:07:48+08:00</updated>
   <id>http://forresthcang.com/wiki/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -16,9 +16,132 @@
     <updated>2017-09-20T13:35:48+08:00</updated>
     <id>http://forresthcang.com/wiki/15058857487655.html</id>
     <content type="html">
-<![CDATA[<h2 id="toc_0">第 16 章：协程</h2>
+<![CDATA[<h2 id="toc_0">第 17 章：使用 futures 处理并发</h2>
 
-<p>从句法上来看，协程与生成器类似，都是定义体中包含 yield 关键字的函数。但在协程中，yield 通常出现在表达式的右边（例如 <code>datum = yield</code>），可以产出值，也可以不产出——如果 yield 关键字后面没有表达式，那么生成器产出 None。</p>
+<blockquote>
+<p>抨击线程的往往是系统程序员，他们考虑的使用场景对一般的应用程序员来说，也许一生都不会遇到……应用程序员遇到的使用场景，99% 的情况下只需知道如何派生一堆独立的线程，然后用队列收集结果。—— Michele Simionato</p>
+</blockquote>
+
+<p>本章主要讨论 Python 3.2 引入的 concurrent.futures 模块，这个库封装了前面引文中 Michele 所述的模式，特别易于使用。</p>
+
+<p>这一章还会介绍 futures 的概念，future 指一种对象，表示异步执行的操作。这个概念的作用很大，是 corcurrent.futures 模块和 asyncio 包的基础。</p>
+
+<h3 id="toc_1">示例：网络下载的三种风格</h3>
+
+<p>为了高效处理网络 I/O，需要使用并发，因为网络有很高的延迟，所以为了不浪费 CPU 周期去等待，最好在收到网络相应之前做些其他事情。</p>
+
+<p>为了通过代码说明这一点，我写了三个示例程序：从网上下载 20 个国家的国旗图像。第一个示例程序 flag.py 是依序下载的：下载完一个图像，并将其保存在硬盘中之后，才请求下载下一个图像；另外两个脚本是并发下载的：几乎同时请求所有图像，每下载完一个文件就保存一个文件。flags_threadpool.py 脚本使用 concurrent.futures 模块，而 flags_asyncio.py 脚本是会用 asyncio 包。</p>
+
+<h4 id="toc_2">依序下载的脚本</h4>
+
+<pre><code class="language-python"># flags.py：依序下载的脚本；另外两个脚本会重用其中几个函数
+
+import os
+import time
+import sys
+
+import requests
+
+POP20_CC = (&#39;CN IN US ID BR PK NG BD RU JP &#39;
+            &#39;MX PH VN ET EG DE IR TR CD FR&#39;).split()
+
+BASE_URL = &#39;http://flupy.org/data/flags&#39;
+
+DEST_DIR = &#39;/Users/jiayuan/Downloads/&#39;
+
+
+def save_flag(img, filename):
+    path = os.path.join(DEST_DIR, filename)
+    with open(path, &#39;wb&#39;) as fp:
+        fp.write(img)
+        
+
+def get_flag(cc):
+    url = &#39;{}/{cc}/{cc}.gif&#39;.format(BASE_URL, cc=cc.lower())
+    resp = requests.get(url)
+    return resp.content
+
+
+def show(text):
+    print(text, end=&#39; &#39;)
+    sys.stdout.flush()
+    
+    
+def download_many(cc_list):
+    for cc in sorted(cc_list):
+        image = get_flag(cc)
+        show(cc)
+        save_flag(image, cc.lower() + &#39;.gif&#39;)
+    return len(cc_list)
+
+
+def main(download_many):
+    t0 = time.time()
+    count = download_many(POP20_CC)
+    elapsed = time.time() - t0
+    msg = &#39;\n{} flags downloads in {:.2f}s&#39;
+    print(msg.format(count, elapsed))
+</code></pre>
+
+<p>测试结果：</p>
+
+<pre><code class="language-python">&gt;&gt;&gt; main(download_many)
+BD BR CD CN DE EG ET FR ID IN IR JP MX NG PH PK RU TR US VN 
+20 flags downloads in 30.90s
+</code></pre>
+
+<h4 id="toc_3">使用 concurrent.futures 模块下载</h4>
+
+<p>concurrent.futures 模块的主要特色是 ThreadPoolExecutor 和 ProcessPollExecutor 类，这两个雷实现的接口能分别在不同的线程或进程中执行可调用的对象。这两个雷子啊内部维护这一个工作线程或进程池，以及要执行的任务队列。不过，这个接口抽象层级很高，像下载国旗这种简单的案例，无需关心任何实现细节。</p>
+
+<pre><code class="language-python"># flags_threadpool.py: 使用 futures.ThreadPoolExecutor 类实现多线程下载的脚本
+from concurrent import futures
+
+MAX_WORKERS = 20
+
+
+def download_one(cc):
+    image = get_flag(cc)
+    show(cc)
+    save_flag(image, cc.lower() + &#39;.gif&#39;)
+    return cc
+
+
+def download_many(cc_list):
+    workers = min(MAX_WORKERS, len(cc_list))
+    with futures.ThreadPoolExecutor(workers) as executor:
+        res = executor.map(download_one, sorted(cc_list)) # 1
+        
+    return len(list(res)) # 2
+</code></pre>
+
+<p>测试结果：</p>
+
+<pre><code class="language-python">&gt;&gt;&gt; main(download_many)
+IN VN BD FR DE JP CN ID BR PH EG NG ET MX IR RU US CD PK TR 
+20 flags downloads in 70.05s
+</code></pre>
+
+<p>关于这个示例的一些注解：</p>
+
+<ul>
+<li>1）map 方法的作用与内置的 map 函数类似，不过 download_one 函数会在多个线程中并发调用；map 方法返回一个生成器，因此可以迭代，获取各个函数返回的值。</li>
+<li>2）返回获取的结果数量；如果有线程抛出异常，异常会在这里抛出，这与隐式调用 next() 函数从迭代器中获取相应的返回值一样</li>
+</ul>
+
+<h4 id="toc_4">Future 在哪里</h4>
+
+<p>Future 是 concurrent.futures 模块和 asyncio 包的重要组件，作为这两个库的用户，我们有时却见不到 Future。</p>
+
+<p>从 Python 3.4 起，标准库中有两个名为 Future 的类：concurrent.futures.Future 和 asyncio.Future。这两个雷的作用相同：两个 Future 类的实例都表示可能已经完成或者尚未完成的延迟计算。这与 Twisted 引擎中的 Deferred 类、Tornado 框架中的 Future 类，以及多个 JavaScript 库中的 Promise 对象类似。</p>
+
+<p>Future 封装待完成的操作，可以放入队列，完成的状态可以查询，得到结果（或抛出异常），后可以获取结果（或异常）。</p>
+
+<p>我们要记住一件事：通常情况下自己不应该创建 Future，而只能由并发框架（concurrent.futures 或 asyncio）实例化。原因很简单：Future 表示终将发生的事情，而确定某件事会发生的卫衣方式是执行的时间已经排定。因此，只有排定把某事件交给 concurrent.futures.Executor 子类处理时，才会创建 concurrent.futures.Future 实例。例如，Executor.submit() 方法的参数时一个可调用的对象，调用这个方法后会为传入的可调用对象排期，并返回一个 Future。</p>
+
+<p>客户端代码不应该改变 Future 的状态，并发框架在 Future 表示的延迟计算结束后会改变 Future 的状态，而我们无法控制计算何时结束。</p>
+
+<p>这两种 Future 都有 .done() 方法，这个方法不阻塞，返回值是布尔值，指明 Future 链接的可调用对象是否已经执行。客户端代码通常不会询问 Future 是否运行结束，而是会等待通知。因此，两个 Future 类都有 .add_done_callback() 方法：这个方法只有一个参数，类型是可调用的对象，Future 运行结束后会调用指定的可调用对象。</p>
 ]]>
     </content>
   </entry>
@@ -240,7 +363,7 @@
 
 <p>所有的变量都可以理解为内存中一个对象的引用。</p>
 
-<p>类型是属于对象的，而不是变量。而对象有两种，「可更改」（mutable） 与「不可更改」（inmutable） 对象。<mark>在 Python 中，strings, tuples, numbers 是不可更改的对象，list, dict 则是可以更改的对象。</mark></p>
+<p>类型是属于对象的，而不是变量。而对象有两种，「可更改」（mutable） 与「不可更改」（inmutable） 对象。==在 Python 中，strings, tuples, numbers 是不可更改的对象，list, dict 则是可以更改的对象。</p>
 
 <p>当一个引用传递给函数的时候，函数自动复制一份引用，这个函数里的引用就和外部的引用没有关系了。而在函数内的引用指向的是可变对象的时候，对它的操作就和定位了指针地址一样，可以直接在内存里进行修改。</p>
 
