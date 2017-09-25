@@ -75,7 +75,7 @@
 
 <p>本章主要讨论 Python 3.2 引入的 concurrent.futures 模块，这个库封装了前面引文中 Michele 所述的模式，特别易于使用。</p>
 
-<p>这一章还会介绍 futures 的概念，future 指一种对象，表示异步执行的操作。这个概念的作用很大，是 corcurrent.futures 模块和 asyncio 包的基础。</p>
+<p>这一章还会介绍 futures 的概念，futures 指一种对象，表示异步执行的操作。这个概念的作用很大，是 corcurrent.futures 模块和 asyncio 包的基础。</p>
 
 <h3 id="toc_1">示例：网络下载的三种风格</h3>
 
@@ -143,7 +143,7 @@ BD BR CD CN DE EG ET FR ID IN IR JP MX NG PH PK RU TR US VN
 
 <h4 id="toc_3">使用 concurrent.futures 模块下载</h4>
 
-<p>concurrent.futures 模块的主要特色是 ThreadPoolExecutor 和 ProcessPollExecutor 类，这两个雷实现的接口能分别在不同的线程或进程中执行可调用的对象。这两个雷子啊内部维护这一个工作线程或进程池，以及要执行的任务队列。不过，这个接口抽象层级很高，像下载国旗这种简单的案例，无需关心任何实现细节。</p>
+<p>concurrent.futures 模块的主要特色是 ThreadPoolExecutor 和 ProcessPollExecutor 类，这两个类实现的接口能分别在不同的线程或进程中执行可调用的对象。这两个雷子啊内部维护这一个工作线程或进程池，以及要执行的任务队列。不过，这个接口抽象层级很高，像下载国旗这种简单的案例，无需关心任何实现细节。</p>
 
 <pre><code class="language-python"># flags_threadpool.py: 使用 futures.ThreadPoolExecutor 类实现多线程下载的脚本
 from concurrent import futures
@@ -180,19 +180,19 @@ IN VN BD FR DE JP CN ID BR PH EG NG ET MX IR RU US CD PK TR
 <li>2）返回获取的结果数量；如果有线程抛出异常，异常会在这里抛出，这与隐式调用 next() 函数从迭代器中获取相应的返回值一样</li>
 </ul>
 
-<h4 id="toc_4">Future 在哪里</h4>
+<h4 id="toc_4">futures 在哪里</h4>
 
-<p>Future 是 concurrent.futures 模块和 asyncio 包的重要组件，作为这两个库的用户，我们有时却见不到 Future。</p>
+<p>futures 是 concurrent.futures 模块和 asyncio 包的重要组件，作为这两个库的用户，我们有时却见不到 Future。</p>
 
-<p>从 Python 3.4 起，标准库中有两个名为 Future 的类：concurrent.futures.Future 和 asyncio.Future。这两个类的作用相同：<strong>两个 Future 类的实例都表示可能已经完成或者尚未完成的延迟计算</strong>。这与 Twisted 引擎中的 Deferred 类、Tornado 框架中的 Future 类，以及多个 JavaScript 库中的 Promise 对象类似。</p>
+<p>从 Python 3.4 起，标准库中有两个名为 futures 的类：concurrent.futures.Future 和 asyncio.Future。这两个类的作用相同：<strong>两个 futures 类的实例都表示可能已经完成或者尚未完成的延迟计算</strong>。这与 Twisted 引擎中的 Deferred 类、Tornado 框架中的 Future 类，以及多个 JavaScript 库中的 Promise 对象类似。</p>
 
-<p><strong>Future 封装待完成的操作，可以放入队列，完成的状态可以查询，得到结果（或抛出异常），后可以获取结果（或异常）</strong><sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>。</p>
+<p><strong>futures 封装待完成的操作，可以放入队列，完成的状态可以查询，得到结果（或抛出异常），后可以获取结果（或异常）</strong>。</p>
 
-<p>我们要记住一件事：通常情况下自己不应该创建 Future，而只能由并发框架（concurrent.futures 或 asyncio）实例化。原因很简单：Future 表示终将发生的事情，而<strong>确定某件事会发生的唯一方式是执行的时间已经排定</strong><sup id="fnref2"><a href="#fn2" rel="footnote">2</a></sup>。因此，只有排定把某事件交给 concurrent.futures.Executor 子类处理时，才会创建 concurrent.futures.Future 实例。例如，Executor.submit() 方法的参数时一个可调用的对象，调用这个方法后会为传入的可调用对象排期，并返回一个 Future。</p>
+<p>我们要记住一件事：通常情况下自己不应该创建 futures，而只能由并发框架（concurrent.futures 或 asyncio）实例化。原因很简单：futures 表示终将发生的事情，而<strong>确定某件事会发生的唯一方式是执行的时间已经排定</strong>。因此，只有排定把某事件交给 concurrent.futures.Executor 子类处理时，才会创建 concurrent.futures.Future 实例。例如，Executor.submit() 方法的参数时一个可调用的对象，调用这个方法后会为传入的可调用对象排期，并返回一个 future。</p>
 
-<p>客户端代码不应该改变 Future 的状态，并发框架在 Future 表示的延迟计算结束后会改变 Future 的状态，而我们无法控制计算何时结束。</p>
+<p>客户端代码不应该改变 futures 的状态，并发框架在 future 表示的延迟计算结束后会改变 futures 的状态，而我们无法控制计算何时结束。</p>
 
-<p>这两种 Future 都有 .done() 方法，这个方法不阻塞，返回值是布尔值，指明 Future 链接的可调用对象是否已经执行。客户端代码通常不会询问 Future 是否运行结束，而是会等待通知。因此，两个 Future 类都有 .add_done_callback() 方法：这个方法只有一个参数，类型是可调用的对象，Future 运行结束后会调用指定的可调用对象。</p>
+<p>这两种 future 都有 .done() 方法，这个方法不阻塞，返回值是布尔值，指明 future 链接的可调用对象是否已经执行。客户端代码通常不会询问 future 是否运行结束，而是会等待通知。因此，两个 future 类都有 .add_done_callback() 方法：这个方法只有一个参数，类型是可调用的对象，futures 运行结束后会调用指定的可调用对象。</p>
 
 <p>此外，还有 .result() 方法。在 Future 运行结束后调用的话，这个方法在两个 Future 类中的作用相同：返回可调用对象的结果，或者重新抛出执行可调用的对象时抛出的异常。</p>
 
@@ -202,20 +202,139 @@ IN VN BD FR DE JP CN ID BR PH EG NG ET MX IR RU US CD PK TR
 
 <p>为了从使用的角度理解 Future，我们可以使用 concurrent.futures.as_completed 函数重写上节的示例，这个函数的参数是一个 Future 列表，返回值是一个迭代器，在 Future 运行结束后产出 Future。</p>
 
-<div class="footnotes">
-<hr/>
-<ol>
+<p>为了使用 futures.as_completed 函数，只需修改 download_many 函数，把较抽象的 executor.map 调用换成两个 for 循环：一个用于创建并排定 Future，另一个用于获取 Future 的结果。同时，我们会添加几个 print 调用，显式运行结束前后的 Future。</p>
 
-<li id="fn1">
-<p>什么是脚注。&nbsp;<a href="#fnref1" rev="footnote">&#8617;</a></p>
-</li>
+<pre><code class="language-python"># flags_threadpool_ac.py: 把 download_many 函数中的 executor.map 方法换成 executor.submit 方法和 futures.as_completed 函数
 
-<li id="fn2">
-<p>something interesting.&nbsp;<a href="#fnref2" rev="footnote">&#8617;</a></p>
-</li>
+def download_many(cc_list):
+    cc_list = cc_list[:5]
+    with futures.ThreadPoolExecutor(max_workers=3) as executor:
+        to_do = []
+        for cc in sorted(cc_list):
+            future = executor.submit(download_one, cc)
+            to_do.append(future)
+            msg = &#39;Scheduled for {}: {}&#39;
+            print(msg.format(cc, future))
+            
+        results = []
+        for future in futures.as_completed(to_do):
+            res = future.result()
+            msg = &#39;{} result: {!r}&#39;
+            print(msg.format(future, res))
+            results.append(res)
+    return len(results)
+</code></pre>
 
-</ol>
-</div>
+<p>测试结果：</p>
+
+<pre><code class="language-python">&gt;&gt;&gt; main(download_many)
+Scheduled for BR: &lt;Future at 0x109a12be0 state=running&gt;
+Scheduled for CN: &lt;Future at 0x109a12da0 state=running&gt;
+Scheduled for ID: &lt;Future at 0x109a620f0 state=running&gt;
+Scheduled for IN: &lt;Future at 0x1099b9710 state=pending&gt;
+Scheduled for US: &lt;Future at 0x106ac29e8 state=pending&gt;
+IDCN BR  &lt;Future at 0x109a12da0 state=finished returned str&gt; result: &#39;CN&#39;
+&lt;Future at 0x109a620f0 state=finished returned str&gt; result: &#39;ID&#39;
+&lt;Future at 0x109a12be0 state=finished returned str&gt; result: &#39;BR&#39;
+IN &lt;Future at 0x1099b9710 state=finished returned str&gt; result: &#39;IN&#39;
+US &lt;Future at 0x106ac29e8 state=finished returned str&gt; result: &#39;US&#39;
+
+5 flags downloads in 3.81s
+</code></pre>
+
+<p>注意，在这个示例中调用 future.result() 方法绝不会堵塞，因为 future 由 as_completed 函数产出。</p>
+
+<p>严格来说，我们目前测试的并发脚本都不能并行下载，使用 concurrent.futures 库实现的两个示例收到 GIL 的限制。</p>
+
+<p>有个问题：既然 Python 线程受 GIL 的限制，任何时候都只允许运行一个线程，那个为什么 flags_threadpool.py 脚本的下载速度会比 flags.py 脚本快 5 倍？</p>
+
+<h3 id="toc_5">阻塞型 I/O 和 GIL</h3>
+
+<p>CPython 解释器本身就不是线程安全的，因此有全局解释器锁，一次只允许使用一个线程执行 Python 字节码。因此，一个 Python 进程通常不能同时使用多个 CPU 核心（语言无关，解释器相关）。</p>
+
+<p>编写 Python 代码时无法控制 GIL，不过，执行耗时的任务时，可以使用一个内置的函数或一个使用 C 语言编写的扩展释放 GIL。</p>
+
+<p>然而，标准库中所有执行阻塞型 I/O 操作的函数，在等待操作系统返回结果时都会释放 GIL。这意味着在 Python 语言这个层次上可以使用多线程，而 IO 密集型 Python 程序能从中受益：一个 Python 线程等待网络响应时，阻塞型 IO 函数会释放 GIL，再运行一个线程。</p>
+
+<p>Python 标准库中所有阻塞型 IO 函数都会释放 GIL，允许其他线程运行。因此，尽管有 GIL，Python 线程还是能在 IO 密集型应用中发挥作用。</p>
+
+<p>下面加单说明如何在 CPU 密集型作业中使用 concurrent.futures 模块轻松绕开 GIL。</p>
+
+<h3 id="toc_6">使用 concurrent.futures 模块启动进程</h3>
+
+<p>concurrent.futures 模块实现的是真正的并行计算，因为它使用 ProcessPoolExecutor 类把工作分配给多个 Python 进程处理，因此，如果需要做 CPU 密集型处理，使用这个模块能绕开 GIL，利用所有可用的 CPU 核心。</p>
+
+<p>ProcessPoolExecutor 和 ThreadPoolExecutor 类都实现了通用的 Executor 接口，因此使用 concurrent.futures 模块能轻松地把基于线程的方案转换成基于进程的方案。</p>
+
+<p>下载国旗的示例或其他 IO 密集型作业使用 ProcessPoolExecutor 类得不到任何好处，因为对于 CPU 密集型的处理来说，不吭呢要求使用超过 CPU 数量的进程，而对于 IO 密集型来说，可以在一个 ThreadPoolExecutor 实例中使用 10 个、100 个或 1000 个线程，最佳线程数取决于做的是什么事，以及可用内存是多少，因此要自习测试才能找到最佳的线程数。</p>
+
+<p>ProcessPoolExecutor 的价值体现在 CPU 密集型作业上。有两个 CPU 密集型的脚本：</p>
+
+<ul>
+<li>arcfour_futures.py: 这个脚本纯粹使用 Python 实现 RC4 算法；</li>
+<li>sha_futures.py: 这个脚本使用标准库中的 haslib 模块（使用 OpenSSL 库实现）实现 SHA-256 算法。</li>
+</ul>
+
+<p>这两个脚本除了显示汇总结果外，没有使用 IO，测试的结果如下：</p>
+
+<p><img src="media/15058857487655/15063175994496.jpg" alt=""/></p>
+
+<p>可以看出，对加密算法来说，使用 ProcessPoolExecutor 类派生 4 个工作进程后（如果有 4 个 CPU 核心的话），性能可能提高两倍。</p>
+
+<p>如果使用 Python 处理 CPU 密集型工作，应该试试 PyPy，使用 PyPy 运行上面脚本，速度快乐 3.8~5.1 倍。</p>
+
+<h3 id="toc_7">实现 Executor.map 方法</h3>
+
+<p>下面通过一个演示程序来研究线程池的行为，这个程序会创建一个包含 3 个 worker 的线程池，运行 5 个可调用对象，输出带有时间戳的消息。</p>
+
+<p>若想并发运行多个可调用对象，最简单的方式是使用 Executor.map 方法。Executor.map 函数易于使用，不过有个特性可能有用，也可能没用，具体情况取决于需求：这个函数返回结果的顺序与调用开始的顺序一致。如果第一个调用生成结果用时 10 秒，而其他调用只用 1 秒，代码会阻塞 10 秒，获取 map 方法返回的生成器产出的第一个结果。在此之后，获取后续结果时不会阻塞，因为后续的调用已经结束。如果必须等到获取所有结果后再处理，这种行为没有问题；不过，通常更可取的做法是，不管提交的顺序，只要有结果就获取。为此，要把 Executor.submit 方法和 futures.as_completed 函数结合起来使用。</p>
+
+<p>executor.submit 和 futures.as_completed 这个组合比 executor.map 更灵活，因为 submit 方法能处理不同的可调用对象和参数，而 executor.map 只能处理参数不同的同一个可调用对象。此外，传给 futures.as_completed 函数的 futres 集合可以来自多个 Executor 实例，例如一些由 ThreadPoolExecutor 实例创建，另一些由 ProcessPoolExecutor 实例创建。</p>
+
+<h3 id="toc_8">显示下载进度并处理错误</h3>
+
+<p>之前的示例脚本中没有处理错误，这么做是为了便于阅读和比较三种方案（依序、多线程和异步）的结构。</p>
+
+<p>这三个示例在负责下载一个文件的函数（download_one）中使用相同的策略处理 HTTP 404 错误，其他异常则向上冒泡，交给 download_many 函数处理。</p>
+
+<pre><code class="language-python"># flags2_sequential.py: 负责下载的基本函数；flags2_threadpool.py 脚本重用了这两个函数
+
+def get_flag(base_url, cc):
+    url = &#39;{}/{cc}.gif&#39;.format(base_url, cc=cc.lower())
+    resp = requests.get(url)
+    if resp.status_code != 200:
+        resp.raise_for_status()
+    return resp.content
+
+
+def download_one(cc, base_url, verbose=False):
+    try:
+        image = get_flag(base_url, cc)
+    except requests.exceptions.HTTPError as exc:
+        res = exc.response
+        if res.status_code == 404:
+            status = HTTPSatus.not_fount
+            msg = &#39;not found&#39;
+        else:
+            raise
+    else:
+        save_flag(image, cc.lower() + &#39;.gif&#39;)
+        status = HTTPStatus.ok
+        msg = &#39;OK&#39;
+        
+    if verbose:
+        print(cc, msg)
+        
+    return Result(status, cc)
+</code></pre>
+
+<p>Python 线程特别适合 IO 密集型应用，concurrent.futures 模块大大简化了某些使用场景下 Python 线程的用法。下面讨论不适合使用 ThreadPoolExecutor 或 ProcessPoolExecutor 类时，有哪些替代方案。</p>
+
+<h3 id="toc_9">杂谈</h3>
+
+<p>concurrent.futures 包把线程、进程和队列视作服务的基础设施，不用自己动手直接处理。当然，这个包针对的是简单的作业，也就是所谓的「高度并行」问题，编写应用（而非操作系统或数据库服务器）时，遇到的大部分并发问题都属于这一种。</p>
+
+<p>GIL 简化了了 CPython 解释器和 C 怨言扩展的实现，得益于 GIL，Python 有很多 C 语言扩展。GIL 并不会导致 Python 线程没有用武之地，因为标准库中每一个阻塞性 IO 函数都会释放 GIL，Python 线程特别适合在 IO 密集型系统中使用。</p>
 
                             
                         </div>
