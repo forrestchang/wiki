@@ -3,7 +3,7 @@
   <title><![CDATA[Wiki]]></title>
   <link href="http://forresthcang.com/wiki/atom.xml" rel="self"/>
   <link href="http://forresthcang.com/wiki/"/>
-  <updated>2017-09-25T20:59:36+08:00</updated>
+  <updated>2017-09-27T20:32:57+08:00</updated>
   <id>http://forresthcang.com/wiki/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -298,7 +298,7 @@ def download_one(cc, base_url, verbose=False):
 
 <p>真正的并行需要多个核心。现代的笔记本电脑有 4 个 CPU 核心，但是通常不经意间就有超过 100 个进程同时运行。因此，实际上大多数过程都是并发处理的，而不是并行处理。</p>
 
-<p>本章介绍 asyncio 包，这个包使用时间循环驱动的协程实现并发。asyncio 大量使用 yield from 表达式，因此与 Python 旧版不兼容。</p>
+<p>本章介绍 asyncio 包，这个包使用事件循环驱动的协程实现并发。asyncio 大量使用 yield from 表达式，因此与 Python 旧版不兼容。</p>
 
 <p>本章讨论以下话题：</p>
 
@@ -315,7 +315,118 @@ def download_one(cc, base_url, verbose=False):
 
 <h3 id="toc_11">线程与协程对比</h3>
 
-<p>下面两个示例一个由 threading 模块使用线程实现，一个借由 asyncio 包使用协程实现。对比两种实现方式，理解如何不适用线程来实现并发行为。 </p>
+<p>有一次讨论线程和 GIL 时，Michele Simionato 发布了一个简单但有趣的示例：在长时间计算的过程中，使用 multiprocessing 包在控制台中显示一个由 ASCII 字符「\/-\」构成的动画旋转指针。</p>
+
+<p>我们改写了 Simionato 的示例，一个借由 threading 模块使用线程实现，一个借由 asyncio 包使用协程实现。我们这么做是为了让你对比两种实现，理解如何不使用线程来实现并发行为。</p>
+
+<pre><code class="language-python"># spinner_thread.py: 通过线程以动画形式显示文本格式旋转指针
+import threading
+import itertools
+import time
+import sys
+
+
+class Signal:
+    go = True
+
+
+def spin(msg, signal):
+    write, flush = sys.stdout.write, sys.stdout.flush
+    for char in itertools.cycle(&#39;|/-\\&#39;):
+        status = char + &#39; &#39; + msg
+        write(status)
+        flush()
+        write(&#39;\x08&#39; * len(status))  # 这是显示文本动画的诀窍所在：使用退格符（\x08）把光标移回来
+        time.sleep(.1)
+        if not signal.go:
+            break
+    write(&#39; &#39; * len(status) + &#39;\x08&#39; * len(status))  # 使用空格键清除状态信息，把光标移回开头
+
+
+def slow_function():
+    # 假装等待 I/O 一段时间
+    time.sleep(3)  # 调用 sleep 函数会阻塞主线程，不过一定哟啊这么做，以便释放 GIL，创建从属线程
+    return 42
+
+
+def supervisor():
+    signal = Signal()
+    spinner = threading.Thread(
+        target=spin,
+        args=(&#39;thinking&#39;, signal)
+    )
+    print(&#39;spinner object: &#39;, spinner)
+    spinner.start()
+    result = slow_function()
+    signal.go = False
+    spinner.join()
+    return result
+
+
+def main():
+    result = supervisor()
+    print(&#39;Answer: &#39;, result)
+
+
+if __name__ == &#39;__main__&#39;:
+    main()
+
+</code></pre>
+
+<p>注意，Python 没有提供终止线程的 API，这是有意为之的。若想关闭线程，必须给线程发送消息。这里我们使用的是 signal.go 属性：在主线程中把它设置为 False 后，spinner 线程最终会注意到，然后干净地退出。</p>
+
+<p>下面来看如何使用 @asyncio.coroutine 装饰器替代线程，实现相同的行为。asyncio 包使用的「协程」是较严格的定义。适合 asyncio API 的协程在定义体中必须使用 yield from，而不能使用 yield。此外，适合 asyncio 的协程要由调用方驱动，并由调用方通过 yield from 调用；或者把协程传给 asyncio 包中的某个函数，例如 asyncio.async(...) 和本章要介绍的其他函数，从而驱动协程。最后，@asyncio.coroutine 装饰器应该用在协程上，如下述示例所示。</p>
+
+<pre><code class="language-python"># spinner_asyncio.py: 通过协程以动画形式显示文本式旋转指针
+import asyncio
+import itertools
+import sys
+
+
+@asyncio.coroutine
+def spin(msg):
+    write, flush = sys.stdout.write, sys.stdout.flush
+    for char in itertools.cycle(&#39;|/-\\&#39;):
+        status = char + &#39; &#39; + msg
+        write(status)
+        flush()
+        write(&#39;\x08&#39; * len(status))
+        try:
+            yield from asyncio.sleep(.1)
+        except asyncio.CancelledError:
+            break
+    write(&#39; &#39; * len(status) + &#39;\x08&#39; * len(status))
+
+
+@asyncio.coroutine
+def slow_function():
+    # 假装等待 I/O 一段时间
+    yield from asyncio.sleep(3)
+    return 42
+
+
+@asyncio.coroutine
+def supervisor():
+    spinner = asyncio.async(spin(&#39;thinking!&#39;))
+    print(&#39;spinner object: &#39;, spinner)
+    result = yield from slow_function()
+    spinner.cancel()
+    return result
+
+
+def main():
+    loop = asyncio.get_event_loop()
+    result = loop.run_until_complete(supervisor())
+    loop.close()
+    print(&#39;Answer: &#39;, result)
+
+
+if __name__ == &#39;__main__&#39;:
+    main()
+
+</code></pre>
+
+<p>若非想阻塞主线程，从而冻结事件循环或整个应用，否则不要在 asyncio 协程中使用 time.sleep(...)。如果协程需要在一段时间内什么也不做，应该使用 yield from asyncio.sleep(DELAY)。</p>
 ]]>
     </content>
   </entry>
