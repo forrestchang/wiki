@@ -3,7 +3,7 @@
   <title><![CDATA[Wiki]]></title>
   <link href="http://forresthcang.com/wiki/atom.xml" rel="self"/>
   <link href="http://forresthcang.com/wiki/"/>
-  <updated>2017-10-06T19:50:50+08:00</updated>
+  <updated>2017-10-07T15:53:16+08:00</updated>
   <id>http://forresthcang.com/wiki/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -56,6 +56,110 @@
 <li>词法分析（lexical analysis）：在这一部分中，输入的字符串被拆分为一系列的 token；</li>
 <li>语法分析（syntactic analysis）：将 token 汇编为抽象语法树。</li>
 </ol>
+
+<h2 id="toc_3">环境（Environments）</h2>
+
+<p>eval 函数接收两个参数：一个我们想要求值的表达式 x，还有一个环境 env，x 将在这个环境中被求值。环境指的是变量名和它们值之间的映射。eval 默认会使用全局环境（global environment）进行求值，全局环境包含着一系列的标准函数（比如 sqrt, max, * 这类操作符）。这一环境可以用用户定义的变量扩展，语法为<code>(define variable value)</code>。我们可以用 Python 自带的字典来实现环境，字典中的键对为 <code>{变量: 值}</code> 的形式。</p>
+
+<h2 id="toc_4">Scheme 的语法规则</h2>
+
+<table>
+<thead>
+<tr>
+<th>表达式（Expression）</th>
+<th>语法（Syntax）</th>
+<th>语义（Semantics）和范例</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>变量引用（variable reference）</td>
+<td>var</td>
+<td>该符号被认为是变量名；它的值是变量的值。</td>
+</tr>
+<tr>
+<td>字面常量（constant literal）</td>
+<td>number</td>
+<td>一个数字（number）求值得到它自身。</td>
+</tr>
+<tr>
+<td>条件（conditional）</td>
+<td>(if test conseq alt)</td>
+<td>对 test 进行求值；如果结果为真，对 conseq 进行求值并返回结果；否则对 alt 进行求值并返回结果。</td>
+</tr>
+<tr>
+<td>定义（definition）</td>
+<td>(define var exp)</td>
+<td>定义一个新的变量，将 var 的值定义为 exp 求值得到的结果。</td>
+</tr>
+<tr>
+<td>过程调用（procedure call）</td>
+<td>(proc arg...)</td>
+<td>如果 proc 不是 if/define/quote 其中之一，那它就被认为是一个过程（procedure）。对 proc 和所有的 args 求值，然后将 proc 过程应用于所有的 args 之上。</td>
+</tr>
+<tr>
+<td>引用（quotation）</td>
+<td>(quote exp)</td>
+<td>直接按字面返回 exp，不对其进行求值。范例：(quote (+ 1 2)) --&gt; (+ 1 2)</td>
+</tr>
+<tr>
+<td>赋值（assignment）</td>
+<td>(set! var exp)</td>
+<td>对 exp 进行求值并将结果赋值给 var，exp 必须在之前定义过（被 define 定义过或者是包含 set! 表达式的过程中的一个参数）</td>
+</tr>
+<tr>
+<td>过程（procedure）</td>
+<td>(lambda (var...) (exp))</td>
+<td>创造一个过程，参数为 var...，exp为过程的主体，范例：(lambda (r) (* pi (* r r)))</td>
+</tr>
+</tbody>
+</table>
+
+<p>lambda 特殊形式会创建一个过程（procedure）：</p>
+
+<pre><code class="language-scheme">&gt;&gt;&gt; (define circle-area (lambda (r) (* pi (* r r))))
+&gt;&gt;&gt; (circle-area 10)
+314.159265359
+</code></pre>
+
+<p>过程调用 (circle-area 10) 使我们队过程的主体部分 (* pi (* r r)) 进行求值。求值所在的环境中 pi 与 r 的值同全局环境相同，而 r 的值为 10.事实上，解释器并不会简单地在全局环境之中将 r 的值设为 10。如果我们将 r 用于其他用途会怎么样？我们不希望对 circle-area 的调用改变 r 的值，因此我们希望讲一个局部变量 r 设为 10，这样就不会影响到其他同名的变量。因此，我们需要构建一种新的环境，允许同时创建局部和全局变量。</p>
+
+<p>想法如下：在我们对 <code>(circle-area 10)</code> 求值时，首先提取过程主体部分 <code>(* pi (* r r))</code>，随后在仅有一个本地变量 r 的环境中求值，但该环境同时也能访问全局环境。下图演示了这种环境模型，局部环境（蓝色）嵌套在全局环境（红色）之中：</p>
+
+<p><img src="media/15073552964811/15073755364588.jpg" alt=""/></p>
+
+<p>当我们在一个被嵌套的环境中查找变量时，首先在本层查找，如果没有找到对应值的话就到外一层查找。</p>
+
+<pre><code class="language-python">class Procedure(object):
+    &quot;用户定义的Scheme过程。&quot;
+    def __init__(self, parms, body, env):
+        self.parms, self.body, self.env = parms, body, env
+    def __call__(self, *args): 
+        return eval(self.body, Env(self.parms, args, self.env))
+
+class Env(dict):
+    &quot;环境是以{&#39;var&#39;:val}为键对的字典，它还带着一个指向外层环境的引用。&quot;
+    def __init__(self, parms=(), args=(), outer=None):
+        self.update(zip(parms, args))
+        self.outer = outer
+    def find(self, var):
+        &quot;寻找变量出现的最内层环境。&quot;
+        return self if (var in self) else self.outer.find(var)
+
+global_env = standard_env()
+</code></pre>
+
+<p>我们看到每个过程有 3 个组成部分：一个包含变量名的列表，一个主体表达式，以及一个外层环境。外层环境使得我们在局部环境中无法找到变量时有下一个地方可以寻找。</p>
+
+<p>环境是 dict 的子类，因此它含有 dict 拥有的所有方法。除此之外还有两个额外的方法：</p>
+
+<ol>
+<li>构造器 <code>__init__</code> 接受一个变量名列表以及对应的变量值列表，构造一个新环境，内部形式为 {variable: value} 键对，并拥有一个纸箱外层环境的引用；</li>
+<li>find 函数用于找到某个变量所在的正确环境，可能是内层环境也可能是更外层的环境。</li>
+</ol>
+
+<p>要想知道这部分的工作原理，我们首先来看看 eval 的定义。注意，现在我们需要调用 env.find(x) 来寻找变量处于哪一层环境之中；随后我们才能从那一层环境中提取 x（define 分支的定义没有改变，因为 define 总是向最内一层的环境添加变量）。同时我们还增加了两个判定分支：set! 分支中，我们寻找变量所处的环境并将其设为新的值；通过 lambda，我们可以传入参数列表、主体以及环境以创建一个新的过程。</p>
 ]]>
     </content>
   </entry>
