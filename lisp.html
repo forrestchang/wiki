@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+         Lisp - Wiki 
+    </title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+
+    <link rel="stylesheet" type="text/css" href="asset/yue.css">
+    <link rel="stylesheet" type="text/css" href="asset/main.css">
+    <link rel="stylesheet" type="text/css" href="asset/tomorrow.css">
+
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Wiki">
+
+    <script src="asset/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+<body>
+    <header class="yue site-header">
+        <div class="wrapper">
+            <a class="site-title" href="index.html">Wiki</a>
+            <nav class="site-nav">
+                <a href="#" class="menu-icon">
+                    
+                    <svg viewBox="0 0 18 15">
+                        <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"
+                        />
+                        <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"
+                        />
+                        <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"
+                        />
+                    </svg>
+
+                </a>
+                <div class="trigger">
+                    
+                        <a class="page-link" href="index.html">INDEX</a>
+                    
+                        <a class="page-link" href="archives.html">ARCHIVES</a>
+                    
+                        <a class="page-link" href="http://forrestchang.com">BLOG</a>
+                    
+                </div>
+            </nav>
+        </div>
+    </header>
+</body>
+
+</html> <div class="page-content yue">
+    <div class="wrapper">
+        <div class="home">
+            <div class="divider">
+                <p></p>
+            </div>
+            <ul class="entry-list">
+                
+                <li class="entry-item" itemscope="" itemtype="http://schema.org/Article">
+                    <div class="entry-meta">
+                        <time class="updated" datetime="2017/10/9">2017/10/9</time>
+                    </div>
+                    <div class="detail">
+                        <h2 itemprop="name"><a itemprop="url" href="15075210302691.html">S-表达式</a></h2>
+                        <div itemprop="description">
+                            
+                                <p>S-表达式（其中 S 代表「符号的」）是一种以人类可读的文本形式表达半结构化数据的约定。S-表达式可能以其在 Lisp 家族的编程语言中的使用而为人所知。语法细节和所支持的数据类型虽淫语言而异，但这些语言件最通用的特性则是使用 S-表达式 作为括号化的前缀表示法。</p>
+
+<p><img src="media/15075210302691/15075213452393.jpg" alt=""/></p>
+
+<h2 id="toc_0">数据类型和语法</h2>
+
+<p>S-表达式格式有多种变体，支持不同数据类型的各种不同语法。最广泛支持的是：</p>
+
+<ul>
+<li>列表和点对</li>
+<li>符号</li>
+<li>字符串</li>
+<li>整数</li>
+<li>浮点数</li>
+</ul>
+
+<h2 id="toc_1">在 Lisp 编程中的使用</h2>
+
+<p>S-表达式在 Lisp 中即用作代码，也用作数据。</p>
+
+<p>S-表达式可以是如数字这样的单个对象，包括特殊原子<code>nil</code>和<code>t</code>在内的 Lisp 原子，或写作<code>(x . y)</code>的 cons pair。更长的列表则有嵌套的 cons pair 组成，例如<code>(1 . (2 . (3 . nil)))</code>（亦可以写作更易理解的 <code>(1 2 3)</code>）。</p>
+
+<p>使用前缀表示方法，程序代码课写作 S-表达式。书写 Lisp 程序中额外的语法糖规则是，一般的表达式<code>(quote x)</code>可以省略为<code>&#39;x</code>。</p>
+
+<h3 id="toc_2">S-表达式的源码示例</h3>
+
+<pre><code class="language-scheme">(define (factorial x)
+    (if (zero? x) 1
+          (* x (factorial (- x 1)))))
+</code></pre>
+
+<h2 id="toc_3">解析</h2>
+
+<p>S-表达式经常与 XML 进行比较，一个关键的区别是 S-表达式在语法上要简单的多，因此更容易解析。</p>
+
+<pre><code class="language-python"># 一个简单的 S-表达式解析器
+def parse_sexp(string):
+    &quot;&quot;&quot;
+    &gt;&gt;&gt; parse_sexp(&quot;(+ 5 (+ 3 5))&quot;)
+    [[&#39;+&#39;, &#39;5&#39;, [&#39;+&#39;, &#39;3&#39;, &#39;5&#39;]]]
+    &quot;&quot;&quot;
+    sexp = [[]]
+    word = &#39;&#39;
+    in_str = False
+    for char in string:
+        if char == &#39;(&#39; and not in_str:
+            sexp.append([])
+        elif char == &#39;)&#39; and not in_str:
+            if word:
+                sexp[-1].append(word)
+                word = &#39;&#39;
+            temp = sexp.pop()
+            sexp[-1].append(temp)
+        elif char in (&#39; &#39;, &#39;\n&#39;, &#39;\t&#39;) and not in_str:
+            if word:
+                sexp[-1].append(word)
+                word = &#39;&#39;
+        elif char = &#39;\&quot;&#39;:
+            in_str = not in_str
+        else:
+            word += char
+    return sexp[0]
+</code></pre>
+
+<hr/>
+
+<p>S-表达式是二叉树的一种线性编码。</p>
+
+<pre><code>原子 -&gt; 数字|符号
+S表达式 -&gt; 原子|(S表达式 . S表达式)
+</code></pre>
+
+<p>书写 S-表达式，还要同时写很多「.」号，因此，Lisp 语言定义了一套 S-表达式的化简规则：</p>
+
+<ol>
+<li>如果一个点号右邻一个左括号，那么就可以将这个点号，左括号以及匹配的右括号一起去掉：<code>(a . (b . c))</code> &lt;==&gt; <code>(a b . c)</code></li>
+<li>如果一个点号右邻原子 nil，那么就可以把这个点号和原子 nil 一起去掉：<code>(a . (b . nil))</code> &lt;<mark>&gt; <code>(a b . nil)</code> &lt;</mark>&gt; <code>(a b)</code></li>
+</ol>
+
+<p>列表是一种特殊类型的 S-表达式，如果一个 S-表达式不是原子，而且经过化简可以把点号都去掉，就说这个 S-表达式是一个列表。</p>
+
+<p>例如：<code>(a .(b .(c . nil)))</code> &lt;==&gt; <code>(a b c)</code>。</p>
+
+<p>为了使用方便，还允许有空表，而且还定义空表等价于原子 nil，空表的记法，使 nil 身兼三职：</p>
+
+<ol>
+<li>nil 表示一个原子</li>
+<li>nil 表示空表</li>
+<li>nil 表示逻辑值「假」</li>
+</ol>
+
+<p>nil 成为了 Lisp 语言中唯一的既是原子又是列表的表达式。</p>
+
+<p>在 Scheme 中，它没有 nil 的概念，只有空表 <code>()</code>。</p>
+
+                            
+                        </div>
+                    </div>
+                </li>
+                
+            </ul>
+            <p class="paging">
+                 
+            </p>
+        </div>
+    </div>
+</div>  <footer id="footer" class="yue">
+    <div class="wrapper">
+        <p>© Copyright 2014 - 2017 by <a href="https://twitter.com/Tisoga">@Tisoga</a> and powered by <a href="http://zh.mweb.im/">Mweb</a></p>
+    </div>
+</footer>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({TeX: { equationNumbers: { autoNumber: "AMS" } }});</script>
