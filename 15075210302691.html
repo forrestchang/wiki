@@ -133,13 +133,13 @@ S表达式 -&gt; 原子|(S表达式 . S表达式)
 <p>书写 S-表达式，还要同时写很多「.」号，因此，Lisp 语言定义了一套 S-表达式的化简规则：</p>
 
 <ol>
-<li>如果一个点号右邻一个左括号，那么就可以将这个点号，左括号以及匹配的右括号一起去掉：<code>(a . (b . c))</code> &lt;==&gt; <code>(a b . c)</code></li>
-<li>如果一个点号右邻原子 nil，那么就可以把这个点号和原子 nil 一起去掉：<code>(a . (b . nil))</code> &lt;<mark>&gt; <code>(a b . nil)</code> &lt;</mark>&gt; <code>(a b)</code></li>
+<li>如果一个点号右邻一个左括号，那么就可以将这个点号，左括号以及匹配的右括号一起去掉：<code>(a . (b . c))</code> &lt;=&gt; <code>(a b . c)</code></li>
+<li>如果一个点号右邻原子 nil，那么就可以把这个点号和原子 nil 一起去掉：<code>(a . (b . nil))</code> &lt;=&gt; <code>(a b . nil)</code> &lt;=&gt; <code>(a b)</code></li>
 </ol>
 
 <p>列表是一种特殊类型的 S-表达式，如果一个 S-表达式不是原子，而且经过化简可以把点号都去掉，就说这个 S-表达式是一个列表。</p>
 
-<p>例如：<code>(a .(b .(c . nil)))</code> &lt;==&gt; <code>(a b c)</code>。</p>
+<p>例如：<code>(a .(b .(c . nil)))</code> &lt;=&gt; <code>(a b c)</code>。</p>
 
 <p>为了使用方便，还允许有空表，而且还定义空表等价于原子 nil，空表的记法，使 nil 身兼三职：</p>
 

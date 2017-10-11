@@ -61,6 +61,141 @@
                 
                 <li class="entry-item" itemscope="" itemtype="http://schema.org/Article">
                     <div class="entry-meta">
+                        <time class="updated" datetime="2017/10/11">2017/10/11</time>
+                    </div>
+                    <div class="detail">
+                        <h2 itemprop="name"><a itemprop="url" href="15077106861971.html">Scheme 笔记</a></h2>
+                        <div itemprop="description">
+                            
+                                <h2 id="toc_0">生成表</h2>
+
+<p>作为 Lisp 语言大家族中的一员，Scheme 同样擅长处理表，表在后面章节中的递归函数和告诫函数中扮演重要的角色。</p>
+
+<h3 id="toc_1">Cons 单元和表</h3>
+
+<h4 id="toc_2">Cons 单元</h4>
+
+<p>表的元素：Cons 单元（Cons cells）。Cons 单元是一个存放了两个地址的内存空间，Cons 单元可以用函数 cons 生成。</p>
+
+<p><img src="media/15077106861971/15077112823272.jpg" alt=""/></p>
+
+<p>系统返回<code>(1 . 2)</code>。函数 cons 给两个地址分配了内存空间，并把存放指向 1 的地址放在一个空间，把存放指向 2 的地址放在另一个空间。存放指向 1 的地址的内存空间被称作 car 部分，对应的，存放指向 2 的地址的内存空间被称作 cdr 部分。car 和 cdr 分别是寄存器地址部分（Contents of the Address part of the Register）和寄存器减量部分（Contents of the Decrement part of the Register）的简称。这些名字最初来源于 Lisp 首次实现所用用的硬件环境中内存空间的名字。这些名字同时也表明 Cons 单元的本质就是一个内存空间，cons 这个名字是术语「构造」（construction）的简称。</p>
+
+<p><img src="media/15077106861971/15077114966984.jpg" alt=""/></p>
+
+<p>Cons 单元也可以被串起来：</p>
+
+<p><img src="media/15077106861971/15077115494659.jpg" alt=""/></p>
+
+<p><code>(3 . (1 . 2))</code> 可以更方便地表示为 <code>(3 1 . 2)</code>。这种情况的内存空间如下图所示：</p>
+
+<p><img src="media/15077106861971/15077116138238.jpg" alt=""/></p>
+
+<p>Cons 单元可以存放不同类型的数据，也可以嵌套。</p>
+
+<pre><code class="language-lisp">(cons #\a (cons 3 &quot;hello&quot;))
+;Value 17: (#\a 3 . &quot;hello&quot;)
+
+(cons (cons 0 1) (cons 2 3))
+;Value 23: ((0 . 1) 2 . 3)
+</code></pre>
+
+<p>这是因为Scheme可以通过地址操作所有的数据。（#\c代表了一个字符c。例如，#\a就代表字符a）。</p>
+
+<h4 id="toc_3">表</h4>
+
+<p>表示 Cons 单元通过用 cdr 部分连接到下一个 Cons 单元的开头实现的。表中包含的<code>&#39;()</code>被作为空表。就算数据仅由一个 Cons 单元组成，只要它的 cdr 单元是 <code>&#39;()</code>，那么它就是一个表，下图表示了 <code>(1 2 3)</code> 的内存结构。</p>
+
+<p><img src="media/15077106861971/15077120432851.jpg" alt=""/></p>
+
+<p>事实上，表可以像下面这样递归地定义：</p>
+
+<ol>
+<li><code>&#39;()</code> 是一个表</li>
+<li>如果 <code>ls</code> 是一个表并且 <code>obj</code> 是某种类型的数据，那么 <code>(cons obj ls)</code> 也是一个表。</li>
+</ol>
+
+<p>正因为表示一种被递归定义的数据结构，将它用在递归的函数中显然是合理的。</p>
+
+                            
+                        </div>
+                    </div>
+                </li>
+                
+                <li class="entry-item" itemscope="" itemtype="http://schema.org/Article">
+                    <div class="entry-meta">
+                        <time class="updated" datetime="2017/10/9">2017/10/9</time>
+                    </div>
+                    <div class="detail">
+                        <h2 itemprop="name"><a itemprop="url" href="15075498694747.html">Python Tricks</a></h2>
+                        <div itemprop="description">
+                            
+                                <h2 id="toc_0">1. <code>__init__.py</code> 里面可以写什么</h2>
+
+<p>有如下层级的代码：</p>
+
+<pre><code>graphics/
+    __init__.py
+    primitive/
+        __init__.py
+        line.py
+        fill.py
+        text.py
+    formats/
+        __init__.py
+        png.py
+        jpg.py
+</code></pre>
+
+<p>绝大部分时候让<code>__init__.py</code>空着就好，但是有些情况可能包含代码。例如用来自动加载子模块：</p>
+
+<pre><code class="language-python"># graphics/formats/__init__.py
+from . import jpg
+from . import png
+</code></pre>
+
+<p>像这样一个文件，用户可以仅仅通过<code>import graphics.formats</code>来代替<code>import graphics.formats.jpg</code>以及<code>import graphics.formats.png</code>。</p>
+
+<h2 id="toc_1">2. 控制模块被全部导入的内容</h2>
+
+<p>在模块中定义变量 <code>__all__</code>（列表） 来明确地列出需要导出的内容。如果定义了 <code>__call__</code>，那么只有被列举出的东西会被导出。</p>
+
+<h2 id="toc_2">3. 使用相对路径名导入包中子模块</h2>
+
+<p>使用绝对路径名导入的不利之处是这将顶层包名硬编码到你的源码中，如果你想要重新组织它，你的代码将很难工作。</p>
+
+<p>假设在你的文件系统上有 mypackage 包，组织如下：</p>
+
+<pre><code>mypackage/
+    __init__.py
+    A/
+        __init__.py
+        spam.py
+        grok.py
+    B/
+        __init__.py
+        bar.py
+</code></pre>
+
+<p>如果模块 mypackage.A.spam 要导入同目录吓得模块 grok：</p>
+
+<pre><code class="language-python">from . import grok
+</code></pre>
+
+<p>如果模块 mypackage.A.spam 要导入不同目录吓得模块 B.bar：</p>
+
+<pre><code class="language-python">from ..B import bar
+</code></pre>
+
+<p>两个 import 都没有包含顶层包名，而是使用了 spam.py 的相对路径。</p>
+
+                            
+                        </div>
+                    </div>
+                </li>
+                
+                <li class="entry-item" itemscope="" itemtype="http://schema.org/Article">
+                    <div class="entry-meta">
                         <time class="updated" datetime="2017/10/9">2017/10/9</time>
                     </div>
                     <div class="detail">
@@ -142,13 +277,13 @@ S表达式 -&gt; 原子|(S表达式 . S表达式)
 <p>书写 S-表达式，还要同时写很多「.」号，因此，Lisp 语言定义了一套 S-表达式的化简规则：</p>
 
 <ol>
-<li>如果一个点号右邻一个左括号，那么就可以将这个点号，左括号以及匹配的右括号一起去掉：<code>(a . (b . c))</code> &lt;==&gt; <code>(a b . c)</code></li>
-<li>如果一个点号右邻原子 nil，那么就可以把这个点号和原子 nil 一起去掉：<code>(a . (b . nil))</code> &lt;<mark>&gt; <code>(a b . nil)</code> &lt;</mark>&gt; <code>(a b)</code></li>
+<li>如果一个点号右邻一个左括号，那么就可以将这个点号，左括号以及匹配的右括号一起去掉：<code>(a . (b . c))</code> &lt;=&gt; <code>(a b . c)</code></li>
+<li>如果一个点号右邻原子 nil，那么就可以把这个点号和原子 nil 一起去掉：<code>(a . (b . nil))</code> &lt;=&gt; <code>(a b . nil)</code> &lt;=&gt; <code>(a b)</code></li>
 </ol>
 
 <p>列表是一种特殊类型的 S-表达式，如果一个 S-表达式不是原子，而且经过化简可以把点号都去掉，就说这个 S-表达式是一个列表。</p>
 
-<p>例如：<code>(a .(b .(c . nil)))</code> &lt;==&gt; <code>(a b c)</code>。</p>
+<p>例如：<code>(a .(b .(c . nil)))</code> &lt;=&gt; <code>(a b c)</code>。</p>
 
 <p>为了使用方便，还允许有空表，而且还定义空表等价于原子 nil，空表的记法，使 nil 身兼三职：</p>
 

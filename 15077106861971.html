@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+         Scheme 笔记 - Wiki 
+    </title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+
+    <link rel="stylesheet" type="text/css" href="asset/yue.css">
+    <link rel="stylesheet" type="text/css" href="asset/main.css">
+    <link rel="stylesheet" type="text/css" href="asset/tomorrow.css">
+
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Wiki">
+
+    <script src="asset/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+<body>
+    <header class="yue site-header">
+        <div class="wrapper">
+            <a class="site-title" href="index.html">Wiki</a>
+            <nav class="site-nav">
+                <a href="#" class="menu-icon">
+                    
+                    <svg viewBox="0 0 18 15">
+                        <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"
+                        />
+                        <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"
+                        />
+                        <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"
+                        />
+                    </svg>
+
+                </a>
+                <div class="trigger">
+                    
+                        <a class="page-link" href="index.html">INDEX</a>
+                    
+                        <a class="page-link" href="archives.html">ARCHIVES</a>
+                    
+                        <a class="page-link" href="http://forrestchang.com">BLOG</a>
+                    
+                </div>
+            </nav>
+        </div>
+    </header>
+</body>
+
+</html> <div class="page-content yue">
+    <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+            <header class="post-header">
+                <h1 class="post-title" itemprop="name headline">Scheme 笔记</h1>
+            </header>
+            <div class="post-content" itemprop="articleBody">
+                <h2 id="toc_0">生成表</h2>
+
+<p>作为 Lisp 语言大家族中的一员，Scheme 同样擅长处理表，表在后面章节中的递归函数和告诫函数中扮演重要的角色。</p>
+
+<h3 id="toc_1">Cons 单元和表</h3>
+
+<h4 id="toc_2">Cons 单元</h4>
+
+<p>表的元素：Cons 单元（Cons cells）。Cons 单元是一个存放了两个地址的内存空间，Cons 单元可以用函数 cons 生成。</p>
+
+<p><img src="media/15077106861971/15077112823272.jpg" alt=""/></p>
+
+<p>系统返回<code>(1 . 2)</code>。函数 cons 给两个地址分配了内存空间，并把存放指向 1 的地址放在一个空间，把存放指向 2 的地址放在另一个空间。存放指向 1 的地址的内存空间被称作 car 部分，对应的，存放指向 2 的地址的内存空间被称作 cdr 部分。car 和 cdr 分别是寄存器地址部分（Contents of the Address part of the Register）和寄存器减量部分（Contents of the Decrement part of the Register）的简称。这些名字最初来源于 Lisp 首次实现所用用的硬件环境中内存空间的名字。这些名字同时也表明 Cons 单元的本质就是一个内存空间，cons 这个名字是术语「构造」（construction）的简称。</p>
+
+<p><img src="media/15077106861971/15077114966984.jpg" alt=""/></p>
+
+<p>Cons 单元也可以被串起来：</p>
+
+<p><img src="media/15077106861971/15077115494659.jpg" alt=""/></p>
+
+<p><code>(3 . (1 . 2))</code> 可以更方便地表示为 <code>(3 1 . 2)</code>。这种情况的内存空间如下图所示：</p>
+
+<p><img src="media/15077106861971/15077116138238.jpg" alt=""/></p>
+
+<p>Cons 单元可以存放不同类型的数据，也可以嵌套。</p>
+
+<pre><code class="language-lisp">(cons #\a (cons 3 &quot;hello&quot;))
+;Value 17: (#\a 3 . &quot;hello&quot;)
+
+(cons (cons 0 1) (cons 2 3))
+;Value 23: ((0 . 1) 2 . 3)
+</code></pre>
+
+<p>这是因为Scheme可以通过地址操作所有的数据。（#\c代表了一个字符c。例如，#\a就代表字符a）。</p>
+
+<h4 id="toc_3">表</h4>
+
+<p>表示 Cons 单元通过用 cdr 部分连接到下一个 Cons 单元的开头实现的。表中包含的<code>&#39;()</code>被作为空表。就算数据仅由一个 Cons 单元组成，只要它的 cdr 单元是 <code>&#39;()</code>，那么它就是一个表，下图表示了 <code>(1 2 3)</code> 的内存结构。</p>
+
+<p><img src="media/15077106861971/15077120432851.jpg" alt=""/></p>
+
+<p>事实上，表可以像下面这样递归地定义：</p>
+
+<ol>
+<li><code>&#39;()</code> 是一个表</li>
+<li>如果 <code>ls</code> 是一个表并且 <code>obj</code> 是某种类型的数据，那么 <code>(cons obj ls)</code> 也是一个表。</li>
+</ol>
+
+<p>正因为表示一种被递归定义的数据结构，将它用在递归的函数中显然是合理的。</p>
+
+            </div>
+            <div>
+                <script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://tisogas-wiki.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+                
+                
+            </div>
+        </article>
+    </div>
+</div>  <footer id="footer" class="yue">
+    <div class="wrapper">
+        <p>© Copyright 2014 - 2017 by <a href="https://twitter.com/Tisoga">@Tisoga</a> and powered by <a href="http://zh.mweb.im/">Mweb</a></p>
+    </div>
+</footer>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({TeX: { equationNumbers: { autoNumber: "AMS" } }});</script>

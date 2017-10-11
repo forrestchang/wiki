@@ -61,6 +61,78 @@
                 
                 <li class="entry-item" itemscope="" itemtype="http://schema.org/Article">
                     <div class="entry-meta">
+                        <time class="updated" datetime="2017/10/9">2017/10/9</time>
+                    </div>
+                    <div class="detail">
+                        <h2 itemprop="name"><a itemprop="url" href="15075498694747.html">Python Tricks</a></h2>
+                        <div itemprop="description">
+                            
+                                <h2 id="toc_0">1. <code>__init__.py</code> 里面可以写什么</h2>
+
+<p>有如下层级的代码：</p>
+
+<pre><code>graphics/
+    __init__.py
+    primitive/
+        __init__.py
+        line.py
+        fill.py
+        text.py
+    formats/
+        __init__.py
+        png.py
+        jpg.py
+</code></pre>
+
+<p>绝大部分时候让<code>__init__.py</code>空着就好，但是有些情况可能包含代码。例如用来自动加载子模块：</p>
+
+<pre><code class="language-python"># graphics/formats/__init__.py
+from . import jpg
+from . import png
+</code></pre>
+
+<p>像这样一个文件，用户可以仅仅通过<code>import graphics.formats</code>来代替<code>import graphics.formats.jpg</code>以及<code>import graphics.formats.png</code>。</p>
+
+<h2 id="toc_1">2. 控制模块被全部导入的内容</h2>
+
+<p>在模块中定义变量 <code>__all__</code>（列表） 来明确地列出需要导出的内容。如果定义了 <code>__call__</code>，那么只有被列举出的东西会被导出。</p>
+
+<h2 id="toc_2">3. 使用相对路径名导入包中子模块</h2>
+
+<p>使用绝对路径名导入的不利之处是这将顶层包名硬编码到你的源码中，如果你想要重新组织它，你的代码将很难工作。</p>
+
+<p>假设在你的文件系统上有 mypackage 包，组织如下：</p>
+
+<pre><code>mypackage/
+    __init__.py
+    A/
+        __init__.py
+        spam.py
+        grok.py
+    B/
+        __init__.py
+        bar.py
+</code></pre>
+
+<p>如果模块 mypackage.A.spam 要导入同目录吓得模块 grok：</p>
+
+<pre><code class="language-python">from . import grok
+</code></pre>
+
+<p>如果模块 mypackage.A.spam 要导入不同目录吓得模块 B.bar：</p>
+
+<pre><code class="language-python">from ..B import bar
+</code></pre>
+
+<p>两个 import 都没有包含顶层包名，而是使用了 spam.py 的相对路径。</p>
+
+                            
+                        </div>
+                    </div>
+                </li>
+                
+                <li class="entry-item" itemscope="" itemtype="http://schema.org/Article">
+                    <div class="entry-meta">
                         <time class="updated" datetime="2017/10/7">2017/10/7</time>
                     </div>
                     <div class="detail">
