@@ -108,6 +108,250 @@
 
 <p>正因为表示一种被递归定义的数据结构，将它用在递归的函数中显然是合理的。</p>
 
+<h3 id="toc_4">原子</h3>
+
+<p>不使用 Cons 单元的数据结构称为原子（atom）。数字、字符、字符串、向量和空表 <code>&#39;()</code> 都是原子。<code>&#39;()</code> 既是原子，又是表。</p>
+
+<h3 id="toc_5">引用</h3>
+
+<p>所有的记号都会依据 Scheme 的求值规则求值：所有记号都会从最内层的括号一次向外层括号求值，且最外层括号返回的值将作为 S-表达式的值。一个被称为「引用」（quote）的形式可以用来阻止记号被求值。它是用来讲符号或者表原封不动地传递给程序，而不是求值后变成其它的东西。</p>
+
+<p>因为 <code>quote</code> 使用的频率很高，它被简写为 <code>&#39;</code>。</p>
+
+<ul>
+<li><code>&#39;(+ 2 3)</code> 代表列表 <code>(+ 2 3)</code> 本身</li>
+<li><code>&#39;+</code> 代表 <code>+</code> 本身</li>
+</ul>
+
+<p>实际上，<code>&#39;()</code> 是对空表的引用，也就是说，尽管解释器返回 <code>()</code> 代表空表，你也应该用 <code>&#39;()</code> 来表示空表。</p>
+
+<h3 id="toc_6">特殊形式</h3>
+
+<p>Scheme 有两种不同类型的操作符：</p>
+
+<ol>
+<li>函数：函数会对所有的参数求值并返回值</li>
+<li>特殊形式：特殊形式不会对所有的参数求值</li>
+</ol>
+
+<h3 id="toc_7">car 和 cdr 函数</h3>
+
+<p>返回一个 Cons 单元的 car 部分 和 cdr 部分的函数分别是 car 和 cdr 函数。如果 cdr 部分串联着 Cons 单元，解释器会打印出整个 cdr 部分。如果 Cons 单元的 cdr 部分不是 <code>&#39;()</code>，那么其值稍后亦会被展示。</p>
+
+<h3 id="toc_8">list 函数</h3>
+
+<p>list 函数使得我们可以构建包含数个元素的表。函数 list 有任意个数的参数，且返回由这些参数构成的表。</p>
+
+<h2 id="toc_9">定义函数</h2>
+
+<p>Scheme 解释器通过内存空间中的数据地址操作所有的数据，因此，所有存在于内存空间中的对象都以相同额方式处理。</p>
+
+<h3 id="toc_10">定义有参数的函数</h3>
+
+<p>可以通过在 <code>lambda</code> 后放一个参数表来定义有参数的函数。</p>
+
+<h2 id="toc_11">分支</h2>
+
+<h3 id="toc_12">if 表达式</h3>
+
+<pre><code class="language-lisp">(if predicate then_value else_value)
+</code></pre>
+
+<p>如果 predicate 部分为真，那么 then_value 部分被求值，否则 else_value 部分被求值，并且求得的值会返回给 if 语句的括号外。true 是除 false 以外的任意值，true 使用 <code>#t</code> 表示，false 使用 <code>#f</code> 表示。</p>
+
+<p>在 R5RS 中，<code>false</code> 和 <code>&#39;()</code> 是两个不同的对象。</p>
+
+<h3 id="toc_13">cond 表达式</h3>
+
+<p>尽管所有的分支都可以用 if 表达式表达，但当条件有更多的可能性时，你就需要使用嵌套的 if 表达式了，这将使代码变得复杂。处理这种情况可以使用 cond 表达式：</p>
+
+<pre><code class="language-lisp">(cond
+    (predicate_1 clauses_1)
+    (predicate_2 clauses_2)
+    ...
+    (predicate_n clauses_n)
+    (else        clauses_else))
+</code></pre>
+
+<p>在 cond 表达式中，predicate_i 是按照从上到下的顺序求值，而当 predicate_i 为真时，clause_i 会被求值并返回。之后的不会被求值。</p>
+
+<h3 id="toc_14">做出判断的函数</h3>
+
+<p>基本函数 <code>eq?</code>, <code>eqv?</code>, <code>equal?</code> 具有两个参数，用于检查这两个参数是否「一致」。这三个函数间有略微的区别。</p>
+
+<ul>
+<li><code>eq?</code>：该函数比较两个对象的地址。</li>
+<li><code>eqv?</code>：该函数比较两个存储在内存中的对象的类型和值。对于过程（lambda 表达式）的比较依赖于具体的实现。这个函数不能用于类似于表和字符串一类的序列比较，因为尽管这些序列看起来是一致的，但它们的值是存储在不同的地址中。</li>
+<li><code>equal?</code>：该函数用于比较类似于表或者字符串一类的序列。</li>
+</ul>
+
+<h3 id="toc_15">用于检查数据类型的函数</h3>
+
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>比较对象</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>pair?</td>
+<td>是否是序对</td>
+</tr>
+<tr>
+<td>list?</td>
+<td>是否是表</td>
+</tr>
+<tr>
+<td>null?</td>
+<td>是否是空表</td>
+</tr>
+<tr>
+<td>symbol?</td>
+<td>是否是符号</td>
+</tr>
+<tr>
+<td>char?</td>
+<td>是否是字符</td>
+</tr>
+<tr>
+<td>string?</td>
+<td>是否是字符串</td>
+</tr>
+<tr>
+<td>number?</td>
+<td>是否是数字</td>
+</tr>
+<tr>
+<td>complex?</td>
+<td>是否是复数</td>
+</tr>
+<tr>
+<td>real?</td>
+<td>是否是实数</td>
+</tr>
+<tr>
+<td>rational?</td>
+<td>是否是有理数</td>
+</tr>
+<tr>
+<td>integer?</td>
+<td>是否是整数</td>
+</tr>
+<tr>
+<td>exact?</td>
+<td>是否是不是浮点数</td>
+</tr>
+<tr>
+<td>inexact?</td>
+<td>是否是浮点数</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="toc_16">局部变量</h2>
+
+<h3 id="toc_17">let 表达式</h3>
+
+<p>使用 let 表达式可以定义局部变量：</p>
+
+<pre><code class="language-lisp">(let binds body)
+</code></pre>
+
+<p>变量在 binds 定义的形式中被声明并初始化。body 由任意多个 S-表达式构成，格式如下：</p>
+
+<pre><code class="language-lisp">[binds] -&gt; ((p1 v1) (p2 v2) ...)
+</code></pre>
+
+<p>声明了变量 p1, p2，分别为它们赋初始值 v1，v2.变量的作用域（Scope）为 body 体，也就是说变量只在 body 中有效。</p>
+
+<p>实际上，let 表达式知识 lambda 表达式的一个语法糖：</p>
+
+<pre><code class="language-lisp">((lambda (p1 p2 ...)
+        exp1 exp2 ...) v1 v2)
+</code></pre>
+
+<p>这是因为 lambda 表达式用于定义函数，它为变量建立了一个作用域。变量的作用域通过使用 let 表达式或 lambda 表达式来确定，在 Scheme 中，这个有效域由源代码的编写决定，这叫做「词法闭包」（lexical closure）。</p>
+
+<h2 id="toc_18">重复</h2>
+
+<p>虽然 Scheme 中可以使用 do 表达式，但通常我们用递归来实现重复。</p>
+
+<h3 id="toc_19">递归</h3>
+
+<p>在自己的定义中调用自己的函数叫做递归函数（Recursive Function）。</p>
+
+<p>我们通常使用计算阶乘来解释递归。</p>
+
+<pre><code class="language-lisp">(define (fact n)
+  (if (= n 1)
+      1
+      (* n (fact (- n 1)))))
+</code></pre>
+
+<p><code>(fact 5)</code> 的计算过程如下：</p>
+
+<pre><code>(fact 5)
+⇒ 5 * (fact 4)
+⇒ 5 * 4 * (fact 3)
+⇒ 5 * 4 * 3 * (fact 2)
+⇒ 5 * 4 * 3 * 2 * (fact 1)
+⇒ 5 * 4 * 3 * 2 * 1
+⇒ 5 * 4 * 3 * 2
+⇒ 5 * 4 * 6
+⇒ 5 * 24
+⇒ 120
+</code></pre>
+
+<p>递归函数可以以一种简单的方式表达重复，表示被递归定义的，进而表和递归函数可以很好地配合。</p>
+
+<h3 id="toc_20">尾递归</h3>
+
+<p>普通的递归调用并不高效因为它既浪费存储空间又具有函数调用开销。与之相反，尾递归函数包含了计算结果，当计算结束时直接将其返回。特别第，由于 Scheme 规范要求尾递归调用转化为循环，因此尾递归调用就不在函数调用开销。</p>
+
+<p><code>fact</code> 的尾递归调用版本：</p>
+
+<pre><code class="language-lisp">(define (fact-tail n)
+  (fact-rec n n))
+
+(define (fact-rec n p)
+  (if (= n 1)
+      p
+      (let ((m (- n 1)))
+        (fact-rec m (* p m)))))
+</code></pre>
+
+<p><code>fact-tail</code> 计算阶乘的过程如下：</p>
+
+<pre><code>(fact-tail 5)
+⇒ (fact-rec 5 5)
+⇒ (fact-rec 4 20)
+⇒ (fact-rec 3 60)
+⇒ (fact-rec 2 120)
+⇒ (fact-rec 1 120)
+⇒ 120
+</code></pre>
+
+<p>因为 <code>fact-rec</code> 并不等待其它函数的计算结果，因此当它计算结束时即从内存中释放。计算通过 <code>fact-rec</code> 的参数来演进，这基本等同于循环。如上文所述，Scheme 将尾递归转化为循环，Scheme 就无需提供循环的语法来实现重复。</p>
+
+<h3 id="toc_21">命名 let</h3>
+
+<p>命名 let（named let）可以用来表达循环。</p>
+
+<pre><code class="language-lisp">(define (fact-let n)
+  (let loop((n1 n) (p n))           ; 1
+    (if (= n1 1)                    
+    p
+    (let ((m (- n1 1)))
+      (loop m (* p m))))))      ; 2
+</code></pre>
+
+<p>上例代码展示了如何使用命名 let 来计算阶乘。<code>fact-let</code> 函数使用了一个命名 let 表达式（loop），这与 <code>fact-rec</code> 函数时不同的。</p>
+
+<p>在 Scheme 中，用命名 let 来表达循环是约定俗成的方法。</p>
+
             </div>
             <div>
                 <script>
