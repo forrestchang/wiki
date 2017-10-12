@@ -484,7 +484,24 @@ if __name__ == &#39;__main__&#39;:
 <li>supervisor 协程必须在 main 函数中由 loop.run_until_complete 方法执行。</li>
 </ul>
 
-<p>使用线程编程，因为调度程序任何时候都能终端线程，所以必须记住保留锁，去保护程序中的重要部分，防止多步操作在执行的过程中终端，防止数据处于无效状态。而协程默认会做好全方位保护，以防止中断。</p>
+<p>使用线程编程，因为调度程序任何时候都能终端线程，所以必须记住保留锁，去保护程序中的重要部分，防止多步操作在执行的过程中终端，防止数据处于无效状态。而协程默认会做好全方位保护，以防止中断。我们必须显式产出才能让程序的余下部分运行。对协程来说，无需保留锁，在多个线程之间同步操作，协程自身就会同步，因为在任意时刻只有一个协程运行。想交出控制权时，可以使用 yield 或 yield from 把控制权交还给调度程序。这就是能够安全地取消协程的原因：按照定义，协程只能在暂停的 yield 处取消，因此可以处理 CancelledError 异常，执行清理操作。</p>
+
+<h4 id="toc_12">asyncio.Future：故意不阻塞</h4>
+
+<p>asyncio.Future 类与 concurrent.futures.Future 类的接口基本一致，不过实现方式不同，不可以互换。</p>
+
+<p>期物只是调度执行某物的结果，在 asyncio 包中， BaseEventLoop.create_task() 方法接收一个协程，排定它的运行时间，然后返回一个 asyncio.Task 实例——也是 asyncio.Future 类的实例，因为 Task 是 Future 的子类，用于包装协程。这与调用 Executor.submit() 方法创建 concurrent.futures.Future 实例是一个道理。</p>
+
+<p>使用 yield from 处理期物，等待期物运行完毕这一步无需我们关心，而且不会阻塞事件循环，因为在 asyncio 包中，yield from 的作用是把控制权交还给事件循环。</p>
+
+<p>注意，使用 yield from 处理期物与使用 add_done_callback 方法处理协程的作用一样：延迟的操作结束后，事件循环不会触发回调对象，而是设置期物的返回值；而 yield from 表达式则在暂停的协程中产生返回值，回复执行协程。</p>
+
+<p>总之，因为 asyncio.Future 类的目的是与 yield from 一起使用，所以通常不需要使用以下方法：</p>
+
+<ul>
+<li>无需调用 my_future.add_done_callback()，因为可以直接把像在期物运行结束后执行的操作放在协程中 yield from my_future 表达式的后面。这是协程的一大优势：协程时可以暂停和恢复的函数。</li>
+<li>无需调用 my_future.result()，因为 yield from 从期物中产出的值就是结果（例如 result = yield from my_future）。</li>
+</ul>
 
             </div>
             <div>
