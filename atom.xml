@@ -1,22 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
+
   <title><![CDATA[Wiki]]></title>
   <link href="http://forresthcang.com/wiki/atom.xml" rel="self"/>
   <link href="http://forresthcang.com/wiki/"/>
-  <updated>2017-10-12T19:55:14+08:00</updated>
+  <updated>2017-10-13T16:11:37+08:00</updated>
   <id>http://forresthcang.com/wiki/</id>
   <author>
     <name><![CDATA[]]></name>
+    
   </author>
   <generator uri="http://www.coderforart.com/">CoderForArt</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[全站必备：网络编程基础]]></title>
+    <link href="http://forresthcang.com/wiki/15078822029815.html"/>
+    <updated>2017-10-13T16:10:02+08:00</updated>
+    <id>http://forresthcang.com/wiki/15078822029815.html</id>
+    <content type="html"><![CDATA[
+<p>笔记来源：<a href="http://blog.jobbole.com/110041/">http://blog.jobbole.com/110041/</a></p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[函数式编程]]></title>
+    <link href="http://forresthcang.com/wiki/15078804008494.html"/>
+    <updated>2017-10-13T15:40:00+08:00</updated>
+    <id>http://forresthcang.com/wiki/15078804008494.html</id>
+    <content type="html"><![CDATA[
+<p>笔记来源：<a href="https://coolshell.cn/articles/10822.html">https://coolshell.cn/articles/10822.html</a></p>
+
+<p>函数式编程的三大特性：</p>
+
+<ol>
+<li>immutable data 不可变数据：像 Clojure 一样，默认上变量是不可变的，如果你要改变变量，你需要把变量 copy 出去修改。这样一来，可以让你的程序少很多 Bug。因为，程序中的状态不好维护，在并发的时候更不好维护。</li>
+<li>first class function：这个技术可以让你的函数就像变量一样来使用。</li>
+<li>尾递归优化：递归会有递归深度限制，性能会大幅度下降。所以我们使用尾递归优化技术——每次递归时都会重用 stack，这样一来就能提升性能，当然，这需要语言或者编译器内部的支持。</li>
+</ol>
+
+<p>函数式编程的几个技术：</p>
+
+<ol>
+<li>map &amp; reduce：函数式编程最常见的技术就是堆一个集合做 Map 和 Reduce 操作。这比起过程式语言来说，在代码上要更容易阅读。</li>
+<li>pipeline：这个技术的意思是，把函数实例成一个一个的 action，然后，把一组 action 放到一个数组或是列表中，然后把数据传给这个 action list，数据就像一个 pipeline 一样顺序地被各个函数所操作，最终得到我们想要的结果。</li>
+<li>recursing 递归：递归最大的好处是简化代码，它可以把一个复杂的问题用很简单的代码描述出来。注意：递归的精髓是描述问题，而这正是函数式编程的精髓。</li>
+<li>currying：把一个函数的多个参数分解成多个函数，然后把函数多层封装起，每层函数都返回一个函数去接收下一个参数。这样，可以简化函数的多个参数。</li>
+<li>higher order function 高阶函数：所谓高阶函数就是函数当做参数，把传入的函数做成一个封装，然后返回这个封装函数。</li>
+</ol>
+
+<p>函数式的一些好处：</p>
+
+<ol>
+<li>parallelization 并行：所谓并行的意思就是在并行环境下，各个线程之间不需要同步或互斥。</li>
+<li>lazy evaluation 惰性求值：这个需要编译器支持。表达式不在它被绑定到变量之后就立即求值，而是在该值被取用的时候求值。</li>
+<li>determinism 确定性：所谓确定性的意思就是像数学函数那样 \(f(x)=y\) ，这个函数无论在什么场景下，都会得到同样的结果。</li>
+</ol>
+
+<p>函数式编程的准则：<strong>不依赖于外部的数据，而且也不改变外部数据的值，而是返回一个新值给你</strong>。</p>
+
+<p>一个简单的例子：</p>
+
+<pre><code class="language-python">def inc(x):
+    def incx(y):
+        return x + y
+    return incx
+    
+inc2 = inc(2)
+inc5 = inc(5)
+
+inc2(5) #7
+inc5(5) #10
+</code></pre>
+
+<p>我们可以看到上面那个例子 inc() 函数反悔了另一个函数 incx()，于是我们可以用 inc() 函数来构造各种版本的 inc 函数。这个计数就是 Curring。从这个技术上，你可能体会到函数式编程的理念：把函数当成变量来用，关注于描述问题而不是怎么实现。</p>
+
+<p>如何判断是否 functional：</p>
+
+<ul>
+<li>它们之间没有共享的变量</li>
+<li>函数间通过参数和返回值来传递数据</li>
+<li>在函数里没有临时变量</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Scheme 笔记]]></title>
     <link href="http://forresthcang.com/wiki/15077106861971.html"/>
     <updated>2017-10-11T16:31:26+08:00</updated>
     <id>http://forresthcang.com/wiki/15077106861971.html</id>
-    <content type="html">
-<![CDATA[<h2 id="toc_0">生成表</h2>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">生成表</h2>
 
 <p>作为 Lisp 语言大家族中的一员，Scheme 同样擅长处理表，表在后面章节中的递归函数和告诫函数中扮演重要的角色。</p>
 
@@ -309,8 +386,8 @@
 <p>上例代码展示了如何使用命名 let 来计算阶乘。<code>fact-let</code> 函数使用了一个命名 let 表达式（loop），这与 <code>fact-rec</code> 函数时不同的。</p>
 
 <p>在 Scheme 中，用命名 let 来表达循环是约定俗成的方法。</p>
-]]>
-    </content>
+
+]]></content>
   </entry>
   
   <entry>
@@ -318,8 +395,8 @@
     <link href="http://forresthcang.com/wiki/15075498694747.html"/>
     <updated>2017-10-09T19:51:09+08:00</updated>
     <id>http://forresthcang.com/wiki/15075498694747.html</id>
-    <content type="html">
-<![CDATA[<h2 id="toc_0">1. <code>__init__.py</code> 里面可以写什么</h2>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">1. <code>__init__.py</code> 里面可以写什么</h2>
 
 <p>有如下层级的代码：</p>
 
@@ -377,8 +454,8 @@ from . import png
 </code></pre>
 
 <p>两个 import 都没有包含顶层包名，而是使用了 spam.py 的相对路径。</p>
-]]>
-    </content>
+
+]]></content>
   </entry>
   
   <entry>
@@ -386,8 +463,8 @@ from . import png
     <link href="http://forresthcang.com/wiki/15075210302691.html"/>
     <updated>2017-10-09T11:50:30+08:00</updated>
     <id>http://forresthcang.com/wiki/15075210302691.html</id>
-    <content type="html">
-<![CDATA[<p>S-表达式（其中 S 代表「符号的」）是一种以人类可读的文本形式表达半结构化数据的约定。S-表达式可能以其在 Lisp 家族的编程语言中的使用而为人所知。语法细节和所支持的数据类型虽淫语言而异，但这些语言件最通用的特性则是使用 S-表达式 作为括号化的前缀表示法。</p>
+    <content type="html"><![CDATA[
+<p>S-表达式（其中 S 代表「符号的」）是一种以人类可读的文本形式表达半结构化数据的约定。S-表达式可能以其在 Lisp 家族的编程语言中的使用而为人所知。语法细节和所支持的数据类型虽淫语言而异，但这些语言件最通用的特性则是使用 S-表达式 作为括号化的前缀表示法。</p>
 
 <p><img src="media/15075210302691/15075213452393.jpg" alt=""/></p>
 
@@ -481,8 +558,8 @@ S表达式 -&gt; 原子|(S表达式 . S表达式)
 <p>nil 成为了 Lisp 语言中唯一的既是原子又是列表的表达式。</p>
 
 <p>在 Scheme 中，它没有 nil 的概念，只有空表 <code>()</code>。</p>
-]]>
-    </content>
+
+]]></content>
   </entry>
   
   <entry>
@@ -490,8 +567,8 @@ S表达式 -&gt; 原子|(S表达式 . S表达式)
     <link href="http://forresthcang.com/wiki/15073552964811.html"/>
     <updated>2017-10-07T13:48:16+08:00</updated>
     <id>http://forresthcang.com/wiki/15073552964811.html</id>
-    <content type="html">
-<![CDATA[<h2 id="toc_0">Scheme 程序的语法和语义</h2>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">Scheme 程序的语法和语义</h2>
 
 <ul>
 <li>语法（syntax）：指的是字母排列成正确表达式或声明的顺序；</li>
@@ -635,8 +712,8 @@ global_env = standard_env()
 </ol>
 
 <p>要想知道这部分的工作原理，我们首先来看看 eval 的定义。注意，现在我们需要调用 env.find(x) 来寻找变量处于哪一层环境之中；随后我们才能从那一层环境中提取 x（define 分支的定义没有改变，因为 define 总是向最内一层的环境添加变量）。同时我们还增加了两个判定分支：set! 分支中，我们寻找变量所处的环境并将其设为新的值；通过 lambda，我们可以传入参数列表、主体以及环境以创建一个新的过程。</p>
-]]>
-    </content>
+
+]]></content>
   </entry>
   
   <entry>
@@ -644,8 +721,8 @@ global_env = standard_env()
     <link href="http://forresthcang.com/wiki/15058857487655.html"/>
     <updated>2017-09-20T13:35:48+08:00</updated>
     <id>http://forresthcang.com/wiki/15058857487655.html</id>
-    <content type="html">
-<![CDATA[<h2 id="toc_0">第 17 章：使用 futures 处理并发</h2>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">第 17 章：使用 futures 处理并发</h2>
 
 <blockquote>
 <p>抨击线程的往往是系统程序员，他们考虑的使用场景对一般的应用程序员来说，也许一生都不会遇到……应用程序员遇到的使用场景，99% 的情况下只需知道如何派生一堆独立的线程，然后用队列收集结果。—— Michele Simionato</p>
@@ -1089,8 +1166,8 @@ if __name__ == &#39;__main__&#39;:
 <li>无需调用 my_future.add_done_callback()，因为可以直接把像在期物运行结束后执行的操作放在协程中 yield from my_future 表达式的后面。这是协程的一大优势：协程时可以暂停和恢复的函数。</li>
 <li>无需调用 my_future.result()，因为 yield from 从期物中产出的值就是结果（例如 result = yield from my_future）。</li>
 </ul>
-]]>
-    </content>
+
+]]></content>
   </entry>
   
   <entry>
@@ -1098,8 +1175,8 @@ if __name__ == &#39;__main__&#39;:
     <link href="http://forresthcang.com/wiki/14892052747708.html"/>
     <updated>2017-03-11T12:07:54+08:00</updated>
     <id>http://forresthcang.com/wiki/14892052747708.html</id>
-    <content type="html">
-<![CDATA[<ul>
+    <content type="html"><![CDATA[
+<ul>
 <li>
 <a href="#toc_0">Python 语言特性</a>
 <ul>
@@ -1976,8 +2053,8 @@ d =  [1, 2, 3, 4, [&#39;a&#39;, &#39;b&#39;]]
 <h3 id="toc_62">Ajax</h3>
 
 <p>Ajax（Asynchronous JavaScript and Xml，异步的 JavaScript 和 XML），是指在不重新加载整个页面的情况下，与服务器交换数据并更新部分网页的技术。</p>
-]]>
-    </content>
+
+]]></content>
   </entry>
   
   <entry>
@@ -1985,8 +2062,8 @@ d =  [1, 2, 3, 4, [&#39;a&#39;, &#39;b&#39;]]
     <link href="http://forresthcang.com/wiki/14889309726832.html"/>
     <updated>2017-03-08T07:56:12+08:00</updated>
     <id>http://forresthcang.com/wiki/14889309726832.html</id>
-    <content type="html">
-<![CDATA[<ul>
+    <content type="html"><![CDATA[
+<ul>
 <li>
 <a href="#toc_0">HTTP 协议</a>
 <ul>
@@ -2531,8 +2608,8 @@ Connection: close
 <p>Socket 还可以认为是一种网络间不同计算机上的进程通信的一种方法，利用三元组（ip 地址、协议、端口）就可以唯一标识网络中的进程，网络中的进程通信可以利用这个标志与其他进程进行交互。</p>
 
 <p>Socket 起源于 Unix，Unix 基本哲学之一就是「一切皆文件」，都可以用「open -&gt; read/write -&gt; close」 模式来进行操作。因此，Socket 也被处理为一种特殊的文件。</p>
-]]>
-    </content>
+
+]]></content>
   </entry>
   
   <entry>
@@ -2540,8 +2617,8 @@ Connection: close
     <link href="http://forresthcang.com/wiki/14887608416607.html"/>
     <updated>2017-03-06T08:40:41+08:00</updated>
     <id>http://forresthcang.com/wiki/14887608416607.html</id>
-    <content type="html">
-<![CDATA[<ul>
+    <content type="html"><![CDATA[
+<ul>
 <li>
 <a href="#toc_0">1.3 背包、队列和栈</a>
 <ul>
@@ -3540,8 +3617,8 @@ class _BagIterator(object):
 
 <pre><code class="language-python">
 </code></pre>
-]]>
-    </content>
+
+]]></content>
   </entry>
   
   <entry>
@@ -3549,8 +3626,8 @@ class _BagIterator(object):
     <link href="http://forresthcang.com/wiki/14872260244406.html"/>
     <updated>2017-02-16T14:20:24+08:00</updated>
     <id>http://forresthcang.com/wiki/14872260244406.html</id>
-    <content type="html">
-<![CDATA[<h2 id="toc_0">调用父类的方法</h2>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">调用父类的方法</h2>
 
 <p><code>super()</code> 的常见用法：</p>
 
@@ -3626,8 +3703,8 @@ class Stock:
         self.shares = shares
         self.price = price
 </code></pre>
-]]>
-    </content>
+
+]]></content>
   </entry>
   
   <entry>
@@ -3635,8 +3712,8 @@ class Stock:
     <link href="http://forresthcang.com/wiki/14871569977647.html"/>
     <updated>2017-02-15T19:09:57+08:00</updated>
     <id>http://forresthcang.com/wiki/14871569977647.html</id>
-    <content type="html">
-<![CDATA[<ul>
+    <content type="html"><![CDATA[
+<ul>
 <li>
 <a href="#toc_0">函数与方法装饰器</a>
 </li>
@@ -3843,8 +3920,8 @@ class Stock:
 <p>Python 之父 Guido 推荐的规范：</p>
 
 <p><img src="media/14871569977647/14872190162425.jpg" alt=""/></p>
-]]>
-    </content>
+
+]]></content>
   </entry>
   
   <entry>
@@ -3852,8 +3929,8 @@ class Stock:
     <link href="http://forresthcang.com/wiki/14824095038232.html"/>
     <updated>2016-12-22T20:25:03+08:00</updated>
     <id>http://forresthcang.com/wiki/14824095038232.html</id>
-    <content type="html">
-<![CDATA[<h2 id="toc_0">Data Structures</h2>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">Data Structures</h2>
 
 <h3 id="toc_1">More on Lists</h3>
 
@@ -4055,8 +4132,8 @@ Yuck!
 <pre><code class="language-python">with open(&#39;workfile&#39;, &#39;r&#39;) as f:
     read_data = f.read()
 </code></pre>
-]]>
-    </content>
+
+]]></content>
   </entry>
   
   <entry>
@@ -4064,8 +4141,8 @@ Yuck!
     <link href="http://forresthcang.com/wiki/14635617646524.html"/>
     <updated>2016-05-18T16:56:04+08:00</updated>
     <id>http://forresthcang.com/wiki/14635617646524.html</id>
-    <content type="html">
-<![CDATA[<h2 id="toc_0">Repeat-While</h2>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">Repeat-While</h2>
 
 <p><code>repeat-while</code> 在 <code>while</code> 判断循环条件之前，先执行一次循环的代码块，和其他语言中的 <code>do-while</code> 是类似的。</p>
 
@@ -4124,8 +4201,8 @@ Yuck!
 <h2 id="toc_10">提前退出</h2>
 
 <p>像 <code>if</code> 语句一样， <code>guard</code> 的执行取决于一个表达式的布尔值。我们可以使用 <code>guard</code> 语句来要求条件必须为真时，以执行 <code>guard</code> 语句后的代码。不同于 <code>if</code> 语句，一个 <code>guard</code> 语句总是有一个 <code>else</code> 分句，如果条件不为真则执行 <code>else</code> 分句中的代码。</p>
-]]>
-    </content>
+
+]]></content>
   </entry>
   
   <entry>
@@ -4133,8 +4210,8 @@ Yuck!
     <link href="http://forresthcang.com/wiki/14634546001476.html"/>
     <updated>2016-05-17T11:10:00+08:00</updated>
     <id>http://forresthcang.com/wiki/14634546001476.html</id>
-    <content type="html">
-<![CDATA[<h2 id="toc_0">字符串是值类型</h2>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">字符串是值类型</h2>
 
 <p>使用字符串会进行值拷贝。</p>
 
@@ -4211,8 +4288,8 @@ Yuck!
 <h2 id="toc_14">字符串的 Unicode 表示形式（Unicode Representations of Strings）</h2>
 
 <p>当一个 Unicode 字符串被写进文本文件或其他存储时，字符串中的 Unicode 标量会用 Unicode 定义的几种编码格式（encoding forms）编码。每一个字符串中的小块编码都被称为 <code>code units</code>。这些包括 UTF-8,UTF-16,UTF-32 编码格式。</p>
-]]>
-    </content>
+
+]]></content>
   </entry>
   
   <entry>
@@ -4220,8 +4297,8 @@ Yuck!
     <link href="http://forresthcang.com/wiki/14631242333306.html"/>
     <updated>2016-05-13T15:23:53+08:00</updated>
     <id>http://forresthcang.com/wiki/14631242333306.html</id>
-    <content type="html">
-<![CDATA[<p>属性将值跟特定的类、结构或枚举关联。存储常量或变量作为实例的一部分，而计算属性（不是存储）一个值。</p>
+    <content type="html"><![CDATA[
+<p>属性将值跟特定的类、结构或枚举关联。存储常量或变量作为实例的一部分，而计算属性（不是存储）一个值。</p>
 
 <ul>
 <li>计算属性：类、结构体、枚举</li>
@@ -4280,8 +4357,8 @@ Yuck!
 <h2 id="toc_7">类型属性</h2>
 
 <p>存储型类型属性是延迟初始化的，它们只有在第一次被访问的时候才会被初始化。即使它们被多个线程同时访问，系统也保证只会对其进行一次初始化，并且不需要对其使用 <code>lazy</code> 修饰符。</p>
-]]>
-    </content>
+
+]]></content>
   </entry>
   
   <entry>
@@ -4289,8 +4366,8 @@ Yuck!
     <link href="http://forresthcang.com/wiki/14627836147810.html"/>
     <updated>2016-05-09T16:46:54+08:00</updated>
     <id>http://forresthcang.com/wiki/14627836147810.html</id>
-    <content type="html">
-<![CDATA[<p>Swift 语言提供 Arrays、Sets 和 Dictionaries 三种基本的集合类型来存储数据合集。数组（Array）是有序数据的集；集合（Sets）是无序无重复数据的集；字典（Dictionaries）是无序的键值对的集。</p>
+    <content type="html"><![CDATA[
+<p>Swift 语言提供 Arrays、Sets 和 Dictionaries 三种基本的集合类型来存储数据合集。数组（Array）是有序数据的集；集合（Sets）是无序无重复数据的集；字典（Dictionaries）是无序的键值对的集。</p>
 
 <p><img src="media/14627836147810/14627837494241.jpg" alt=""/></p>
 
@@ -4381,8 +4458,8 @@ let airportNames = [String](airports.values)
 </code></pre>
 
 <p>Swift 的字典类型书无序集合类型。为了以特定的顺序便利字典的键或值，可以对字典的 keys 或 values 属性使用 <code>sort()</code> 方法。</p>
-]]>
-    </content>
+
+]]></content>
   </entry>
   
   <entry>
@@ -4390,8 +4467,8 @@ let airportNames = [String](airports.values)
     <link href="http://forresthcang.com/wiki/14627831551017.html"/>
     <updated>2016-05-09T16:39:15+08:00</updated>
     <id>http://forresthcang.com/wiki/14627831551017.html</id>
-    <content type="html">
-<![CDATA[<h2 id="toc_0">空合运算符（NIl Coalescing Operator）</h2>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">空合运算符（NIl Coalescing Operator）</h2>
 
 <p>空合运算符（<code>a ?? b</code>）将对可选类型 <code>a</code> 进行空判断，如果 <code>a</code> 包含一个值就进行解封，否则就返回一个默认值 <code>b</code>。表达式 <code>a</code> 必须是 Optional 类型。默认值 <code>b</code> 的类型必须要和 <code>a</code> 存储值的类型保持一致。</p>
 
@@ -4401,8 +4478,8 @@ let airportNames = [String](airports.values)
 </code></pre>
 
 <p>如果 <code>a</code> 为非空值（non-nil），那么 <code>b</code> 值将不会被计算，这也就是所谓的短路求值。</p>
-]]>
-    </content>
+
+]]></content>
   </entry>
   
   <entry>
@@ -4410,8 +4487,8 @@ let airportNames = [String](airports.values)
     <link href="http://forresthcang.com/wiki/14623593987548.html"/>
     <updated>2016-05-04T18:56:38+08:00</updated>
     <id>http://forresthcang.com/wiki/14623593987548.html</id>
-    <content type="html">
-<![CDATA[<p>与 C 语言中的算术运算符不同，Swift 中的算数运算符默认是不会溢出的。所有溢出行为都会被捕获并报告错误。</p>
+    <content type="html"><![CDATA[
+<p>与 C 语言中的算术运算符不同，Swift 中的算数运算符默认是不会溢出的。所有溢出行为都会被捕获并报告错误。</p>
 
 <p>如果想让系统允许溢出行为，可以选择使用 Swift 中另一套默认支持溢出的运算符，所有的这些溢出运算符都是以<code>&amp;</code>开头的。</p>
 
@@ -4570,8 +4647,8 @@ let airportNames = [String](airports.values)
 </code></pre>
 
 <p>注：当定义前缀与后缀运算符的时候，我们并没有制定优先级。然而，如果对同一个值同时使用前缀和后缀运算符，则后缀运算符会先参与运算。</p>
-]]>
-    </content>
+
+]]></content>
   </entry>
   
   <entry>
@@ -4579,8 +4656,8 @@ let airportNames = [String](airports.values)
     <link href="http://forresthcang.com/wiki/14617168482919.html"/>
     <updated>2016-04-27T08:27:28+08:00</updated>
     <id>http://forresthcang.com/wiki/14617168482919.html</id>
-    <content type="html">
-<![CDATA[<h2 id="toc_0">存储属性的初始赋值</h2>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">存储属性的初始赋值</h2>
 
 <p>类和结构体在创建实例时，必须为所有存储型属性设置合适的初始值。存储属性的值不能处于一个未知的状态。</p>
 
@@ -4753,160 +4830,8 @@ let airportNames = [String](airports.values)
 <p>闭包结尾的大括号后面接了一对空的小括号。这用来告诉 Swift 立即执行此闭包，如果忽略了这对括号，相当于闭包本身作为值赋给了属性，而不是将闭包的返回值赋值给属性。</p>
 
 <p>注：如果你使用闭包来初始化属性，请记住在闭包执行时，实例的其他部分还没有初始化。这意味着你不能再闭包里访问其他属性，即使这些属性有默认值，同样，你也不能使用隐式的 <code>self</code> 属性，或者调用任何实例方法。</p>
-]]>
-    </content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Swift 学习笔记：访问控制]]></title>
-    <link href="http://forresthcang.com/wiki/14616582990381.html"/>
-    <updated>2016-04-26T16:11:39+08:00</updated>
-    <id>http://forresthcang.com/wiki/14616582990381.html</id>
-    <content type="html">
-<![CDATA[<p>访问控制可以限定其他源文件或者模块中的代码对你的代码的访问级别。这个特性可以让我们隐藏代码的一些实现细节，并且可以为其他人可以访问和使用的代码提供接口。</p>
 
-<h2 id="toc_0">模块和源文件</h2>
-
-<p>Swift 中的访问控制模型基于模块和源文件这两个概念。</p>
-
-<p>模块指的是独立的代码单元，框架或应用程序会作为一个独立的模块来构建和发布。一个模块可以使用 <code>import</code> 关键字导入另一个模块。</p>
-
-<p>在 Swift 中，Xcode 的每个 target（例如框架或应用程序）都被当做独立的模块处理。如果你是为了实现某个通用的功能，或者是为了封装一些常用方法而将代码打包成独立的框架，这个框架就是 Swift 中的一个模块。</p>
-
-<p>源文件就是 Swift 中的代码源文件，它通常属于一个模块，即一个应用程序或者框架。尽管我们一般会将不同的类型分别定义在不同的源文件中，但是同一个源文件也可以包含多个类型、函数之类的定义。</p>
-
-<h2 id="toc_1">访问级别</h2>
-
-<ul>
-<li><code>public</code>：可以访问同一模块源文件中的任何实体，在模块外也可以通过导入该模块来访问源文件里的所有实体。通常情况下，框架中的某个接口可以被任何人使用时，你可以将其设置为 <code>public</code> 级别。</li>
-<li><code>internal</code>：可以访问同一模块源文件中的任何实体，但是不能从模块外访问该模块源文件的实体。通常情况下，某个接口只在应用程序或框架内部使用时，你可以将其设置为 <code>internal</code> 级别。</li>
-<li><code>private</code>：限制实体只能在所在的源文件内部使用。使用 <code>private</code> 级别可以隐藏某些功能的实现细节。</li>
-</ul>
-
-<p>Swift 中的 <code>private</code> 访问级别不同于其他语言，它的范围限于源文件，而不是声明范围内。这就意味着，一个类型可以访问其所在源文件中的所有 <code>private</code> 实体，但是如果它的扩展定义在其他源文件中，那么它的扩展就不能访问它在这个源文件中定义的 <code>private</code> 实体。</p>
-
-<h2 id="toc_2">访问级别的基本原则</h2>
-
-<p>Swift 中的访问级别遵循一个基本原则：不可以在某个实体定义访问级别更高的实体。</p>
-
-<h2 id="toc_3">默认访问级别</h2>
-
-<p>不显式制定，默认为 <code>internal</code> 级别，有一些例外。</p>
-
-<h2 id="toc_4">单 target 应用程序的访问级别</h2>
-
-<p>当你编写一个单 target 应用程序时，应用的所有功能都是为该应用服务，而不需要提供给其他应用或者模块使用，所以我们不需要明确设置访问级别，使用默认的访问级别 <code>internal</code> 即可。但是，你也可以使用 <code>private</code> 级别，用于隐藏一些功能的实现细节。</p>
-
-<h2 id="toc_5">框架的访问级别</h2>
-
-<p>当你开发框架时，就需要把一些对外的接口定义为 <code>public</code> 级别，以便使用者导入该框架后可以正常使用其功能。这些被你定义为 <code>public</code> 的接口，就是这个框架的 API。</p>
-
-<h2 id="toc_6">单元测试 target 的访问级别</h2>
-
-<p>当你的应用程序包含单元测试 target 时，为了测试，测试模块需要访问应用程序模块中的代码。默认情况下只有 <code>public</code> 级别的实体才可以被其他模块访问。然而，如果在导入应用程序模块的语句前使用 <code>@testable</code> 特性，然后在允许测试的编译设置（Build Options -&gt; Enable Testability）下编译这个应用程序模块，单元测试 target 就可以访问应用程序模块中所有 <code>internal</code> 级别的实体。</p>
-
-<h2 id="toc_7">元组类型</h2>
-
-<p>元组的访问级别将由元组中访问级别最严格的类型来决定。例如，如果你构建了一个包含两种不同类型的元组，其中一个类型为 <code>private</code> 类型，那么这个元组的访问级别为 <code>private</code>。</p>
-
-<h2 id="toc_8">函数类型</h2>
-
-<p>函数的访问级别根据访问级别最严格的参数类型或返回值类型的访问级别来决定。</p>
-
-<h2 id="toc_9">枚举类型</h2>
-
-<p>枚举成员的访问级别和该枚举类型相同，你不能为枚举成员单独指定不同的访问级别。</p>
-
-<p>枚举定义中的任何原始值或关联值得类型的访问级别至少不能低于枚举类型的访问级别。例如，你不能在一个 <code>internal</code> 访问级别的枚举中定义 <code>private</code> 级别的原始值类型。</p>
-
-<h2 id="toc_10">子类</h2>
-
-<p>子类的访问级别不得高于父类的访问级别。例如，父类的访问级别是 <code>internal</code>，子类的访问级别就不能是 <code>public</code>。</p>
-
-<p>可以通过重写为继承来的类成员提供更高的访问级别。</p>
-
-<h2 id="toc_11">Getter 和 Setter</h2>
-
-<p>常量、变量、属性、下标的 <code>Getters</code> 和 <code>Setters</code> 的访问级别和它们所属类型的访问级别相同。</p>
-
-<p><code>Setter</code> 的访问级别可以低于对应的 <code>Getter</code> 的访问级别，这样就可以控制变量、属性或下标的读写权限。在 <code>var</code> 或 <code>subscript</code> 关键字之前，你可以通过 <code>privat(set)</code> 或 <code>internal(set)</code> 为它们的写入权限制定更低的访问级别。</p>
-
-<h2 id="toc_12">构造器</h2>
-
-<p>自定义构造器的访问级别可以低于或等于其所属类型的访问级别。唯一例外的是必要构造器，它的访问级别必须和所属类型的访问级别相同。</p>
-
-<p>如同函数或方法的参数，构造器参数的访问级别也不能低于构造器本身的访问级别。</p>
-
-<h2 id="toc_13">默认构造器</h2>
-
-<p>默认构造器的访问级别与所属类型的访问级别相同，除非类型的访问级别是 <code>public</code>。如果一个类型被指定为 <code>public</code> 级别，那么默认构造器的访问级别将为 <code>internal</code>。如果你希望一个 <code>public</code> 级别的参数类型也能在其他模块中使用这种无参数的默认构造器，你只能自己提供一个 <code>public</code> 访问级别的无参构造器。</p>
-
-<h2 id="toc_14">结构体默认的成员逐一构造器</h2>
-
-<p>如果结构体中任意存储型的访问级别为 <code>private</code>，那么该结构体默认的成员逐一构造器的访问级别就是 <code>private</code>。否则，这种构造器的访问级别依然是 <code>internal</code>。</p>
-
-<h2 id="toc_15">协议</h2>
-
-<p>协议中的每一个要求都具有和该协议相同的访问级别。你不能将协议中的要求设置为其他访问级别。这样才能确保该协议的所有要求对于任意采纳者都将可用。</p>
-
-<p>如果你定义了一个 <code>public</code> 访问级别的协议，那么该协议的所有实现也会是 <code>public</code> 访问级别。这一点不同于其他类型，例如，当类类型是 <code>public</code> 访问级别时，其成员的访问级别却只是 <code>internal</code>。</p>
-
-<h2 id="toc_16">协议继承</h2>
-
-<p>如果定义了一个继承自其他协议的新协议，那么新协议拥有的访问级别最高也只能和被继承协议的访问级别相同。</p>
-]]>
-    </content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Swift 学习笔记：错误处理]]></title>
-    <link href="http://forresthcang.com/wiki/14616560170869.html"/>
-    <updated>2016-04-26T15:33:37+08:00</updated>
-    <id>http://forresthcang.com/wiki/14616560170869.html</id>
-    <content type="html">
-<![CDATA[<h2 id="toc_0">表示并抛出错误</h2>
-
-<p>Swift 中的枚举类型尤为适合构建一组相关的错误状态，枚举的关联值还可以提供错误状态的额外信息。</p>
-
-<p>抛出一个错误可以让你表明有意外情况发生，导致正常的执行流程无法继续执行。抛出错误使用 <code>throws</code> 关键字。</p>
-
-<h2 id="toc_1">处理错误</h2>
-
-<p>当某个错误被抛出时，附近的某部分代码必须负责处理这个错误，例如纠正这个问题、尝试另外一种方式、或是向用户报告错误。</p>
-
-<p>当一个函数抛出一个错误时，你的程序流程会发生改变，所以重要的是你能迅速识别代码中会抛出错误的地方。为了标识出这些地方，在调用一个能抛出错误的函数、方法或者构造器之前，加上 <code>try</code> 关键字，或者 <code>try?</code> 或 <code>try!</code> 这种变体。</p>
-
-<p>和其他语言中的异常处理不同的是，Swift 中的错误处理并不涉及解除调用栈，这是一个计算代价高昂的过程。就此而言，<code>throw</code> 语句的性能特性是可以和 <code>return</code> 语句媲美的。</p>
-
-<h2 id="toc_2">用 throwing 函数传递错误</h2>
-
-<p>为了表示一个函数、方法或构造器可以抛出错误，在函数声明的参数列表后面加上 <code>throws</code> 关键字。一个标有 <code>throws</code> 关键字的函数被称作 throwing 函数。</p>
-
-<p>一个 throwing 函数可以在其 nebula 抛出错误，并将错误传递到函数被调用时的作用域。</p>
-
-<h2 id="toc_3">用 Do-Catch 处理错误</h2>
-
-<p>可以使用一个 <code>do-catch</code> 语句运行一段闭包代码来处理错误。如果在 <code>do</code> 子句中的代码抛出了一个错误，这个错误会与 <code>catch</code> 子句做匹配，从而决定哪条子句能处理它。</p>
-
-<h2 id="toc_4">将错误转换成可选值</h2>
-
-<p>可以使用 <code>try?</code> 通过将错误转换成一个可选值来处理错误。如果在评估 <code>try?</code> 表达式时一个错误被抛出，那么表达式的值就是 <code>nil</code>。</p>
-
-<h2 id="toc_5">禁用错误传递</h2>
-
-<p>有时候你知道某个 throwing 函数实际上在运行的时候是不会抛出错误的，在这种情况下，你可以在表达式前面写 <code>try!</code> 来禁用错误传递，这会把调用包装在一个断言不会有错误抛出的运行时断言中。如果实际上抛出了错误，你会得到一个运行时错误。</p>
-
-<h2 id="toc_6">指定清理操作</h2>
-
-<p>可以使用 <code>defer</code> 语句在即将离开当前代码块时执行一系列语句。该语句让你能执行一些必要的清理工作，不管是以何种方式离开当前代码块的——无论是由于抛出错误而离开，还是由于诸如 <code>return</code> 或者 <code>break</code> 的语句。</p>
-
-<p>例如，你可以用 <code>defer</code> 语句来确保文件描述符得以关闭，以及手动分配的内存得以释放。</p>
-
-<p><code>defer</code> 语句将代码的执行延迟到当前的作用域退出之前。该语句由 <code>defer</code> 关键字和要被延迟执行的语句组成。延迟执行的语句不能包含任何控制转移语句，例如 <code>break</code> 或是 <code>return</code> 语句，或是抛出一个错误。</p>
-
-<p>延迟执行的操作会按照它们被指定时的顺序的相反顺序执行。</p>
-]]>
-    </content>
+]]></content>
   </entry>
   
 </feed>
