@@ -4,7 +4,7 @@
   <title><![CDATA[Wiki]]></title>
   <link href="http://forresthcang.com/wiki/atom.xml" rel="self"/>
   <link href="http://forresthcang.com/wiki/"/>
-  <updated>2017-10-13T16:11:37+08:00</updated>
+  <updated>2017-10-13T16:13:53+08:00</updated>
   <id>http://forresthcang.com/wiki/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -20,6 +20,8 @@
     <id>http://forresthcang.com/wiki/15078822029815.html</id>
     <content type="html"><![CDATA[
 <p>笔记来源：<a href="http://blog.jobbole.com/110041/">http://blog.jobbole.com/110041/</a></p>
+
+<h2 id="toc_0">关于网络</h2>
 
 ]]></content>
   </entry>
