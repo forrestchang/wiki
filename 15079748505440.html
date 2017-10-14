@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <title>
     
-  Python Tricks - Tisoga's Wiki
+  怎样理解阻塞非阻塞与同步异步的区别？ - Tisoga's Wiki
   
 
   </title>
@@ -78,68 +78,29 @@ $(document).ready(function(event) {
 <div>
 	<article class="hentry" role="article">
 	<header>
-			  	<h1 class="entry-title">Python Tricks</h1>
-				<p class="meta"><time datetime="2017-10-09T19:51:09+08:00" pubdate data-updated="true">2017/10/9</time></p>
+			  	<h1 class="entry-title">怎样理解阻塞非阻塞与同步异步的区别？</h1>
+				<p class="meta"><time datetime="2017-10-14T17:54:10+08:00" pubdate data-updated="true">2017/10/14</time></p>
 			 </header>
 		  	<div class="entry-content">
-			  	<h2 id="toc_0">1. <code>__init__.py</code> 里面可以写什么</h2>
+			  	<p>笔记来源：<a href="https://www.zhihu.com/question/19732473">https://www.zhihu.com/question/19732473</a></p>
 
-<p>有如下层级的代码：</p>
+<h2 id="toc_0">同步与异步</h2>
 
-<pre><code>graphics/
-    __init__.py
-    primitive/
-        __init__.py
-        line.py
-        fill.py
-        text.py
-    formats/
-        __init__.py
-        png.py
-        jpg.py
-</code></pre>
+<p>同步和异步关注的是消息通信机制（synchronous communication / asynchronous communication）。所谓同步，就是在发出一个「调用」时，在没有得到结果之前，该「调用」就不返回。但是一旦调用返回，就得到返回值了。</p>
 
-<p>绝大部分时候让<code>__init__.py</code>空着就好，但是有些情况可能包含代码。例如用来自动加载子模块：</p>
+<p>换句话说，就是右「调用者」主动等待这个「调用」的结果。</p>
 
-<pre><code class="language-python"># graphics/formats/__init__.py
-from . import jpg
-from . import png
-</code></pre>
+<p>而异步则是相反，<strong>「调用」在发出之后，这个调用就直接返回了，所以没有返回结果</strong>。换句话说，当一个异步过程调用发出后，调用者不会立刻得到结果。而是在「调用」发出后，「被调用者」通过状态、通知来通知调用者，或者通过回调函数处理这个调用。</p>
 
-<p>像这样一个文件，用户可以仅仅通过<code>import graphics.formats</code>来代替<code>import graphics.formats.jpg</code>以及<code>import graphics.formats.png</code>。</p>
+<p>典型的异步编程模型比如 Node.js。</p>
 
-<h2 id="toc_1">2. 控制模块被全部导入的内容</h2>
+<h2 id="toc_1">阻塞与非阻塞</h2>
 
-<p>在模块中定义变量 <code>__all__</code>（列表） 来明确地列出需要导出的内容。如果定义了 <code>__call__</code>，那么只有被列举出的东西会被导出。</p>
+<p>阻塞和非阻塞关注的是<strong>程序在等待调用结果（消息、返回值）时的状态</strong>。</p>
 
-<h2 id="toc_2">3. 使用相对路径名导入包中子模块</h2>
+<p>阻塞调用时指调用结果返回之前，当前线程会被挂起。调用线程只有在得到结果之后才会返回。</p>
 
-<p>使用绝对路径名导入的不利之处是这将顶层包名硬编码到你的源码中，如果你想要重新组织它，你的代码将很难工作。</p>
-
-<p>假设在你的文件系统上有 mypackage 包，组织如下：</p>
-
-<pre><code>mypackage/
-    __init__.py
-    A/
-        __init__.py
-        spam.py
-        grok.py
-    B/
-        __init__.py
-        bar.py
-</code></pre>
-
-<p>如果模块 mypackage.A.spam 要导入同目录吓得模块 grok：</p>
-
-<pre><code class="language-python">from . import grok
-</code></pre>
-
-<p>如果模块 mypackage.A.spam 要导入不同目录吓得模块 B.bar：</p>
-
-<pre><code class="language-python">from ..B import bar
-</code></pre>
-
-<p>两个 import 都没有包含顶层包名，而是使用了 spam.py 的相对路径。</p>
+<p>非阻塞调用指在不能立刻得到结果之前，该调用不会阻塞当前线程。</p>
 
 			</div>
 
@@ -182,12 +143,9 @@ s.setAttribute('data-timestamp', +new Date());
 
 	    <p class="meta">
 	    
-	        <a class="basic-alignment left" href="15077106861971.html" 
-	        title="Previous Post: Scheme 笔记">&laquo; Scheme 笔记</a>
 	    
-	    
-	        <a class="basic-alignment right" href="15075210302691.html" 
-	        title="Next Post: S-表达式">S-表达式 &raquo;</a>
+	        <a class="basic-alignment right" href="15079735695142.html" 
+	        title="Next Post: 什么是 Event Loop？">什么是 Event Loop？ &raquo;</a>
 	    
 	    </p>
 	  </footer>

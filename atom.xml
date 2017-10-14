@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Wiki]]></title>
+  <title><![CDATA[Tisoga's Wiki]]></title>
   <link href="http://forresthcang.com/wiki/atom.xml" rel="self"/>
   <link href="http://forresthcang.com/wiki/"/>
-  <updated>2017-10-13T19:15:52+08:00</updated>
+  <updated>2017-10-14T19:01:27+08:00</updated>
   <id>http://forresthcang.com/wiki/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,35 @@
   </author>
   <generator uri="http://www.coderforart.com/">CoderForArt</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[怎样理解阻塞非阻塞与同步异步的区别？]]></title>
+    <link href="http://forresthcang.com/wiki/15079748505440.html"/>
+    <updated>2017-10-14T17:54:10+08:00</updated>
+    <id>http://forresthcang.com/wiki/15079748505440.html</id>
+    <content type="html"><![CDATA[
+<p>笔记来源：<a href="https://www.zhihu.com/question/19732473">https://www.zhihu.com/question/19732473</a></p>
+
+<h2 id="toc_0">同步与异步</h2>
+
+<p>同步和异步关注的是消息通信机制（synchronous communication / asynchronous communication）。所谓同步，就是在发出一个「调用」时，在没有得到结果之前，该「调用」就不返回。但是一旦调用返回，就得到返回值了。</p>
+
+<p>换句话说，就是右「调用者」主动等待这个「调用」的结果。</p>
+
+<p>而异步则是相反，<strong>「调用」在发出之后，这个调用就直接返回了，所以没有返回结果</strong>。换句话说，当一个异步过程调用发出后，调用者不会立刻得到结果。而是在「调用」发出后，「被调用者」通过状态、通知来通知调用者，或者通过回调函数处理这个调用。</p>
+
+<p>典型的异步编程模型比如 Node.js。</p>
+
+<h2 id="toc_1">阻塞与非阻塞</h2>
+
+<p>阻塞和非阻塞关注的是<strong>程序在等待调用结果（消息、返回值）时的状态</strong>。</p>
+
+<p>阻塞调用时指调用结果返回之前，当前线程会被挂起。调用线程只有在得到结果之后才会返回。</p>
+
+<p>非阻塞调用指在不能立刻得到结果之前，该调用不会阻塞当前线程。</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[什么是 Event Loop？]]></title>
@@ -4657,26 +4686,6 @@ let airportNames = [String](airports.values)
 </code></pre>
 
 <p>Swift 的字典类型书无序集合类型。为了以特定的顺序便利字典的键或值，可以对字典的 keys 或 values 属性使用 <code>sort()</code> 方法。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Swift 学习笔记：基本运算符]]></title>
-    <link href="http://forresthcang.com/wiki/14627831551017.html"/>
-    <updated>2016-05-09T16:39:15+08:00</updated>
-    <id>http://forresthcang.com/wiki/14627831551017.html</id>
-    <content type="html"><![CDATA[
-<h2 id="toc_0">空合运算符（NIl Coalescing Operator）</h2>
-
-<p>空合运算符（<code>a ?? b</code>）将对可选类型 <code>a</code> 进行空判断，如果 <code>a</code> 包含一个值就进行解封，否则就返回一个默认值 <code>b</code>。表达式 <code>a</code> 必须是 Optional 类型。默认值 <code>b</code> 的类型必须要和 <code>a</code> 存储值的类型保持一致。</p>
-
-<p>空合运算符是对以下代码的简短表达方法：</p>
-
-<pre><code class="language-swift">a != nil ? a! : b
-</code></pre>
-
-<p>如果 <code>a</code> 为非空值（non-nil），那么 <code>b</code> 值将不会被计算，这也就是所谓的短路求值。</p>
 
 ]]></content>
   </entry>
