@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Tisoga's Wiki]]></title>
+  <title><![CDATA[七录书斋]]></title>
   <link href="http://forresthcang.com/wiki/atom.xml" rel="self"/>
   <link href="http://forresthcang.com/wiki/"/>
-  <updated>2017-10-14T19:02:01+08:00</updated>
+  <updated>2017-10-14T19:47:07+08:00</updated>
   <id>http://forresthcang.com/wiki/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -1438,6 +1438,60 @@ if __name__ == &#39;__main__&#39;:
 <li>无需调用 my_future.add_done_callback()，因为可以直接把像在期物运行结束后执行的操作放在协程中 yield from my_future 表达式的后面。这是协程的一大优势：协程时可以暂停和恢复的函数。</li>
 <li>无需调用 my_future.result()，因为 yield from 从期物中产出的值就是结果（例如 result = yield from my_future）。</li>
 </ul>
+
+<h2 id="toc_13">第 19 章：动态属性和特性</h2>
+
+<p>在 Python 中，数据的属性和处理数据的方法统称「属性」（attribute）。其实，方法只是「可调用」的「属性」。除了这二者之外，我们还可以创建「特性」（property），在不改变类接口的前提下，使用「存取方法」（即读值方法和设值方法）修改数据属性。这与「统一访问原则」相符：</p>
+
+<pre><code>不管服务是由存储还是计算机实现的，一个模块提供的所有服务都应该通过统一的方式使用。
+</code></pre>
+
+<p>除了特性，Python 还提供了丰富的 API，用于控制属性的访问权限，以及实现动态属性。使用点号访问属性时（如 obj.attr），Python 解释器会调用特殊的方法（如 <code>__getattr__</code> 和 <code>__setattr__</code>）计算属性。用户自己定义的类可以通过 <code>__getattr__</code> 方法实现「虚拟属性」，当访问不存在的属性时（如 obj.no_such_attribute），即时计算属性的值。</p>
+
+<p>动态创建属性是一种元编程。</p>
+
+<h3 id="toc_14">使用动态属性转化数据</h3>
+
+<p>在接下来的几个示例中，我们要使用动态属性处理 O&#39;Reilly 为 OSCON 2016 大会提供的 JSON 格式数据源。</p>
+
+<p>数据集：<a href="http://www.oreilly.com/pub/sc/osconfeed">http://www.oreilly.com/pub/sc/osconfeed</a></p>
+
+<p>我们编写的第一个脚本只用于下载那个 OSCON 数据源。示例 19-2 没有用到元编程。</p>
+
+<pre><code class="language-python"># 示例 19-2 osconfeed.py: 下载 osconfeed.json
+from urllib.request import urlopen
+import warnings
+import os
+import json
+
+URL = &#39;http://www.oreilly.com/pub/sc/osconfeed&#39;
+JSON = &#39;data/osconfeed.json&#39;
+
+
+def load():
+    if not os.path.exists(JSON):
+        msg = &#39;downloading {} to {}&#39;.format(URL, JSON)
+        warnings.warn(msg)
+        with urlopen(URL) as remote, open(JSON, &#39;wb&#39;) as local:
+            local.write(remote.read())
+            
+    with open(JSON) as fp:
+        return json.load(fp)
+</code></pre>
+
+<p>有了 19-2 中的代码，我们可以审查数据源中的任何字段。</p>
+
+<p><img src="media/15058857487655/15079842995320.jpg" alt=""/></p>
+
+<h4 id="toc_15">使用动态属性访问 JSON 类数据</h4>
+
+<p>示例 19-2 十分简单，不过，<code>feed[&#39;Schedule&#39;][&#39;speakers&#39;][-1][&#39;name&#39;]</code> 这种句法很冗长。在 JavaScript 中，可以使用 <code>feed.Schedule.events[40].name</code> 来获取那个值。在 Python 中，可以实现一个近似字典的类，达到同样的效果。我自己实现了 FrozenJSON 类，比大多数实现都简单，因为只支持读取，即只能访问数据。不过，这个类能递归，自动处理嵌套的映射和列表。</p>
+
+<p><img src="media/15058857487655/15079845272578.jpg" alt=""/></p>
+
+<p>FrozenJSON 类的关键是 <code>__getattr__</code> 方法。我们要记住重要的一点，<strong>仅当无法使用常规的方法获取属性（即在实例、类或超类中找不到指定的属性），解释器才会调用特殊的 <code>__getattr__</code> 方法</strong>。</p>
+
+<p>如示例 19-5 所示，FrozenJSON 类只有两个方法（<code>__init__</code> 和 <code>__getattr__</code>）和一个实例属性 <code>__data</code>。因此，尝试获取其他属性会触发解释器调用 <code>__getattr__</code> 方法。这个方法首先查看 self._data 字典中有没有指定名称的属性（不是键），这样 FrozenJSON 实例便可以处理字典中的所有方法，例如把 items 方法委托给 self.__data.items() 方法。如果 self.__data 没有指定名称的属性，那么 <code>__getattr__</code> 方法一那个名称为键，从 self.__data 中获取一个元素，传给 FrozenJSON.build 方法。这样就能深入 JSON 数据的嵌套结构，使用类方法 build 把每一层嵌套转化成一个 FrozenJSON 实例。</p>
 
 ]]></content>
   </entry>
