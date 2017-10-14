@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <title>
     
-  雾里看花之 Python Asyncio - Tisoga's Wiki
+  I don't understand Python's Asyncio - Tisoga's Wiki
   
 
   </title>
@@ -78,7 +78,7 @@ $(document).ready(function(event) {
 <div>
 	<article class="hentry" role="article">
 	<header>
-			  	<h1 class="entry-title">雾里看花之 Python Asyncio</h1>
+			  	<h1 class="entry-title">I don't understand Python's Asyncio</h1>
 				<p class="meta"><time datetime="2017-10-14T17:16:32+08:00" pubdate data-updated="true">2017/10/14</time></p>
 			 </header>
 		  	<div class="entry-content">
@@ -128,7 +128,51 @@ $(document).ready(function(event) {
 
 <p>这些行为的组合是很混淆的，主要有以下几个原因。首先，你需要知道这些函数被委托到全局设置的底层事件循环策略。默认是hi将事件循环绑定到线程。或者，如果需要的话，可以在理论上将事件循环绑定到一个 greenlet 或类似的。然而，重要是要知道库代码不控制策略，因此不能推断 asyncio 将适用于线程。</p>
 
-<p>其次，asyncio 不需要通过策略将事件循环绑定到上下文。</p>
+<p>其次，asyncio 不需要通过策略将事件循环绑定到上下文。事件循环可以单独工作。但是这正是库代码的第一个问题，因为协同程序或类似的东西并不知道哪个事件循环负责调度它。这意味着，如果从协程中调用 <code>asyncio.get_event_loop()</code>，你可能没有机会取得事件循环。这也是所有 API 均采用可选的显式事件循环参数的原因。举例来说，要弄清楚当前哪个协程正在运行，不能使用如下调用：</p>
+
+<pre><code class="language-python">def get_task():
+    loop = asyncio.get_event_loop()
+    try:
+        return asyncio.Task.get_current(loop)
+    except RuntimeError:
+        return None
+</code></pre>
+
+<p>相反，必须显式地传递事件循环。这进一步要求你在库代码中显式地遍历事件循环，否则可能发生很奇怪的事情。</p>
+
+<p>由于事件循环策略不提供当前上下文的标识符，因此库也不可能以任何方式「索引」到当前上下文。也没有回调函数用来监视这样的上下文拆除，这进一步限制了实际可以展开的操作。</p>
+
+<h2 id="toc_2">Awaitables and Coroutines</h2>
+
+<p>In my humble opinion the biggest design mistake of Python was to overload iterators so much. They are now being used not just for iteration but also for various types of coroutines. Python 中迭代器最大的设计错误之一是：如果 <code>StopIteration</code> 没有被捕获形成的空泡，这可能导致非常令人沮丧的问题，其中某处的异常可能导致其他地方的生成器或协同程序终止。这是一个长期存在的问题，基于 Python 的模板引擎 Jinja 经常面临这种问题。该模板引擎在内部渲染为生成器，并且当由于某种原因的模板引起 <code>StopIteration</code> 时，渲染就停止在那里。</p>
+
+<p>Python 慢慢认识到了过度重载的教训。首先在 3.x 版本加入了 asyncio 模块，并没有语言级支持。所以自始至终它不过仅仅是装饰器和生成器而已。为了实现 yield from 以及其他东西。StopIteration 再次重载，这导致了令人困惑的行为，像这样：</p>
+
+<p><img src="media/15079725923338/15079805254105.jpg" alt=""/></p>
+
+<p>没有错误，没有警告，只是不是你期望的行为。这是因为从一个座位生成器的函数中 return 的值实际上引发了一个带有单个参数的 StopIteration，它不是由迭代器协议捕获的，而是在协程代码中处理。</p>
+
+<p>在 3.5 和 3.6 有很多改变，因为现在除了生成器我们还有协程对象。除了通过封装生成器来生成协程，没有其他可以直接生成协程的单独对象。它是通过给函数加 <code>async</code> 前缀来实现。例如 <code>async def x()</code> 会产生这样的协程。在 3.6 中，将由单独的异步生成器，它通过触发 <code>AsyncStopIteration</code> 保持其独立性。此外，对于 Python 3.5 和更高的版本，导入新的 future 对象（generator_stop），如果代码在迭代步骤中触发 StopIteration，它将引发 RuntimeError。</p>
+
+<p>老的实现方式并未真的消失。生成器仍然具有 <code>send</code> 和 <code>throw</code> 方法，以及协程仍然在很大程度上表现为生成器。</p>
+
+<p>为了统一很多这样的重复，现在我们在 Python 中有更多的概念了：</p>
+
+<ul>
+<li>awaitable：具有 <code>__await__</code> 方法的对象。由本地协同程序和旧式协同程序以及一些其他程序来实现；</li>
+<li>协程函数（coroutine function）：返回原生协程的函数。不要与返回协程的函数混淆；</li>
+<li>协程（coroutine）：原生协程，注意，目前为止，当前文档不认为老式 asyncio 协程时协程程序。至少 insepect.iscoroutine 不认为它是协程。尽管它被 future/awaitable 分支接纳。</li>
+</ul>
+
+<h2 id="toc_3">协程封装器（coroutine wrapper）</h2>
+
+<p>每当你运行 async def，Python 就会调用一个线程局部的协程封装器。它由 sys.set_coroutine_wrapper 设置，并且它是可以包装这些东西的一个函数。看起来有点像如下代码：</p>
+
+<p><img src="media/15079725923338/15079813301626.jpg" alt=""/></p>
+
+<p>在这种情况下，我从来没有实际调用原始的函数，只是给你一个提示，说明这个函数可以做些什么。目前我只能说它总是线程的局部有效，所以，如果替换事件循环策略，你需要搞清楚如何让协程封装器在相同的上下文同步更新。创建的新线程不会从父线程继承那些标识。</p>
+
+<p>这不要与 asyncio 协程封装代码混淆。</p>
 
 			</div>
 
@@ -227,7 +271,7 @@ s.setAttribute('data-timestamp', +new Date());
 	  
 	      
 		      <li class="post">
-		        <a href="15079725923338.html">雾里看花之 Python Asyncio</a>
+		        <a href="15079725923338.html">I don't understand Python's Asyncio</a>
 		      </li>
 	     
 	  
