@@ -79,6 +79,69 @@ $(document).ready(function(event) {
 
 	<article>
 		 <header>
+		  	<h1 class="entry-title"><a href="15079725923338.html">雾里看花之 Python Asyncio</a></h1>
+			<p class="meta"><time datetime="2017-10-14T17:16:32+08:00" 
+			pubdate data-updated="true">2017/10/14</time></p>
+		 </header>
+	  	<div class="entry-content">
+		  	
+		  	<p>笔记来源：<a href="https://linux.cn/article-8051-1.html">https://linux.cn/article-8051-1.html</a></p>
+
+<h2 id="toc_0">原语</h2>
+
+<p>asyncio 通过协程的帮助来实现异步 IO。最初它是通过 yield 和 yield from 表达式实现的一个库，因为 Python 语言本身演进的缘故，现在它已经变成了一个更复杂的怪兽。所以，为了在同一个频道讨论下去，你需要了解如下一些术语：</p>
+
+<ul>
+<li><a href="%5B%E4%BB%80%E4%B9%88%E6%98%AF%20Event%20Loop%EF%BC%9F%5D(15079735695142.html)">事件循环</a></li>
+<li>时间循环策略</li>
+<li>awaitable</li>
+<li>协程函数</li>
+<li>老式协程函数</li>
+<li>协程</li>
+<li>协程封装</li>
+<li>生成器</li>
+<li>future</li>
+<li>并发的 future</li>
+<li>任务</li>
+<li>句柄</li>
+<li>执行器（executor）</li>
+<li>传输（transport）</li>
+<li>协议</li>
+</ul>
+
+<p>此外，Python 还新增了一些新的特殊方法：</p>
+
+<ul>
+<li><code>__aenter__</code> 和 <code>__aexit__</code>，用于异步块的操作</li>
+<li><code>__aiter__</code> 和 <code>__anext__</code>，用于异步迭代器（异步循环和异步推导）。为了更强大些，协议已经改变过一次了。在 Python 3.5 它返回一个 awaitable（这是个协程）；在 3.6 它返回一个新的异步生成器。</li>
+<li><code>__await__</code>，用于自定义的 awaitable</li>
+</ul>
+
+<h2 id="toc_1">事件循环</h2>
+
+<p>asyncio 事件循环和你第一眼看上去的略有不同。表面看，每个线程都有一个事件循环，然而事实并非如此。我认为它们应该按照如下的方式工作：</p>
+
+<ul>
+<li>如果是主线程，当调用 <code>asyncio.get_event_loop()</code> 时创建一个事件循环</li>
+<li>如果是其他线程，当调用 <code>asyncio.get_event_loop()</code> 时返回运行时错误</li>
+<li>当前线程可以使用 <code>asyncio.set_event_loop()</code> 在任何事件节点绑定事件循环。该事件循环可由 <code>asyncio.new_event_loop()</code> 函数创建</li>
+<li>事件循环可以在不绑定到当前线程的情况下使用</li>
+<li><code>asyncio.get_event_loop()</code> 返回绑定线程的事件循环，而非当前运行的事件循环</li>
+</ul>
+
+<p>这些行为的组合是很混淆的，主要有以下几个原因。首先，你需要知道这些函数被委托到全局设置的底层事件循环策略。默认是hi将事件循环绑定到线程。或者，如果需要的话，可以在理论上将事件循环绑定到一个 greenlet 或类似的。然而，重要是要知道库代码不控制策略，因此不能推断 asyncio 将适用于线程。</p>
+
+<p>其次，asyncio 不需要通过策略将事件循环绑定到上下文。</p>
+
+
+		</div>
+
+		
+
+	</article>
+ 
+	<article>
+		 <header>
 		  	<h1 class="entry-title"><a href="15075498694747.html">Python Tricks</a></h1>
 			<p class="meta"><time datetime="2017-10-09T19:51:09+08:00" 
 			pubdate data-updated="true">2017/10/9</time></p>
@@ -2211,16 +2274,18 @@ Yuck!
 	  <ul id="recent_posts">
 	  
 	      <li class="post">
-	        <a href="programming.html"><strong>Programming&nbsp;(24)</strong></a>
+	        <a href="programming.html"><strong>Programming&nbsp;(26)</strong></a>
 	         <p class="cat-children-p"> 
 	        
-	        	<a href="python.html">Python&nbsp;(7)</a>&nbsp;&nbsp;
+	        	<a href="python.html">Python&nbsp;(8)</a>&nbsp;&nbsp;
 	        
 	        	<a href="algorithms.html">Algorithms&nbsp;(1)</a>&nbsp;&nbsp;
 	        
 	        	<a href="swift.html">Swift&nbsp;(11)</a>&nbsp;&nbsp;
 	        
 	        	<a href="lisp.html">Lisp&nbsp;(3)</a>&nbsp;&nbsp;
+	        
+	        	<a href="javascript.html">JavaScript&nbsp;(1)</a>&nbsp;&nbsp;
 	        
 	        	<a href="network.html">Network&nbsp;(2)</a>&nbsp;&nbsp;
 	        
@@ -2232,6 +2297,18 @@ Yuck!
 	<section>
 	  <h1>Recent Posts</h1>
 	  <ul id="recent_posts">
+	  
+	      
+		      <li class="post">
+		        <a href="15079735695142.html">什么是 Event Loop？</a>
+		      </li>
+	     
+	  
+	      
+		      <li class="post">
+		        <a href="15079725923338.html">雾里看花之 Python Asyncio</a>
+		      </li>
+	     
 	  
 	      
 		      <li class="post">
@@ -2248,18 +2325,6 @@ Yuck!
 	      
 		      <li class="post">
 		        <a href="15077106861971.html">Scheme 笔记</a>
-		      </li>
-	     
-	  
-	      
-		      <li class="post">
-		        <a href="15075498694747.html">Python Tricks</a>
-		      </li>
-	     
-	  
-	      
-		      <li class="post">
-		        <a href="15075210302691.html">S-表达式</a>
 		      </li>
 	     
 	  

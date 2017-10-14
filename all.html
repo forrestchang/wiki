@@ -79,6 +79,132 @@ $(document).ready(function(event) {
 
 	<article>
 		 <header>
+		  	<h1 class="entry-title"><a href="15079735695142.html">什么是 Event Loop？</a></h1>
+			<p class="meta"><time datetime="2017-10-14T17:32:49+08:00" 
+			pubdate data-updated="true">2017/10/14</time></p>
+		 </header>
+	  	<div class="entry-content">
+		  	
+		  	<p>笔记来源：<a href="http://www.ruanyifeng.com/blog/2013/10/event_loop.html">http://www.ruanyifeng.com/blog/2013/10/event_loop.html</a></p>
+
+<p>Event Loop 指的是计算机系统的一种运行机制。JavaScript 就采用这种机制，来解决单线程运行带来的一些问题。</p>
+
+<p><img src="media/15079735695142/15079736411779.png" alt=""/></p>
+
+<p>想要理解 Event Loop，就要从程序的运行模式讲起。运行以后的程序叫做「进程」（process），一般情况下，一个进程一次只能执行一个任务。</p>
+
+<p>如果有很多任务需要执行，有三种方法：</p>
+
+<ol>
+<li>排队：因为一个进程一次只能执行一个任务，只好等前面的任务执行完了，再执行后面的任务；</li>
+<li>新建进程：使用 fork 命令，为每个任务新建一个进程；</li>
+<li>新建线程：因为进程太耗费资源，所以如今的程序往往允许一个进程包含多个线程，由线程去完成任务。</li>
+</ol>
+
+<p>以 JavaScript 语言为例，它是一种单线程语言，所有任务都在一个线程上完成，即采用上面第一种方法。一旦遇到大量任务或者遇到一个耗时的任务，网页就会出现「假死」，因为 JavaScript 停不下来，也就无法响应用户的行为。</p>
+
+<p>如果某个任务很耗时，比如设计很多 IO 操作，那么线程的运行大概是下面这样：</p>
+
+<p><img src="media/15079735695142/15079739551520.png" alt=""/></p>
+
+<p>上图的绿色部分是程序的运行时间，红色部分是等待时间。可以看到，由于 IO 操作很慢，所以这个线程的大部分运行时间都在空等 IO 操作返回结果。这种运行方式称为「同步模式」（synchronous IO）。</p>
+
+<p>如果采用多线程，同时运行多个任务，那很可能就是下面这样：</p>
+
+<p><img src="media/15079735695142/15079740565106.png" alt=""/></p>
+
+<p>上图表明，多线程不仅占用多倍的系统资源，也闲置多倍的资源，这显然不合理。</p>
+
+<p>Event Loop 就是为了解决这个问题而提出的。</p>
+
+<p><strong>Event Loop 是一种程序结构，用于等待和发送消息和事件。</strong></p>
+
+<p>简单说，就是在程序中设置两个线程：一个负责程序本身的运行，称为「主线程」，另一个负责主线程和其他进程（主要是各种 IO 操作）的通信，被称为「Event Loop 线程」（消息线程）。</p>
+
+<p><img src="media/15079735695142/15079742151620.png" alt=""/></p>
+
+<p>上图主线程的绿色部分，还是表示运行时间，而橙色部分表示空闲时间。每当遇到 IO 的时候，主线程就让 Event Loop 线程去通知相应的 IO 程序，然后接着往后运行，所以不存在红色的等待时间。等到 IO 程序完成操作，Event Loop 线程再把结果返回主线程。主线程就调用事先设定的回调函数，完成整个任务。</p>
+
+<p>可以看到，由于多出了橙色的空闲时间，所以主线程得以运行更多的惹怒，这就提高了运行效率。这种运行法式称为「异步模式」（asynchronous IO）。</p>
+
+<hr/>
+
+<p>文中提到的「阻塞」和「非阻塞」其实与「同步」「异步」并没有太大的关系。</p>
+
+<p>具体可以参考：<a href="https://www.zhihu.com/question/19732473">https://www.zhihu.com/question/19732473</a></p>
+
+
+		</div>
+
+		
+
+	</article>
+ 
+	<article>
+		 <header>
+		  	<h1 class="entry-title"><a href="15079725923338.html">雾里看花之 Python Asyncio</a></h1>
+			<p class="meta"><time datetime="2017-10-14T17:16:32+08:00" 
+			pubdate data-updated="true">2017/10/14</time></p>
+		 </header>
+	  	<div class="entry-content">
+		  	
+		  	<p>笔记来源：<a href="https://linux.cn/article-8051-1.html">https://linux.cn/article-8051-1.html</a></p>
+
+<h2 id="toc_0">原语</h2>
+
+<p>asyncio 通过协程的帮助来实现异步 IO。最初它是通过 yield 和 yield from 表达式实现的一个库，因为 Python 语言本身演进的缘故，现在它已经变成了一个更复杂的怪兽。所以，为了在同一个频道讨论下去，你需要了解如下一些术语：</p>
+
+<ul>
+<li><a href="%5B%E4%BB%80%E4%B9%88%E6%98%AF%20Event%20Loop%EF%BC%9F%5D(15079735695142.html)">事件循环</a></li>
+<li>时间循环策略</li>
+<li>awaitable</li>
+<li>协程函数</li>
+<li>老式协程函数</li>
+<li>协程</li>
+<li>协程封装</li>
+<li>生成器</li>
+<li>future</li>
+<li>并发的 future</li>
+<li>任务</li>
+<li>句柄</li>
+<li>执行器（executor）</li>
+<li>传输（transport）</li>
+<li>协议</li>
+</ul>
+
+<p>此外，Python 还新增了一些新的特殊方法：</p>
+
+<ul>
+<li><code>__aenter__</code> 和 <code>__aexit__</code>，用于异步块的操作</li>
+<li><code>__aiter__</code> 和 <code>__anext__</code>，用于异步迭代器（异步循环和异步推导）。为了更强大些，协议已经改变过一次了。在 Python 3.5 它返回一个 awaitable（这是个协程）；在 3.6 它返回一个新的异步生成器。</li>
+<li><code>__await__</code>，用于自定义的 awaitable</li>
+</ul>
+
+<h2 id="toc_1">事件循环</h2>
+
+<p>asyncio 事件循环和你第一眼看上去的略有不同。表面看，每个线程都有一个事件循环，然而事实并非如此。我认为它们应该按照如下的方式工作：</p>
+
+<ul>
+<li>如果是主线程，当调用 <code>asyncio.get_event_loop()</code> 时创建一个事件循环</li>
+<li>如果是其他线程，当调用 <code>asyncio.get_event_loop()</code> 时返回运行时错误</li>
+<li>当前线程可以使用 <code>asyncio.set_event_loop()</code> 在任何事件节点绑定事件循环。该事件循环可由 <code>asyncio.new_event_loop()</code> 函数创建</li>
+<li>事件循环可以在不绑定到当前线程的情况下使用</li>
+<li><code>asyncio.get_event_loop()</code> 返回绑定线程的事件循环，而非当前运行的事件循环</li>
+</ul>
+
+<p>这些行为的组合是很混淆的，主要有以下几个原因。首先，你需要知道这些函数被委托到全局设置的底层事件循环策略。默认是hi将事件循环绑定到线程。或者，如果需要的话，可以在理论上将事件循环绑定到一个 greenlet 或类似的。然而，重要是要知道库代码不控制策略，因此不能推断 asyncio 将适用于线程。</p>
+
+<p>其次，asyncio 不需要通过策略将事件循环绑定到上下文。</p>
+
+
+		</div>
+
+		
+
+	</article>
+ 
+	<article>
+		 <header>
 		  	<h1 class="entry-title"><a href="15078822029815.html">全栈必备：网络编程基础</a></h1>
 			<p class="meta"><time datetime="2017-10-13T16:10:02+08:00" 
 			pubdate data-updated="true">2017/10/13</time></p>
@@ -5449,16 +5575,18 @@ let airportNames = [String](airports.values)
 	  <ul id="recent_posts">
 	  
 	      <li class="post">
-	        <a href="programming.html"><strong>Programming&nbsp;(24)</strong></a>
+	        <a href="programming.html"><strong>Programming&nbsp;(26)</strong></a>
 	         <p class="cat-children-p"> 
 	        
-	        	<a href="python.html">Python&nbsp;(7)</a>&nbsp;&nbsp;
+	        	<a href="python.html">Python&nbsp;(8)</a>&nbsp;&nbsp;
 	        
 	        	<a href="algorithms.html">Algorithms&nbsp;(1)</a>&nbsp;&nbsp;
 	        
 	        	<a href="swift.html">Swift&nbsp;(11)</a>&nbsp;&nbsp;
 	        
 	        	<a href="lisp.html">Lisp&nbsp;(3)</a>&nbsp;&nbsp;
+	        
+	        	<a href="javascript.html">JavaScript&nbsp;(1)</a>&nbsp;&nbsp;
 	        
 	        	<a href="network.html">Network&nbsp;(2)</a>&nbsp;&nbsp;
 	        
@@ -5470,6 +5598,18 @@ let airportNames = [String](airports.values)
 	<section>
 	  <h1>Recent Posts</h1>
 	  <ul id="recent_posts">
+	  
+	      
+		      <li class="post">
+		        <a href="15079735695142.html">什么是 Event Loop？</a>
+		      </li>
+	     
+	  
+	      
+		      <li class="post">
+		        <a href="15079725923338.html">雾里看花之 Python Asyncio</a>
+		      </li>
+	     
 	  
 	      
 		      <li class="post">
@@ -5486,18 +5626,6 @@ let airportNames = [String](airports.values)
 	      
 		      <li class="post">
 		        <a href="15077106861971.html">Scheme 笔记</a>
-		      </li>
-	     
-	  
-	      
-		      <li class="post">
-		        <a href="15075498694747.html">Python Tricks</a>
-		      </li>
-	     
-	  
-	      
-		      <li class="post">
-		        <a href="15075210302691.html">S-表达式</a>
 		      </li>
 	     
 	  

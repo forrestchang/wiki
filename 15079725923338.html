@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <title>
     
-  Swift 学习笔记：错误处理 - Wiki
+  雾里看花之 Python Asyncio - Wiki
   
 
   </title>
@@ -78,51 +78,57 @@ $(document).ready(function(event) {
 <div>
 	<article class="hentry" role="article">
 	<header>
-			  	<h1 class="entry-title">Swift 学习笔记：错误处理</h1>
-				<p class="meta"><time datetime="2016-04-26T15:33:37+08:00" pubdate data-updated="true">2016/4/26</time></p>
+			  	<h1 class="entry-title">雾里看花之 Python Asyncio</h1>
+				<p class="meta"><time datetime="2017-10-14T17:16:32+08:00" pubdate data-updated="true">2017/10/14</time></p>
 			 </header>
 		  	<div class="entry-content">
-			  	<h2 id="toc_0">表示并抛出错误</h2>
+			  	<p>笔记来源：<a href="https://linux.cn/article-8051-1.html">https://linux.cn/article-8051-1.html</a></p>
 
-<p>Swift 中的枚举类型尤为适合构建一组相关的错误状态，枚举的关联值还可以提供错误状态的额外信息。</p>
+<h2 id="toc_0">原语</h2>
 
-<p>抛出一个错误可以让你表明有意外情况发生，导致正常的执行流程无法继续执行。抛出错误使用 <code>throws</code> 关键字。</p>
+<p>asyncio 通过协程的帮助来实现异步 IO。最初它是通过 yield 和 yield from 表达式实现的一个库，因为 Python 语言本身演进的缘故，现在它已经变成了一个更复杂的怪兽。所以，为了在同一个频道讨论下去，你需要了解如下一些术语：</p>
 
-<h2 id="toc_1">处理错误</h2>
+<ul>
+<li><a href="%5B%E4%BB%80%E4%B9%88%E6%98%AF%20Event%20Loop%EF%BC%9F%5D(15079735695142.html)">事件循环</a></li>
+<li>时间循环策略</li>
+<li>awaitable</li>
+<li>协程函数</li>
+<li>老式协程函数</li>
+<li>协程</li>
+<li>协程封装</li>
+<li>生成器</li>
+<li>future</li>
+<li>并发的 future</li>
+<li>任务</li>
+<li>句柄</li>
+<li>执行器（executor）</li>
+<li>传输（transport）</li>
+<li>协议</li>
+</ul>
 
-<p>当某个错误被抛出时，附近的某部分代码必须负责处理这个错误，例如纠正这个问题、尝试另外一种方式、或是向用户报告错误。</p>
+<p>此外，Python 还新增了一些新的特殊方法：</p>
 
-<p>当一个函数抛出一个错误时，你的程序流程会发生改变，所以重要的是你能迅速识别代码中会抛出错误的地方。为了标识出这些地方，在调用一个能抛出错误的函数、方法或者构造器之前，加上 <code>try</code> 关键字，或者 <code>try?</code> 或 <code>try!</code> 这种变体。</p>
+<ul>
+<li><code>__aenter__</code> 和 <code>__aexit__</code>，用于异步块的操作</li>
+<li><code>__aiter__</code> 和 <code>__anext__</code>，用于异步迭代器（异步循环和异步推导）。为了更强大些，协议已经改变过一次了。在 Python 3.5 它返回一个 awaitable（这是个协程）；在 3.6 它返回一个新的异步生成器。</li>
+<li><code>__await__</code>，用于自定义的 awaitable</li>
+</ul>
 
-<p>和其他语言中的异常处理不同的是，Swift 中的错误处理并不涉及解除调用栈，这是一个计算代价高昂的过程。就此而言，<code>throw</code> 语句的性能特性是可以和 <code>return</code> 语句媲美的。</p>
+<h2 id="toc_1">事件循环</h2>
 
-<h2 id="toc_2">用 throwing 函数传递错误</h2>
+<p>asyncio 事件循环和你第一眼看上去的略有不同。表面看，每个线程都有一个事件循环，然而事实并非如此。我认为它们应该按照如下的方式工作：</p>
 
-<p>为了表示一个函数、方法或构造器可以抛出错误，在函数声明的参数列表后面加上 <code>throws</code> 关键字。一个标有 <code>throws</code> 关键字的函数被称作 throwing 函数。</p>
+<ul>
+<li>如果是主线程，当调用 <code>asyncio.get_event_loop()</code> 时创建一个事件循环</li>
+<li>如果是其他线程，当调用 <code>asyncio.get_event_loop()</code> 时返回运行时错误</li>
+<li>当前线程可以使用 <code>asyncio.set_event_loop()</code> 在任何事件节点绑定事件循环。该事件循环可由 <code>asyncio.new_event_loop()</code> 函数创建</li>
+<li>事件循环可以在不绑定到当前线程的情况下使用</li>
+<li><code>asyncio.get_event_loop()</code> 返回绑定线程的事件循环，而非当前运行的事件循环</li>
+</ul>
 
-<p>一个 throwing 函数可以在其 nebula 抛出错误，并将错误传递到函数被调用时的作用域。</p>
+<p>这些行为的组合是很混淆的，主要有以下几个原因。首先，你需要知道这些函数被委托到全局设置的底层事件循环策略。默认是hi将事件循环绑定到线程。或者，如果需要的话，可以在理论上将事件循环绑定到一个 greenlet 或类似的。然而，重要是要知道库代码不控制策略，因此不能推断 asyncio 将适用于线程。</p>
 
-<h2 id="toc_3">用 Do-Catch 处理错误</h2>
-
-<p>可以使用一个 <code>do-catch</code> 语句运行一段闭包代码来处理错误。如果在 <code>do</code> 子句中的代码抛出了一个错误，这个错误会与 <code>catch</code> 子句做匹配，从而决定哪条子句能处理它。</p>
-
-<h2 id="toc_4">将错误转换成可选值</h2>
-
-<p>可以使用 <code>try?</code> 通过将错误转换成一个可选值来处理错误。如果在评估 <code>try?</code> 表达式时一个错误被抛出，那么表达式的值就是 <code>nil</code>。</p>
-
-<h2 id="toc_5">禁用错误传递</h2>
-
-<p>有时候你知道某个 throwing 函数实际上在运行的时候是不会抛出错误的，在这种情况下，你可以在表达式前面写 <code>try!</code> 来禁用错误传递，这会把调用包装在一个断言不会有错误抛出的运行时断言中。如果实际上抛出了错误，你会得到一个运行时错误。</p>
-
-<h2 id="toc_6">指定清理操作</h2>
-
-<p>可以使用 <code>defer</code> 语句在即将离开当前代码块时执行一系列语句。该语句让你能执行一些必要的清理工作，不管是以何种方式离开当前代码块的——无论是由于抛出错误而离开，还是由于诸如 <code>return</code> 或者 <code>break</code> 的语句。</p>
-
-<p>例如，你可以用 <code>defer</code> 语句来确保文件描述符得以关闭，以及手动分配的内存得以释放。</p>
-
-<p><code>defer</code> 语句将代码的执行延迟到当前的作用域退出之前。该语句由 <code>defer</code> 关键字和要被延迟执行的语句组成。延迟执行的语句不能包含任何控制转移语句，例如 <code>break</code> 或是 <code>return</code> 语句，或是抛出一个错误。</p>
-
-<p>延迟执行的操作会按照它们被指定时的顺序的相反顺序执行。</p>
+<p>其次，asyncio 不需要通过策略将事件循环绑定到上下文。</p>
 
 			</div>
 
@@ -134,7 +140,7 @@ $(document).ready(function(event) {
 			<strong>Categories:</strong>&nbsp; 
 			<span class="categories">
 			
-			    <a class='category' href='swift.html'>Swift</a>&nbsp;
+			    <a class='category' href='python.html'>Python</a>&nbsp;
 			 
 			</span>
 		    </p>
@@ -165,12 +171,12 @@ s.setAttribute('data-timestamp', +new Date());
 
 	    <p class="meta">
 	    
-	        <a class="basic-alignment left" href="14616582990381.html" 
-	        title="Previous Post: Swift 学习笔记：访问控制">&laquo; Swift 学习笔记：访问控制</a>
+	        <a class="basic-alignment left" href="15079735695142.html" 
+	        title="Previous Post: 什么是 Event Loop？">&laquo; 什么是 Event Loop？</a>
 	    
 	    
-	        <a class="basic-alignment right" href="14615726488001.html" 
-	        title="Next Post: Swift 学习笔记：泛型">Swift 学习笔记：泛型 &raquo;</a>
+	        <a class="basic-alignment right" href="15078822029815.html" 
+	        title="Next Post: 全栈必备：网络编程基础">全栈必备：网络编程基础 &raquo;</a>
 	    
 	    </p>
 	  </footer>

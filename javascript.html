@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <title>
     
-  Swift 学习笔记：泛型 - Wiki
+  JavaScript - Wiki
   
 
   </title>
@@ -75,87 +75,77 @@ $(document).ready(function(event) {
 </nav>
   <div id="main">
     <div id="content"> 
-<div>
-	<article class="hentry" role="article">
-	<header>
-			  	<h1 class="entry-title">Swift 学习笔记：泛型</h1>
-				<p class="meta"><time datetime="2016-04-25T16:24:08+08:00" pubdate data-updated="true">2016/4/25</time></p>
-			 </header>
-		  	<div class="entry-content">
-			  	<p>泛型代码让你能够根据自定义的需求，编写出使用与任意类型、灵活可重用的函数及类型。它能让你避免代码的重复，用一种清晰和抽闲的方式来表达代码的意图。</p>
+<div class="blog-index">
 
-<h2 id="toc_0">类型约束</h2>
+	<article>
+		 <header>
+		  	<h1 class="entry-title"><a href="15079735695142.html">什么是 Event Loop？</a></h1>
+			<p class="meta"><time datetime="2017-10-14T17:32:49+08:00" 
+			pubdate data-updated="true">2017/10/14</time></p>
+		 </header>
+	  	<div class="entry-content">
+		  	
+		  	<p>笔记来源：<a href="http://www.ruanyifeng.com/blog/2013/10/event_loop.html">http://www.ruanyifeng.com/blog/2013/10/event_loop.html</a></p>
 
-<p>类型约束可以指定一个类型参数必须继承指定类，或者符合一个特定的协议或协议组合。</p>
+<p>Event Loop 指的是计算机系统的一种运行机制。JavaScript 就采用这种机制，来解决单线程运行带来的一些问题。</p>
 
-<p>当你创建自定义泛型类型时，你可以定义你自己的类型约束，这些约束将提供更为强大的泛型编程能力。抽象概念，例如可哈希的，描述的是类型在概念上的特征，而不是它们的显式类型。</p>
+<p><img src="media/15079735695142/15079736411779.png" alt=""/></p>
 
-<h2 id="toc_1">类型约束语法</h2>
+<p>想要理解 Event Loop，就要从程序的运行模式讲起。运行以后的程序叫做「进程」（process），一般情况下，一个进程一次只能执行一个任务。</p>
 
-<p>你可以在一个类型参数名后面防止一个类名或者协议名，并用冒号进行分隔，来定义类型约束，它们将成为类型参数列表的一部分。对泛型函数添加类型约束的基本语法如下所示（作用于泛型类型时的语法与之相同）：</p>
+<p>如果有很多任务需要执行，有三种方法：</p>
 
-<pre><code class="language-swift">func someFunction&lt;T: SomeClass, U: SomeProtocol&gt;(someT: T, someU: U) {
-    // 这里是泛型函数的函数体部分
-}
-</code></pre>
+<ol>
+<li>排队：因为一个进程一次只能执行一个任务，只好等前面的任务执行完了，再执行后面的任务；</li>
+<li>新建进程：使用 fork 命令，为每个任务新建一个进程；</li>
+<li>新建线程：因为进程太耗费资源，所以如今的程序往往允许一个进程包含多个线程，由线程去完成任务。</li>
+</ol>
 
-<p>上面这个函数有两个类型参数。第一个类型参数 <code>T</code>，有一个要求是 <code>T</code> 必须是 <code>SomeClass</code> 子类的类型约束，同理，第二个必须符合 <code>SomeProtocol</code> 协议的类型约束。</p>
+<p>以 JavaScript 语言为例，它是一种单线程语言，所有任务都在一个线程上完成，即采用上面第一种方法。一旦遇到大量任务或者遇到一个耗时的任务，网页就会出现「假死」，因为 JavaScript 停不下来，也就无法响应用户的行为。</p>
 
-<h2 id="toc_2">关联类型</h2>
+<p>如果某个任务很耗时，比如设计很多 IO 操作，那么线程的运行大概是下面这样：</p>
 
-<p>定义一个协议时，有的时候声明一个或多个关联类型作为协议定义的一部分将会非常有用。关联类型为协议中的某个类型提供了一个占3位名（或者说别名），其代表的实际类型在协议被采纳时才会被指定。你可以通过 <code>associatedtype</code> 关键字来指定关联类型。</p>
+<p><img src="media/15079735695142/15079739551520.png" alt=""/></p>
 
-			</div>
+<p>上图的绿色部分是程序的运行时间，红色部分是等待时间。可以看到，由于 IO 操作很慢，所以这个线程的大部分运行时间都在空等 IO 操作返回结果。这种运行方式称为「同步模式」（synchronous IO）。</p>
 
-		
-	  
-		<footer>
-		 <p class="meta">
+<p>如果采用多线程，同时运行多个任务，那很可能就是下面这样：</p>
 
-			<strong>Categories:</strong>&nbsp; 
-			<span class="categories">
-			
-			    <a class='category' href='swift.html'>Swift</a>&nbsp;
-			 
-			</span>
-		    </p>
-		    <p class="meta">
-		      
-		 </p>
-	    
-		<div class="sharing">
-			<script>
+<p><img src="media/15079735695142/15079740565106.png" alt=""/></p>
 
-/**
-*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
-/*
-var disqus_config = function () {
-this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
-this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-};
-*/
-(function() { // DON'T EDIT BELOW THIS LINE
-var d = document, s = d.createElement('script');
-s.src = 'https://tisogas-wiki.disqus.com/embed.js';
-s.setAttribute('data-timestamp', +new Date());
-(d.head || d.body).appendChild(s);
-})();
-</script>
+<p>上图表明，多线程不仅占用多倍的系统资源，也闲置多倍的资源，这显然不合理。</p>
+
+<p>Event Loop 就是为了解决这个问题而提出的。</p>
+
+<p><strong>Event Loop 是一种程序结构，用于等待和发送消息和事件。</strong></p>
+
+<p>简单说，就是在程序中设置两个线程：一个负责程序本身的运行，称为「主线程」，另一个负责主线程和其他进程（主要是各种 IO 操作）的通信，被称为「Event Loop 线程」（消息线程）。</p>
+
+<p><img src="media/15079735695142/15079742151620.png" alt=""/></p>
+
+<p>上图主线程的绿色部分，还是表示运行时间，而橙色部分表示空闲时间。每当遇到 IO 的时候，主线程就让 Event Loop 线程去通知相应的 IO 程序，然后接着往后运行，所以不存在红色的等待时间。等到 IO 程序完成操作，Event Loop 线程再把结果返回主线程。主线程就调用事先设定的回调函数，完成整个任务。</p>
+
+<p>可以看到，由于多出了橙色的空闲时间，所以主线程得以运行更多的惹怒，这就提高了运行效率。这种运行法式称为「异步模式」（asynchronous IO）。</p>
+
+<hr/>
+
+<p>文中提到的「阻塞」和「非阻塞」其实与「同步」「异步」并没有太大的关系。</p>
+
+<p>具体可以参考：<a href="https://www.zhihu.com/question/19732473">https://www.zhihu.com/question/19732473</a></p>
+
+
 		</div>
 
-	    <p class="meta">
-	    
-	        <a class="basic-alignment left" href="14616560170869.html" 
-	        title="Previous Post: Swift 学习笔记：错误处理">&laquo; Swift 学习笔记：错误处理</a>
-	    
-	    
-	        <a class="basic-alignment right" href="14615467401189.html" 
-	        title="Next Post: Swift 学习笔记：协议">Swift 学习笔记：协议 &raquo;</a>
-	    
-	    </p>
-	  </footer>
+		
+
 	</article>
+  
+	<div class="pagination">
+	
+<a href="archives.html">Blog Archives</a>
+	 
+	    
+	</div>
 </div>
  <aside class="sidebar"> 
 
