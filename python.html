@@ -461,7 +461,83 @@ global_env = standard_env()
 		 </header>
 	  	<div class="entry-content">
 		  	
-		  	<h2 id="toc_0">第 17 章：使用 futures 处理并发</h2>
+		  	<ul>
+<li>
+<a href="#toc_0">第 17 章：使用 futures 处理并发</a>
+<ul>
+<li>
+<a href="#toc_1">示例：网络下载的三种风格</a>
+<ul>
+<li>
+<a href="#toc_2">依序下载的脚本</a>
+</li>
+<li>
+<a href="#toc_3">使用 concurrent.futures 模块下载</a>
+</li>
+<li>
+<a href="#toc_4">futures 在哪里</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#toc_5">阻塞型 I/O 和 GIL</a>
+</li>
+<li>
+<a href="#toc_6">使用 concurrent.futures 模块启动进程</a>
+</li>
+<li>
+<a href="#toc_7">实现 Executor.map 方法</a>
+</li>
+<li>
+<a href="#toc_8">显示下载进度并处理错误</a>
+</li>
+<li>
+<a href="#toc_9">杂谈</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#toc_10">第 18 章：使用 asyncio 包处理并发</a>
+<ul>
+<li>
+<a href="#toc_11">线程与协程对比</a>
+<ul>
+<li>
+<a href="#toc_12">asyncio.Future：故意不阻塞</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href="#toc_13">第 19 章：动态属性和特性</a>
+<ul>
+<li>
+<a href="#toc_14">使用动态属性转化数据</a>
+<ul>
+<li>
+<a href="#toc_15">使用动态属性访问 JSON 类数据</a>
+</li>
+<li>
+<a href="#toc_16">处理无效的属性名</a>
+</li>
+<li>
+<a href="#toc_17">使用 <code>__new__</code> 方法以灵活的方式创建对象</a>
+</li>
+<li>
+<a href="#toc_18">使用 shelve 模块调整 OSCON 数据源的结构</a>
+</li>
+<li>
+<a href="#toc_19">使用特性获取链接的记录</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<h2 id="toc_0">第 17 章：使用 futures 处理并发</h2>
 
 <blockquote>
 <p>抨击线程的往往是系统程序员，他们考虑的使用场景对一般的应用程序员来说，也许一生都不会遇到……应用程序员遇到的使用场景，99% 的情况下只需知道如何派生一堆独立的线程，然后用队列收集结果。—— Michele Simionato</p>
