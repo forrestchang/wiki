@@ -127,7 +127,7 @@ $(document).ready(function(event) {
 <p>asyncio 通过协程的帮助来实现异步 IO。最初它是通过 yield 和 yield from 表达式实现的一个库，因为 Python 语言本身演进的缘故，现在它已经变成了一个更复杂的怪兽。所以，为了在同一个频道讨论下去，你需要了解如下一些术语：</p>
 
 <ul>
-<li><a href="%5B%E4%BB%80%E4%B9%88%E6%98%AF%20Event%20Loop%EF%BC%9F%5D(15079735695142.html)">事件循环</a></li>
+<li>事件循环: <a href="15079735695142.html">什么是 Event Loop？</a></li>
 <li>时间循环策略</li>
 <li>awaitable</li>
 <li>协程函数</li>
@@ -959,6 +959,187 @@ def load():
 <p>FrozenJSON 类的关键是 <code>__getattr__</code> 方法。我们要记住重要的一点，<strong>仅当无法使用常规的方法获取属性（即在实例、类或超类中找不到指定的属性），解释器才会调用特殊的 <code>__getattr__</code> 方法</strong>。</p>
 
 <p>如示例 19-5 所示，FrozenJSON 类只有两个方法（<code>__init__</code> 和 <code>__getattr__</code>）和一个实例属性 <code>__data</code>。因此，尝试获取其他属性会触发解释器调用 <code>__getattr__</code> 方法。这个方法首先查看 self._data 字典中有没有指定名称的属性（不是键），这样 FrozenJSON 实例便可以处理字典中的所有方法，例如把 items 方法委托给 self.__data.items() 方法。如果 self.__data 没有指定名称的属性，那么 <code>__getattr__</code> 方法一那个名称为键，从 self.__data 中获取一个元素，传给 FrozenJSON.build 方法。这样就能深入 JSON 数据的嵌套结构，使用类方法 build 把每一层嵌套转化成一个 FrozenJSON 实例。</p>
+
+<pre><code class="language-python"># explore0.py: 把一个 JSON 数据集转换成一个嵌套着 FrozenJSON 
+# 对象、列表和简单类型的 FrozenJSON 对象
+
+from collections import abc
+
+
+class FrozenJSON:
+    &quot;&quot;&quot;一个只读接口，使用属性表示法访问 JSON 类对象&quot;&quot;&quot;
+    def __init__(self, mapping):
+        self.__data = dict(mapping)
+        
+    def __getattr__(self, name):
+        if hasattr(self.__data, name):
+            return getattr(self.__data, name)
+        else:
+            return FrozenJSON.build(self.__data[name])
+        
+    @classmethod
+    def build(cls, obj):
+        if isinstance(obj, abc.Mapping):
+            return cls(obj)
+        elif isinstance(obj, abc.MutableSequence):
+            return [cls.build(item) for item in obj]
+        else:
+            return obj
+</code></pre>
+
+<p>解释一下 build 这个类方法：如果 obj 是 Mapping，那就构造一个 FrozenJSON 对象；如果是 MutableSequence 对象，必然是列表，因此，我们把 obj 中每个元素递归地传给 .build() 方法，构造一个列表；如果既不是字典也不是列表，那么原封不动地返回元素。</p>
+
+<p>注意，我们没有缓存或转换原始数据源。在迭代数据源的过程中，嵌套的数据结构不断被转换成 FrozenJSON 对象。这么做没问题，因为数据集不大，而且这个脚本只用于访问或转换数据。</p>
+
+<h4 id="toc_16">处理无效的属性名</h4>
+
+<p>FrozenJSON 类有个缺陷：没有对名称为 Python 关键字的属性做特殊处理。</p>
+
+<p>FrozenJSON 类的目的是为了便于访问数据，因此更好的方法是检查传给 FrozenJSON.__init__ 方法的映射中是否有键的名称为关键字，如果有，那么在键名后加上 <code>_</code>，然后通过 <code>xxx.class_</code> 这样的方式读取。</p>
+
+<p>解决方法：</p>
+
+<pre><code class="language-python">class FrozenJSON:
+    &quot;&quot;&quot;一个只读接口，使用属性表示法访问 JSON 类对象&quot;&quot;&quot;
+    def __init__(self, mapping):
+        self.__data = {}
+        for key, value in mapping.items():
+            if keyword.iskeyword(key):
+                key += &#39;_&#39;
+            self.__data[key] = value
+</code></pre>
+
+<p>对动态属性的名称做了一些处理之后，我们要分析 FrozenJSON 类的另一个重要功能——类方法 build 的逻辑。这个方法吧嵌套结构转换成 FrozenJSON 实例或 FrozenJSON 实例列表，因此 <code>__getattr__</code> 方法使用这个方法访问属性时，能为不同的值返回不同类型的对象。</p>
+
+<h4 id="toc_17">使用 <code>__new__</code> 方法以灵活的方式创建对象</h4>
+
+<p>除了在类方法实现 build 的逻辑之外，还可以在 <code>__new__</code> 方法中实现。</p>
+
+<p>我们通常把 <code>__init__</code> 称为构造方法，这是从其他语言借鉴过来的术语。其实，用于构造实例的是特殊方法 <code>__new__</code>：这是个类方法（使用特殊方式处理，因此不必使用 @classmethod 装饰器），必须返回一个实例。返回的实例会作为第一个参数（即 self）传给 <code>__init__</code> 方法。因为调用 <code>__init__</code> 方法时要传入实例，而且禁止返回任何值，所以 <code>__init__</code> 方法其实是「初始化方法」，真正的构造方法时 <code>__new__</code>。我们几乎不需要自己编写 new 方法，因为从 object 类继承的实现已经足够了。</p>
+
+<p>刚才说明的过程，即从 new 方法到 init 方法，是最常见的，但不是唯一的。new 方法也可以返回其他类的实例，此时，解释器不会调用 init 方法。</p>
+
+<p>也就是说，Python 构建对象的过程可以使用下述伪代码描述：</p>
+
+<pre><code class="language-python">def object_maker(the_class, some_arg):
+    new_object = the_class.__new__(some_arg)
+    if isinstance(new_object, the_class):
+        the_class.__init__(new_object, some_arg)
+    return new_object
+    
+# 下述两个语句的作用基本等效
+x = Foo(&#39;bar&#39;)
+x = object_maker(Foo, &#39;bar&#39;)
+</code></pre>
+
+<p>下面是 FrozenJSON 的另一个版本，把之前在类方法 build 中的逻辑移动到了 new 方法中。</p>
+
+<pre><code class="language-python"># explore2.py: 使用 new 方法取代 build 方法，构建可能是也可能不是 FrozenJSON 实例的新对象
+
+from collections import abc
+import keyword
+
+
+class FrozenJSON:
+    &quot;&quot;&quot;一个只读接口，使用属性表示法访问 JSON 类对象&quot;&quot;&quot;
+    def __init__(self, mapping):
+        self.__data = {}
+        for key, value in mapping.items():
+            if keyword.iskeyword(key):
+                key += &#39;_&#39;
+            self.__data[key] = value
+        
+    def __getattr__(self, name):
+        if hasattr(self.__data, name):
+            return getattr(self.__data, name)
+        else:
+            return FrozenJSON(self.__data[name])
+        
+    def __new__(cls, obj):
+        if isinstance(obj, abc.Mapping):
+            return super().__new__(cls)
+        elif isinstance(obj, abc.MutableSequence):
+            return [cls.build(item) for item in obj]
+        else:
+            return obj
+</code></pre>
+
+<p>new 方法的第一个参数时类，因为创建的对象通常是那个类的实例。所以，在 <code>FrozenJSON.__new__</code> 方法中，<code>super().__new__(cls)</code> 表达式会调用 <code>object.__new__(FrozenJSON)</code>，而 object 类构建的实例其实是 FrozenJSON 实例，即那个实例的 <code>__class__</code> 属性存储的是 FrozenJSON 类的引用。</p>
+
+<h4 id="toc_18">使用 shelve 模块调整 OSCON 数据源的结构</h4>
+
+<p>pickle 是 Python 对象序列化格式的包，shelve 模块提供了 pickle 存储方式。</p>
+
+<p>shelve.open 高阶函数返回一个 shelve.Shelf 实例，这是简单的键值对象数据库，背后由 dbm 模块支持，具有下述特点：</p>
+
+<ul>
+<li>shelve.Shelf 是 abc.MutableMapping 的子类，因此提供了处理映射类型的重要方法；</li>
+<li>此外，shelve.Shelf 类还停工了几个管理 I/O 的方法，如 sync 和 close；它也是一个上下文管理器；</li>
+<li>只要把新值赋予键，就会保存键和值；</li>
+<li>键必须是字符串；</li>
+<li>值必须是 pickle 模块能处理的对象。</li>
+</ul>
+
+<p>现在值得关注的是，shelve 模块为识别 OSCON 的日程数据提供了一种简单有效的方式。我们将从 JSON 文件中读取所有记录，将其存在一个 shelve.Shelf 对象中，键由记录类型和编号组成（例如，&#39;event.33050&#39;），而值使我们即将定义的 Record 类的实例。</p>
+
+<p><img src="media/15058857487655/15080695765233.jpg" alt=""/></p>
+
+<pre><code class="language-python"># schedule1.py: 访问保存在 shelve.Shelf 对象里的 OSCOn日程数据
+
+import warnings
+import osconfeed
+
+DB_NAME = &#39;data/schedule1_db&#39;
+CONFERENCE = &#39;conference.115&#39;
+
+
+class Record:
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
+        
+
+def load_db(db):
+    raw_data = osconfeed.load()
+    warnings.warn(&#39;loading &#39; + DB_NAME)
+    for collections, rec_list in raw_data[&#39;Schedule&#39;].items():
+        record_type = collection[:-1]
+        for record in rec_list:
+            key = &#39;{}.{}&#39;.format(record_type, record[&#39;serial&#39;])
+            record[&#39;serial&#39;] = key
+            db[key] = Record(**record)
+</code></pre>
+
+<p><code>Record.__init__</code> 方法展示了一个流行的 Python 技巧。我们知道，对象的 <code>__dict__</code> 属性中存储着对象的属性——前提是类中没有声明 <code>__slots__</code> 属性。因此，更新实例的 dict 属性，把值设为一个映射，能快速地在那个实例中创建一堆属性。</p>
+
+<p>像上面那样调整日程和数据集之后，我们可以扩展 Record 类，让它提供一个有用的服务：自动获取 event 记录引用的 venue 和 speaker 记录。这与 Django ORM 访问 models.ForeignKey 字段时所做的事类似：得到的不是键，而是链接的模型对象。</p>
+
+<h4 id="toc_19">使用特性获取链接的记录</h4>
+
+<p>下一个版本的目标是，对于从 Shelf 对象中获取的 event 记录来说，读取它的 venue 或 speakers 属性时返回的不是编号，而是完整的记录对象，用法如下所示：</p>
+
+<p><img src="media/15058857487655/15080745702654.jpg" alt=""/></p>
+
+<p><img src="media/15058857487655/15080746859163.jpg" alt=""/></p>
+
+<p>上图绘出了本节要分析的几个类。</p>
+
+<ul>
+<li>Record
+
+<ul>
+<li><code>__init__</code> 方法与 schedule1.py 脚本中的一样；为了辅助测试，添加了 <code>__eq__</code> 方法；</li>
+</ul></li>
+<li>DbRecord
+
+<ul>
+<li>Record 类的子类，添加了 <code>__db</code> 类属性，用于设置和获取 <code>__db</code> 属性的 set_db 和 get_db 静态方法，用于从数据库中获取记录的 fetch 类方法，以及辅助调试和测试的 <code>__repr__</code> 实例方法；</li>
+</ul></li>
+<li>Event
+
+<ul>
+<li>DBRecord 类的子类，添加了用于获取所链接记录的 venue 和 speakers 属性，以及特殊的 repr 方法。</li>
+</ul></li>
+</ul>
 
 
 		</div>
