@@ -79,6 +79,312 @@ $(document).ready(function(event) {
 
 	<article>
 		 <header>
+		  	<h1 class="entry-title"><a href="15081195874570.html">理解 Python WSGI</a></h1>
+			<p class="meta"><time datetime="2017-10-16T10:06:27+08:00" 
+			pubdate data-updated="true">2017/10/16</time></p>
+		 </header>
+	  	<div class="entry-content">
+		  	
+		  	<p>笔记来源：<a href="http://www.letiantian.me/2015-09-10-understand-python-wsgi/">http://www.letiantian.me/2015-09-10-understand-python-wsgi/</a></p>
+
+<h2 id="toc_0">什么是 WSGI</h2>
+
+<p>WSGI 的全称是 Web Server Gateway Interface，这是一个规范，描述了 web server 如何与 web application 交互、web application 如何处理请求。该规范具体描述在 PEP3333。注意，WSGI 既要实现 web server，也要实现 web application。</p>
+
+<p>实现了 WSGI 的模块/库有：wsgiref（Python 内置）、werkzeug.serving、twisted.web 等。</p>
+
+<p>当前运行在 WSGI 之上的 web 框架有 Bottle、Flask、Django 等。</p>
+
+<p>WSGI server 所做的工作紧紧是将从客户端收到的请求传递给 WSGI application，然后将 WSGI application 的返回值作为响应传送给客户端。WSGI application 可以是栈式的，这个栈的中间部分叫做中间件，两端必须要实现 application 和 server。</p>
+
+<h2 id="toc_1">WSGI Tutorial</h2>
+
+<h3 id="toc_2">WSGI application 接口</h3>
+
+<p>WSGI application 接口应该实现为一个可调用对象，例如函数、方法、类、含 <code>__call__</code> 方法的实例，这个可调用对象可以接受 2 个参数：</p>
+
+<ul>
+<li>一个字典，该字典可以包含了客户端请求的信息以及其他信息，可以认为是请求上下文，一般叫做 environment；</li>
+<li>一个用于发送 HTTP 响应状态（HTTP status）、响应头（HTTP headers）的回调函数。</li>
+</ul>
+
+<p>同时，可调用对象的返回值是响应正文（response body），响应正文是可迭代的、并包含了多个字符串。</p>
+
+<p>WSGI application 的结构如下：</p>
+
+<pre><code class="language-python">def application(environ, start_response):
+    response_body = &#39;Request method: %s&#39; % environ[&#39;REQUEST_METHOD&#39;]
+    
+    # HTTP status
+    status = &#39;200 OK&#39;
+    
+    # HTTP headers
+    response_headers = [
+        (&#39;Content-Type&#39;, &#39;text/plain&#39;),
+        (&#39;Content-Length&#39;, str(len(response_body)))
+    ]
+    
+    # 将响应状态和响应头交给 WSGI server
+    start_response(status, response_headers)
+    
+    # 返回响应正文
+    return [response_body]
+</code></pre>
+
+<h3 id="toc_3">Environment</h3>
+
+<p>下面的程序可以将 environment 字典的内容返回给客户端：</p>
+
+<pre><code class="language-python"># 导入 python 内置的 WSGI server
+from wsgiref.simple_server import make_server
+
+def application (environ, start_response):
+
+    response_body = [
+        &#39;%s: %s&#39; % (key, value) for key, value in sorted(environ.items())
+    ]
+    response_body = &#39;\n&#39;.join(response_body)  # 由于下面将Content-Type设置为text/plain，所以`\n`在浏览器中会起到换行的作用
+
+    status = &#39;200 OK&#39;
+    response_headers = [
+        (&#39;Content-Type&#39;, &#39;text/plain&#39;),
+        (&#39;Content-Length&#39;, str(len(response_body)))
+    ]
+    start_response(status, response_headers)
+
+    return [response_body]
+
+# 实例化 WSGI server
+httpd = make_server(
+    &#39;localhost&#39;,
+    8051, # port
+    application # WSGI application
+)
+
+httpd.handle_request()
+</code></pre>
+
+<p>访问 <code>http://127.0.0.1:8051/</code>，可以看到 environment 的内容。</p>
+
+<h3 id="toc_4">可迭代的响应</h3>
+
+<p>如果把上面的可调用对象 application 的返回值：</p>
+
+<pre><code class="language-python">return [response_body]
+</code></pre>
+
+<p>改成：</p>
+
+<pre><code class="language-python">return response_body
+</code></pre>
+
+<p>这回导致 WSGI 程序的响应变慢。原因是字符串 response_body 也是可迭代的，它的每一次迭代只能得到 1 byte 的数据量，这也意味着每一次只向客户端发送 1 byte 的数据，知道发送完毕为止。所以，推荐使用 <code>return [response_body]</code>。</p>
+
+<h3 id="toc_5">解析 GET 请求</h3>
+
+<p>运行 environment.py 在浏览器中访问 <code>http://localhost:8051/?age=10&amp;hobbies=software&amp;hobbies=tunning</code>，可以在响应中找到：</p>
+
+<pre><code>QUERY_STRING: age=10&amp;hobbies=software&amp;hobbies=tunning
+REQUEST_METHOD: GET
+</code></pre>
+
+<p>cgi.parse_qs() 函数可以很方便的处理 QUERY_STRING，同时需要 cgi.escape() 函数处理特殊字符以防止脚本注入，下面是个例子：</p>
+
+<pre><code class="language-python"># -*- coding: utf-8 -*-
+
+from cgi import parse_qs, escape
+
+QUERY_STRING = &#39;age=10&amp;hobbies=software&amp;hobbies=tunning&#39;
+d = parse_qs(QUERY_STRING)
+print d.get(&#39;age&#39;, [&#39;&#39;])[0]
+print d.get(&#39;hobbies&#39;, [])
+print d.get(&#39;name&#39;, [&#39;unknown&#39;])
+
+print 10 * &#39;*&#39;
+print escape(&#39;&lt;script&gt;alert(123);&lt;/script&gt;&#39;)
+</code></pre>
+
+<p>输出如下：</p>
+
+<pre><code>10
+[&#39;software&#39;, &#39;tunning&#39;]
+[&#39;unknown&#39;]
+**********
+&amp;lt;script&amp;gt;alert(123);&amp;lt;/script&amp;gt;
+</code></pre>
+
+<p>然后，我们可以写一个基本的处理 GET 请求的动态网页了：</p>
+
+<pre><code class="language-python"># ! /usr/bin/env python
+# -*- coding: utf-8 -*- 
+
+from wsgiref.simple_server import make_server
+from cgi import parse_qs, escape
+
+# html中form的method是get，action是当前页面
+html = &quot;&quot;&quot;
+&lt;html&gt;
+&lt;body&gt;
+   &lt;form method=&quot;get&quot; action=&quot;&quot;&gt;
+        &lt;p&gt;
+           Age: &lt;input type=&quot;text&quot; name=&quot;age&quot; value=&quot;%(age)s&quot;&gt;
+        &lt;/p&gt;
+        &lt;p&gt;
+            Hobbies:
+            &lt;input
+                name=&quot;hobbies&quot; type=&quot;checkbox&quot; value=&quot;software&quot;
+                %(checked-software)s
+            &gt; Software
+            &lt;input
+                name=&quot;hobbies&quot; type=&quot;checkbox&quot; value=&quot;tunning&quot;
+                %(checked-tunning)s
+            &gt; Auto Tunning
+        &lt;/p&gt;
+        &lt;p&gt;
+            &lt;input type=&quot;submit&quot; value=&quot;Submit&quot;&gt;
+        &lt;/p&gt;
+    &lt;/form&gt;
+    &lt;p&gt;
+        Age: %(age)s&lt;br&gt;
+        Hobbies: %(hobbies)s
+    &lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&quot;&quot;&quot;
+
+def application (environ, start_response):
+
+    # 解析QUERY_STRING
+    d = parse_qs(environ[&#39;QUERY_STRING&#39;])
+
+    age = d.get(&#39;age&#39;, [&#39;&#39;])[0] # 返回age对应的值
+    hobbies = d.get(&#39;hobbies&#39;, []) # 以list形式返回所有的hobbies
+
+    # 防止脚本注入
+    age = escape(age)
+    hobbies = [escape(hobby) for hobby in hobbies]
+
+    response_body = html % { 
+        &#39;checked-software&#39;: (&#39;&#39;, &#39;checked&#39;)[&#39;software&#39; in hobbies],
+        &#39;checked-tunning&#39;: (&#39;&#39;, &#39;checked&#39;)[&#39;tunning&#39; in hobbies],
+        &#39;age&#39;: age or &#39;Empty&#39;,
+        &#39;hobbies&#39;: &#39;, &#39;.join(hobbies or [&#39;No Hobbies?&#39;])
+    }
+
+    status = &#39;200 OK&#39;
+
+    # 这次的content type是text/html
+    response_headers = [
+        (&#39;Content-Type&#39;, &#39;text/html&#39;),
+        (&#39;Content-Length&#39;, str(len(response_body)))
+    ]
+
+    start_response(status, response_headers)
+    return [response_body]
+
+httpd = make_server(&#39;localhost&#39;, 8051, application)
+
+# 能够一直处理请求
+httpd.serve_forever()
+
+print &#39;end&#39;
+</code></pre>
+
+<h3 id="toc_6">解析 POST 请求</h3>
+
+<p>对于 POST 请求，查询字符串（query string）是放在 HTTP 请求的正文（request body）中的，而不是放在 URL 中。请求正文在 environment 字典变量中键 wsgi.input 对应的值中，这是一个类似 file 的变量。PEP 3333 指出，请求头中 Content-Length 字段表示正文的大小，但是可能为空、或者不存在，所以读取请求正文时要用 try/except。</p>
+
+<p>下面是一个可以处理 POST 请求的动态网站：</p>
+
+<pre><code class="language-python"># ! /usr/bin/env python
+# -*- coding: utf-8 -*- 
+
+from wsgiref.simple_server import make_server
+from cgi import parse_qs, escape
+
+# html中form的method是post
+html = &quot;&quot;&quot;
+&lt;html&gt;
+&lt;body&gt;
+   &lt;form method=&quot;post&quot; action=&quot;&quot;&gt;
+        &lt;p&gt;
+           Age: &lt;input type=&quot;text&quot; name=&quot;age&quot; value=&quot;%(age)s&quot;&gt;
+        &lt;/p&gt;
+        &lt;p&gt;
+            Hobbies:
+            &lt;input
+                name=&quot;hobbies&quot; type=&quot;checkbox&quot; value=&quot;software&quot;
+                %(checked-software)s
+            &gt; Software
+            &lt;input
+                name=&quot;hobbies&quot; type=&quot;checkbox&quot; value=&quot;tunning&quot;
+                %(checked-tunning)s
+            &gt; Auto Tunning
+        &lt;/p&gt;
+        &lt;p&gt;
+            &lt;input type=&quot;submit&quot; value=&quot;Submit&quot;&gt;
+        &lt;/p&gt;
+    &lt;/form&gt;
+    &lt;p&gt;
+        Age: %(age)s&lt;br&gt;
+        Hobbies: %(hobbies)s
+    &lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&quot;&quot;&quot;
+
+def application(environ, start_response):
+
+    # CONTENT_LENGTH 可能为空，或者没有
+    try:
+        request_body_size = int(environ.get(&#39;CONTENT_LENGTH&#39;, 0))
+    except (ValueError):
+        request_body_size = 0
+
+    request_body = environ[&#39;wsgi.input&#39;].read(request_body_size)
+    d = parse_qs(request_body)
+
+    # 获取数据
+    age = d.get(&#39;age&#39;, [&#39;&#39;])[0] 
+    hobbies = d.get(&#39;hobbies&#39;, []) 
+
+    # 转义，防止脚本注入
+    age = escape(age)
+    hobbies = [escape(hobby) for hobby in hobbies]
+
+    response_body = html % { 
+        &#39;checked-software&#39;: (&#39;&#39;, &#39;checked&#39;)[&#39;software&#39; in hobbies],
+        &#39;checked-tunning&#39;: (&#39;&#39;, &#39;checked&#39;)[&#39;tunning&#39; in hobbies],
+        &#39;age&#39;: age or &#39;Empty&#39;,
+        &#39;hobbies&#39;: &#39;, &#39;.join(hobbies or [&#39;No Hobbies?&#39;])
+    }
+
+    status = &#39;200 OK&#39;
+
+    response_headers = [
+        (&#39;Content-Type&#39;, &#39;text/html&#39;),
+        (&#39;Content-Length&#39;, str(len(response_body)))
+    ]
+
+    start_response(status, response_headers)
+    return [response_body]
+
+httpd = make_server(&#39;localhost&#39;, 8051, application)
+
+httpd.serve_forever()
+
+print &#39;end&#39;
+</code></pre>
+
+
+		</div>
+
+		
+
+	</article>
+ 
+	<article>
+		 <header>
 		  	<h1 class="entry-title"><a href="15079748505440.html">怎样理解阻塞非阻塞与同步异步的区别？</a></h1>
 			<p class="meta"><time datetime="2017-10-14T17:54:10+08:00" 
 			pubdate data-updated="true">2017/10/14</time></p>
@@ -1216,6 +1522,8 @@ def load_db(db):
 <li>DBRecord 类的子类，添加了用于获取所链接记录的 venue 和 speakers 属性，以及特殊的 repr 方法。</li>
 </ul></li>
 </ul>
+
+<p>DbRecord.__db 类属性的作用是存储打开的 shelve.Shelf 数据库引用，以便在需要使用数据库的 DbRecord.fetch 方法以及 Event.venue 和 Event.speakers 属性中使用。我把 __db 设为私有类属性，然后定义了普通的读值方法和设值方法，以防不小心覆盖 __db 属性的值。基于一个重要的原因，我没有使用特性去管理 __db 属性：特性是用于管理实例属性的类属性。</p>
 
 
 		</div>
@@ -2664,10 +2972,10 @@ Yuck!
 	  <ul id="recent_posts">
 	  
 	      <li class="post">
-	        <a href="programming.html"><strong>Programming&nbsp;(27)</strong></a>
+	        <a href="programming.html"><strong>Programming&nbsp;(28)</strong></a>
 	         <p class="cat-children-p"> 
 	        
-	        	<a href="python.html">Python&nbsp;(9)</a>&nbsp;&nbsp;
+	        	<a href="python.html">Python&nbsp;(10)</a>&nbsp;&nbsp;
 	        
 	        	<a href="algorithms.html">Algorithms&nbsp;(1)</a>&nbsp;&nbsp;
 	        
@@ -2690,6 +2998,12 @@ Yuck!
 	  
 	      
 		      <li class="post">
+		        <a href="15081195874570.html">理解 Python WSGI</a>
+		      </li>
+	     
+	  
+	      
+		      <li class="post">
 		        <a href="15079748505440.html">怎样理解阻塞非阻塞与同步异步的区别？</a>
 		      </li>
 	     
@@ -2709,12 +3023,6 @@ Yuck!
 	      
 		      <li class="post">
 		        <a href="15078822029815.html">全栈必备：网络编程基础</a>
-		      </li>
-	     
-	  
-	      
-		      <li class="post">
-		        <a href="15078804008494.html">函数式编程</a>
 		      </li>
 	     
 	  
