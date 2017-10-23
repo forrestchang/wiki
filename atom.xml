@@ -4,7 +4,7 @@
   <title><![CDATA[七录书斋]]></title>
   <link href="http://forresthcang.com/wiki/atom.xml" rel="self"/>
   <link href="http://forresthcang.com/wiki/"/>
-  <updated>2017-10-16T10:44:04+08:00</updated>
+  <updated>2017-10-17T19:14:57+08:00</updated>
   <id>http://forresthcang.com/wiki/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,197 @@
   </author>
   <generator uri="http://www.coderforart.com/">CoderForArt</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[MySQL 20 个经典面试题]]></title>
+    <link href="http://forresthcang.com/wiki/15087265203050.html"/>
+    <updated>2017-10-23T10:42:00+08:00</updated>
+    <id>http://forresthcang.com/wiki/15087265203050.html</id>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">MySQL 的复制原理以及流程</h2>
+
+<p>基本的原理流程，3 个线程及之间的关联；</p>
+
+<ul>
+<li>主：binlog 线程 —— 记录下所有改变了数据库数据的语句，放进 master 上的 binlog 中；</li>
+<li>从：io 线程 —— 在使用 start slave 之后，负责从 master 上拉去 binlog 内容，放进自己的 relay log 中；</li>
+<li>从：sql 执行线程 —— 执行 relay log 中的语句。</li>
+</ul>
+
+<h2 id="toc_1">MySQL 中 MyISAM 和 InnoDB 的区别</h2>
+
+<ol>
+<li>5 点不同
+
+<ul>
+<li>InnoDB 支持事务，MyISAM 不支持</li>
+<li>InnoDB 支持行级锁，MyISAM 不支持</li>
+<li>InnoDB 支持 MVCC，MyISAM 不支持</li>
+<li>InnoDB 支持外键，MyISAM 不支持</li>
+<li>InnoDB 不支持全文索引，MyISAM 支持</li>
+</ul></li>
+<li>InnoDB 引擎的 4 大特性
+
+<ul>
+<li>插入缓冲（insert buffer）</li>
+<li>二次写（double write）</li>
+<li>自适应哈希索引（ahi）</li>
+<li>预读（read ahead）</li>
+</ul></li>
+<li>二者 select count(*) 哪个更快
+
+<ul>
+<li>MyISAM 更快，因为 MyISAM 内部维护了一个计数器，可以直接调取。 </li>
+</ul></li>
+</ol>
+
+<h2 id="toc_2">MySQL 中 varchar 与 char 的区别以及 varchar(50) 中的 50 代表的含义</h2>
+
+<ol>
+<li>varchar(50) 中的 50 的含义是最多存放 50 个字符，varchar(50) 和 varchar(200) 存储 hello 所占用的空间一样，但后者在排序时会消耗更多的内存，因为 order by col 采用 fixed_length 计算 col 的长度</li>
+</ol>
+
+<h2 id="toc_3">InnoDB 的事务日志的实现方式</h2>
+
+<ol>
+<li>有多少中日志：1）错误日志：记录出错信息，也记录一些警告信息或正确信息；2）查询日志：记录所有对数据库请求的信息，不论这些请求是否得到了正确的执行；3）慢查询日志：设置一个阈值，将裕兴时间超过该值的所有 SQL 语句都记录到慢查询日志中；4）二进制日志：记录对数据库执行更改的所有操作；5）中继日志；6）事务日志。</li>
+<li>事务的 4 中隔离级别：1）读未提交；2）读已提交；3）可重复读；4）串行。</li>
+<li>事务是如何通过日志来实现的？事务日志是通过 redo 和 InnoDB 的存储引擎日志缓冲（InnoDB log buffer）来实现的，当开始一个事务的时候，会记录该事务的 LSN（log sequence number），当事务执行时，会往 InnoDB 存储引擎的日志的日志缓存里插入事务日志；当事务提交时，必须将存储引擎的日志缓冲写入磁盘，也就是写数据前，需要先写日志，这种方式称为「预写日志方式」。</li>
+</ol>
+
+<h2 id="toc_4">MySQL 数据库 CPU 飙升到 500% 的话应该如何处理</h2>
+
+<p>列出所有进程，观察所有进程，多秒没有状态变化的 kill 掉。</p>
+
+<h2 id="toc_5">备份计划，mysqldump 以及 xtranbackup 的实现原理</h2>
+
+<p>xtrabackup 的实现原理：在 InnoDB 内部会维护一个 redo 日志文件，我们也可以叫做事务日志文件。事务日志会存储每一个 InnoDB 表数据的记录修改，当 InnoDB 启动时，InnoDB 会检查数据文件和事务日志，并执行两个步骤：它应用（前滚）已经提交的数据进行回滚操作。</p>
+
+<h2 id="toc_6">500 台 db，在最快时间之内重启</h2>
+
+<p>puppet，dsh</p>
+
+<h2 id="toc_7">你是如何监控你们数据库的？你们的慢日志都是怎么查询的？</h2>
+
+<p>lepus</p>
+
+<h2 id="toc_8">是否做过主从一致性校验，如果有，怎么做，如果没有，你打算怎么做？</h2>
+
+<p>使用主从一致性校验工具：checksum、mysqldiff、pt-table-checksum</p>
+
+<h2 id="toc_9">数据库是否支持 emoji 表情，如果不支持，如何操作？</h2>
+
+<p>更改字符集为 utf8_mb4。</p>
+
+<h2 id="toc_10">表中有大字段 X（例如：text 类型），且字段 X 不会经常更新，以读为主，请问是选择拆成子表，还是继续放一起？</h2>
+
+<p>拆带来的问题：连接消耗 + 存储拆分空间。</p>
+
+<p>不拆带来的问题：查询性能。</p>
+
+<p>如果能容忍拆分带来的空间问题，拆的话最好和经常要查询的表的主键在物理结构上放置在一起（分区）顺序 IO，减少连接消耗，</p>
+
+<h2 id="toc_11">MySQL 中的 InnoDB 引擎的行锁是通过加在什么上完成的，为什么是这样子的？</h2>
+
+<p>InnoDB 是基于索引来完成行锁。</p>
+
+<p>例如：</p>
+
+<pre><code>select * from tab_with_index where id = 1 for update;
+</code></pre>
+
+<p>for update 可以根据条件来完成行锁锁定，并且 id 是有索引键的列，如果 id 不是索引键那么 InnoDB 将完成表锁。</p>
+
+<h2 id="toc_12">一个 6 亿的表 a，一个 3 亿的表 b，通过外键 tid 关联，你如何最快的查询出满足条件的第 50000 到第 50200 中的这 200 条数据记录？</h2>
+
+<p>如果 a 表的 tid 是自增长，并且是连续的，b 表的 id 为索引：</p>
+
+<pre><code>select * from a, b where a.tid = b.id and a.tid &gt; 5000000 limit 200;
+</code></pre>
+
+<p>如果 a 表的 tid 不是连续的，那么就需要使用覆盖索引。tid 要么是主键，要么是辅助索引，b 表 id 也要有索引：</p>
+
+<pre><code>select * from b, (select tid from a limit 50000, 200)   a where b.id = a.tid;
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[MySQL 笔记]]></title>
+    <link href="http://forresthcang.com/wiki/15087226760041.html"/>
+    <updated>2017-10-23T09:37:56+08:00</updated>
+    <id>http://forresthcang.com/wiki/15087226760041.html</id>
+    <content type="html"><![CDATA[
+<ul>
+<li>
+<a href="#toc_0">MySQL 数据库引擎种类</a>
+</li>
+<li>
+<a href="#toc_1">MySQL 锁类型</a>
+</li>
+<li>
+<a href="#toc_2">数据库设计数据类型需要注意哪些地方？</a>
+</li>
+<li>
+<a href="#toc_3">MySQL 几种备份方式</a>
+</li>
+</ul>
+
+
+<h2 id="toc_0">MySQL 数据库引擎种类</h2>
+
+<p>缺省情况下，MySQL 支持三个引擎：ISAM，MyISAM，HEAP，另外两种类型是 InnoDB，BerkleyDB。</p>
+
+<p>ISAM：是一个定义明确且历经时间考验的数据表格管理方法，它在设计之时考虑到数据库被查询的次数要远大于更新的次数。因此 ISAM 执行读取操作的速度很快，而且不占用大量的内存和存储资源。ISAM 两个主要不足在于：它不支持事物处理，也不能容错，如果你的硬盘崩溃了，那么数据文件就无法恢复了。</p>
+
+<p>MyISAM：除了提供 ISAM 里所没有的索引和字段管理的大量功能，MyISAM 还能使用一种表格锁定机制，来优化多个并发的读写操作。其代价是你需要经常运行 OPTIMIZE TABLE 命令，来回复被更新机制浪费的空间。</p>
+
+<p>HEAP：允许只驻留在内存里的临时表格。驻留在内存使得 HEAP 比 ISAM 和 MyISAM 的速度都快，但是它所管理的数据时不稳定的，而且如果在关机之前没有进行保存，那么所有的数据都会丢失。HEAP 在你需要使用 SELECT 表达式的时候非常有用。</p>
+
+<p>InnoDB：在使用 MySQL 的时候，你所面对的每一个挑战几乎都源于 ISAM 和 MyISAM 数据库引擎不支持事务处理，也不支持外键。尽管 InnoDB 会慢很多，但是 InnoDB 包括了对事务处理和外键的支持，这两点是前面两个引擎所没有的。</p>
+
+<h2 id="toc_1">MySQL 锁类型</h2>
+
+<p>根据锁的类型分，可以分为共享锁、排他锁、意向共享锁和意向排他锁。</p>
+
+<p>根据锁的粒度分，可以分为行锁、表锁。</p>
+
+<p>对于 MySql 而言，事务机制更多是靠底层的存储引擎来实现，因此，MySql 层面只有表锁，而支持事务的 InnoDB 存储引擎则实现了 行锁（记录锁，在行相应的索引记录上的锁），gap 锁（在索引记录间歇上的锁），next-key 锁（是记录锁和在此索引记录之间的 gap 上的锁的结合）。MySql 的记录锁实质是索引记录的锁，因为 InnoDB 是索引组织表；gap 锁是索引记录间隙的锁，这种锁只在 RR 隔离级别下有效；next-key 锁是记录锁加上记录之前的 gap 锁的组合，MySql 通过 gap 锁和 next-key 锁实现 RR 隔离级别。</p>
+
+<p>共享锁：由读表操作加上的锁，加锁后其他用户只能获取该表或行的共享锁，不能获取排它锁，也就说只能读不能写。</p>
+
+<p>排它锁：由写表操作加上的锁，加锁后其他用户不能获取该表或行的任何锁，典型是 MySQL 事务中的更新操作。</p>
+
+<p>意向共享锁（IS）：事务打算给数据行加行共享锁，事务在给一个数据行加共享锁之前必须先去的该表的 IS 锁。</p>
+
+<p>意向排它锁（IX）：事务打算给数据行加行排它锁，事务在给一个数据行加排他锁前必须先取得该表的 IX 锁。</p>
+
+<h2 id="toc_2">数据库设计数据类型需要注意哪些地方？</h2>
+
+<ol>
+<li>VARCHAR 和 CHAR：varchar 是变长的，需要额外的 1-2 个字节存储，能节约空间，可能会对性能有帮助。但是由于是变长，可能发生碎片（如更新数据）。</li>
+<li>使用 ENUM（枚举类型）代替字符串类型，数据实际存储为整型。</li>
+<li>字符串类型：要尽可能避免使用字符串来做标识符，因为它占用了很多空间并且通常比整数类型要慢。</li>
+<li>还要特别注意完全「随机」的字符串，例如由 MDR5()、SHA1()、UUID()产生的字符串，它们产生的每一个新值都会被任意地保存在很大的空间范围内，这会减慢 Insert 及一些 select 查询。</li>
+<li>如果保存 UUID 值，应该移除其中的短横线，更好的办法是使用 UHEX() 把 UUID 值转化为 16 字节的数字，并把它保存在 Binary(16) 列中。</li>
+</ol>
+
+<h2 id="toc_3">MySQL 几种备份方式</h2>
+
+<ol>
+<li><p>逻辑备份：使用自带的 mysqldump 工具进行备份，备份成 sql 文件的形式。</p>
+
+<ul>
+<li>优点：最大的好处是能够与正在运行的 mysql 自动协同工作，在运行期间可以确保备份是当时的点，它会自动将对应操作的表锁定，不允许其他用户修改（只能访问）。</li>
+<li>缺点：备份的速度比较慢。如果是数据量很多的时候，比较耗费时间。如果数据库服务处在提供给用户服务状态，在这段长时间操作过程中，意味着要锁定表，那么服务就会受到影响。</li>
+</ul></li>
+<li><p>物理备份：直接拷贝 mysql 的数据目录</p></li>
+<li><p>双机热备份：mysql 数据库没有增量备份的机制，当数据量太大的时候备份是一个很大的问题。优点：适合数据量大的时候，大的互联网公司对于 mysql 数据别分，都是采用热机备份，搭建多台数据库服务器，进行主从复制。</p></li>
+</ol>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[理解 Python WSGI]]></title>
@@ -5086,162 +5277,6 @@ Yuck!
 <h2 id="toc_10">提前退出</h2>
 
 <p>像 <code>if</code> 语句一样， <code>guard</code> 的执行取决于一个表达式的布尔值。我们可以使用 <code>guard</code> 语句来要求条件必须为真时，以执行 <code>guard</code> 语句后的代码。不同于 <code>if</code> 语句，一个 <code>guard</code> 语句总是有一个 <code>else</code> 分句，如果条件不为真则执行 <code>else</code> 分句中的代码。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Swift 学习笔记：字符串和字符]]></title>
-    <link href="http://forresthcang.com/wiki/14634546001476.html"/>
-    <updated>2016-05-17T11:10:00+08:00</updated>
-    <id>http://forresthcang.com/wiki/14634546001476.html</id>
-    <content type="html"><![CDATA[
-<h2 id="toc_0">字符串是值类型</h2>
-
-<p>使用字符串会进行值拷贝。</p>
-
-<p>在实际的编译时，Swift 编译器会优化字符串的使用，使实际的复制只发生在绝对必要的情况下，这意味着将字符串作为值类型的同时可以获得极高的性能。</p>
-
-<h2 id="toc_1">Working with Characters</h2>
-
-<p>可以使用 <code>for-in</code> 循环来遍历字符串中的 <code>characters</code> 属性来获取每一个字符的值。</p>
-
-<p>字符串可以通过传递一个值类型为 <code>Character</code> 的数组作为自变量来初始化。</p>
-
-<h2 id="toc_2">连接字符串和字符</h2>
-
-<p>字符串可以通过加法运算符相加在一起创建一个新的字符串。</p>
-
-<p><code>append()</code> 方法可以将一个字符附加到一个字符串变量的尾部。</p>
-
-<h2 id="toc_3">Unicode</h2>
-
-<h3 id="toc_4">Unicode Scalars（Unicode 标量）</h3>
-
-<p>Swift 的 <code>String</code> 类型是基于 Unicode 标量建立的。Unicode 标量是对应字符或者修饰符的唯一的 21 位数字。</p>
-
-<p>Unicode 码位（code poing）的范围是 <code>U+0000</code> 到 <code>U+1F425</code> 或者 <code>U+E000</code> 到 <code>U+10FFFF</code>。Unicode 标量不包括 Unicode 代理项（surrogate pair）码位，其码位范围是 <code>U+D800</code> 到 <code>U+DFFF</code>。</p>
-
-<p>注意，并不是所有的 21 位 Unicode 标量都表示一个字符，因为有一些标量是留作未来分配的。</p>
-
-<h3 id="toc_5">字符串字面量的特殊字符（Special Character in String Literals）</h3>
-
-<p><img src="media/14634546001476/14634553799193.jpg" alt=""/></p>
-
-<h3 id="toc_6">可扩展的字形群集（Extended Grapheme Clusters）</h3>
-
-<p>每一个 Swift 的 Character 类型代表一个可扩展的字形群。一个可扩展的字形群是一个或多个可生成人类可读的字符 Unicode 标量的有序排列。</p>
-
-<h3 id="toc_7">计算字符数量</h3>
-
-<p>如果想要获得一个字符串中的 <code>Character</code> 值得数量，可以使用字符串的 <code>characters</code> 属性的 <code>count</code> 属性。</p>
-
-<p>注意在 Swift 中，使用可拓展的字符群集作为 <code>Character</code> 值来连接或改变字符串时，并不一定会更改字符串的字符数量。</p>
-
-<h2 id="toc_8">访问和修改字符串</h2>
-
-<h3 id="toc_9">字符串索引</h3>
-
-<p>使用 <code>startIndex</code> 属性可以获取一个 <code>String</code> 的第一个 <code>Character</code> 的索引。使用 <code>endIndex</code> 属性可以获取最后一个 <code>Character</code> 的后一个位置的索引，所以 <code>endIndex</code> 属性不能作为一个字符串的有效下标。如果 <code>String</code> 是空串，两者是相等的。</p>
-
-<p><code>String.Index.predecessor()</code> 获得前一个索引，<code>successor()</code> 获得后一个索引。</p>
-
-<p><code>Characters</code> 属性的 <code>indices</code> 属性会创建一个包含全部索引的范围（<code>Range</code>），用来在一个字符串中访问单个字符。</p>
-
-<h3 id="toc_10">插入和删除</h3>
-
-<ul>
-<li><code>insert(_:atIndex:)</code>：在一个字符串的制定索引插入一个字符</li>
-<li><code>insertContentsOf(_:at:)</code>：在一个字符串的指定索引插入一个字符串</li>
-<li>`removeAtIndex(_:)：在一个字符串的指定索引删除一个字符</li>
-<li><code>removeRange(_:)</code>：在一个字符串的指定索引删除一个子字符串</li>
-</ul>
-
-<h2 id="toc_11">比较字符串</h2>
-
-<h3 id="toc_12">字符串/字符相等</h3>
-
-<p>使用 <code>==</code> 和 <code>!=</code> 来比较两个字符/字符串是否相等/不等。</p>
-
-<h3 id="toc_13">前缀/后缀相等</h3>
-
-<ul>
-<li><code>hasPrefix(_:)</code></li>
-<li><code>hasSuffix(_:)</code></li>
-</ul>
-
-<h2 id="toc_14">字符串的 Unicode 表示形式（Unicode Representations of Strings）</h2>
-
-<p>当一个 Unicode 字符串被写进文本文件或其他存储时，字符串中的 Unicode 标量会用 Unicode 定义的几种编码格式（encoding forms）编码。每一个字符串中的小块编码都被称为 <code>code units</code>。这些包括 UTF-8,UTF-16,UTF-32 编码格式。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Swift 学习笔记：属性]]></title>
-    <link href="http://forresthcang.com/wiki/14631242333306.html"/>
-    <updated>2016-05-13T15:23:53+08:00</updated>
-    <id>http://forresthcang.com/wiki/14631242333306.html</id>
-    <content type="html"><![CDATA[
-<p>属性将值跟特定的类、结构或枚举关联。存储常量或变量作为实例的一部分，而计算属性（不是存储）一个值。</p>
-
-<ul>
-<li>计算属性：类、结构体、枚举</li>
-<li>存储属性：类、结构体</li>
-</ul>
-
-<h2 id="toc_0">存储属性</h2>
-
-<h3 id="toc_1">延迟存储属性</h3>
-
-<p>延迟存储属性是指当第一次被调用的时候才会计算其初始值的属性。在属性声明前使用 <code>lazy</code> 来标记一个延迟存储属性。</p>
-
-<p>必须将延迟存储属性声明称变量，因为属性的初始值可能在实例构造完成之后才会得到。<strong>而常量属性在构造过程完成之前必须要有初始值，因此无法声明称延迟属性。</strong></p>
-
-<p>延迟属性很有用，当属性的值依赖于在实例的构造过程结束后才会知道影响值得外部因素时，或者当获得属性的初始值需要复杂或大量计算时，可以只在需要的时候计算它。</p>
-
-<h2 id="toc_2">计算属性</h2>
-
-<p>计算属性不直接存储值，而是提供一个 getter 和一个可选的 setter，来间接获取和设置其他属性或变量的值。</p>
-
-<h3 id="toc_3">便捷 setter 声明</h3>
-
-<p>如果计算属性的 setter 没有定义表示新值的参数名，则可以使用默认名称 <code>newValue</code>。</p>
-
-<h3 id="toc_4">只读计算属性</h3>
-
-<p>只有 getter 没有 setter 的计算属性就是<strong>只读计算属性</strong>。只读计算属性总是返回一个值，可以通过点运算符访问，但不能设置新的值。</p>
-
-<h2 id="toc_5">属性观察器</h2>
-
-<p>属性观察器监控和响应属性值的变化，每次属性被设置新的值都会调用属性观察器，即使新值和当前值相同的时候也不例外。</p>
-
-<p>可以为除了延迟存储属性之外的其他存储属性添加属性观察器，也可以通过重写属性的方式为继承的属性（包括存储属性和计算属性）添加属性观察器。你不必为非重写的计算属性添加属性观察器，因为可以通过它的 setter 直接监控和响应值得变化。</p>
-
-<ul>
-<li><code>willSet</code> 在新的值被设置之前调用</li>
-<li><code>didSet</code> 在新的值被设置之后立即调用</li>
-</ul>
-
-<p><code>willSet</code> 观察器会将新的属性值作为常量参数传入，在 <code>willSet</code> 的实现代码中可以为这个参数指定一个名称，如果不指定则参数仍然可用，这时使用默认名称 <code>newValue</code> 表示。</p>
-
-<p><code>didSet</code> 观察器会将旧的属性值作为参数传入，可以为该参数名或者使用默认参数名 <code>oldValue</code>。如果在 <code>didSet</code> 方法中再次对该属性赋值，那么新值会覆盖旧的值。</p>
-
-<p>父类的属性在子类的构造器中被赋值时，它在父类中的 <code>willSet</code> 和 <code>didSet</code> 观察器会被调用，随后才会调用子类的观察器。在父类初始化方法调用之前，子类给属性赋值时，观察器不会被调用。</p>
-
-<p>如果将属性通过 in-out 方式传入函数， <code>willSet</code> 和 <code>didSet</code> 也会被调用。这是因为 in-out 参数采用了拷入拷出模式：即在函数内部使用的是参数的 copy，函数结束后，又对参数重新赋值。</p>
-
-<h2 id="toc_6">全局变量和局部变量</h2>
-
-<p>计算属性和属性观察器所描述的功能也可以用于全局变量和局部变量。全局变量是在函数、方法、闭包或任何类型之外定义的变量。局部变量是在函数、方法或闭包内部定义的变量。</p>
-
-<p>全局的常量或变量都是延迟计算的，跟延迟存储属性相似，不同的地方在于，全局的常量或变量不需要标记 <code>lazy</code>   修饰符。</p>
-
-<p>局部范围的常量或变量从不延迟计算。</p>
-
-<h2 id="toc_7">类型属性</h2>
-
-<p>存储型类型属性是延迟初始化的，它们只有在第一次被访问的时候才会被初始化。即使它们被多个线程同时访问，系统也保证只会对其进行一次初始化，并且不需要对其使用 <code>lazy</code> 修饰符。</p>
 
 ]]></content>
   </entry>
