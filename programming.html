@@ -79,6 +79,126 @@ $(document).ready(function(event) {
 
 	<article>
 		 <header>
+		  	<h1 class="entry-title"><a href="15087352731978.html">常见的面试题整理 —— 数据库篇</a></h1>
+			<p class="meta"><time datetime="2017-10-23T13:07:53+08:00" 
+			pubdate data-updated="true">2017/10/23</time></p>
+		 </header>
+	  	<div class="entry-content">
+		  	
+		  	<p>笔记来源：<a href="https://zhuanlan.zhihu.com/p/23713529">https://zhuanlan.zhihu.com/p/23713529</a></p>
+
+<h2 id="toc_0">什么是存储过程，有哪些优缺点？</h2>
+
+<p>存储过程是一些预编译的 SQL 语句。</p>
+
+<p>更加直白的理解：存储过程可以说是一个记录集，它是由一些 T-SQL 语句组成的代码块，这些 T-SQL 语句代码像一个方法一样实现一些功能（对单表或多表的增删改查），然后再给这个代码块取一个名字，在用到这个功能的时候调用它就行了。</p>
+
+<ul>
+<li>存储过程是一个预编译的代码块，执行效率比较高；</li>
+<li>一个存储过程替代大量 SQL 语句，可以降低网络通信量，提高通信效率；</li>
+<li>可以一定程度上确保数据安全。</li>
+</ul>
+
+<h2 id="toc_1">索引是什么，有什么作用以及优缺点？</h2>
+
+<p>索引是对数据库表中一或多列的值进行排序的结构，是帮助 MySQL 高效获取数据的数据结构。</p>
+
+<p>MySQL 数据库的几个基本的索引类型：普通索引、唯一索引、主键索引、全文索引。</p>
+
+<ul>
+<li>索引加快数据库的检索速度</li>
+<li>索引降低了插入、删除、修改等维护任务的速度</li>
+<li>唯一索引可以确保每一行数据的唯一性</li>
+<li>通过使用索引，可以在查询的过程中使用优化器，提高系统的性能</li>
+<li>索引需要占物理空间</li>
+</ul>
+
+<h2 id="toc_2">什么是事务？</h2>
+
+<p>事务（Transaction）是并发控制的基本单位。所谓的事务，它是一个操作序列，这些操作要么都执行，要么都不执行，它是一个不可分割的工作单位。事务是数据库维护数据一致性的单位，在每个事务结束时，都能保持数据一致性。</p>
+
+<p>事务具有以下四个基本特征：</p>
+
+<ol>
+<li>原子性：事务中包含的操作被看做一个逻辑单元，这个逻辑单元中的操作要么全部成功，要么全部失败。</li>
+<li>一致性：只有合法的数据可以被写入数据库，否则事务应该将其回滚到最初状态。</li>
+<li>隔离性：事务允许多个用户对同一个数据进行并发访问，而不破坏数据的正确性和完整性。同时，并行事务的修改必须与其他并行事务的修改相互独立。</li>
+<li>持久性：事务结束后，事务处理的结果必须能够得到固化。</li>
+</ol>
+
+<h2 id="toc_3">数据库的乐观锁和悲观锁是什么？</h2>
+
+<p>DBMS 中的并发控制的任务是确保在多个事务同时存取数据库中同一数据时不破坏事务的隔离性和统一性以及数据库的统一性。</p>
+
+<p>乐观并发控制（乐观锁）和悲观并发控制（悲观锁）是并发控制主要采用的技术手段。</p>
+
+<ul>
+<li>悲观锁：假定会发生并发生冲突，屏蔽一起可能违反数据完整性的操作</li>
+<li>乐观锁：假设不会发生并发生冲突，只在提交操作时检查是否违反数据完整性</li>
+</ul>
+
+<h2 id="toc_4">使用索引查询一定能提高查询性能吗？</h2>
+
+<p>通常，通过索引查询数据比全表扫描要快，但是我们也必须注意到它的代价。</p>
+
+<p>索引需要空间来存储，也需要定期维护，每当有记录在表中增减或索引被修改时，索引本身也会被修改。这意味着每条记录的 Insert，Delete，Update 将为此多付出 4、5 次的磁盘 IO。因为索引需要额外的存储空间和处理，那些不必要的索引反而会使查询反应时间变慢。使用索引查询不一定能提高查询性能，索引范围查询（Index Range Scan）适用于两种情况：</p>
+
+<ul>
+<li>基于一个范围的检索，一般查询返回结果集小于表中记录数的 30%</li>
+<li>基于非唯一性索引的检索</li>
+</ul>
+
+<h2 id="toc_5">简单说一说 drop、delete 与 truncate 的区别</h2>
+
+<ul>
+<li>delete 和 truncate 只删除表的数据不删除表的结构</li>
+<li>速度，一般来说：drop &gt; truncate &gt; delete</li>
+<li>delete 语句是 dml，这个操作会放到 rollback segment 中，事务提交之后才生效；如果有相应的 trigger，执行的时候将触发；truncate、drop 是 ddl，操作立即生效，原数据不放到 rollback segment 中，不能回滚，操作不触发 trigger。</li>
+</ul>
+
+<h2 id="toc_6">drop、delete 与 truncate 分别在什么场景下使用</h2>
+
+<ul>
+<li>不需要一张表的时候，用 drop</li>
+<li>想伤处部分数据行的时候，用 delete，并带上 where 语句</li>
+<li>保留表而删除所有数据的时候用 truncate</li>
+</ul>
+
+<h2 id="toc_7">超键、候选键、主键、外键分别是什么</h2>
+
+<ul>
+<li>超键：在关系中能唯一标识元组的属性集称为关系模式的超键。一个属性可以作为一个超键，多个属性组合在一起也可以作为一个超键。超键包含候选键和主键。</li>
+<li>候选键：是最小的超键，即没有冗余元素的超键。</li>
+<li>主键：数据库表中对储存数据对象给予唯一和完整标识的数据列或属性的组合。一个数据列只能有一个主键。且主键的取值不能缺失，即不能为空值（null）。</li>
+<li>外键：在一个表中存在的另一个表的主键称此表的外键。</li>
+</ul>
+
+<h2 id="toc_8">什么是视图，以及视图的使用场景有哪些</h2>
+
+<p>视图是一种虚拟的表，具有和物理表相同的功能。可以对视图进行增删改查操作，视图通常是有一个表或者多个表的行或列的子集。对视图的修改不影响基本表。它使得我们获取数据更容易，相比多表查询。</p>
+
+<ul>
+<li>只暴露部分字段给访问者，所以就建一个虚表，就是视图；</li>
+<li>查询的数据来源于不同的表，而查询者希望以统一的方式查询，这样也可以建立一个视图，把多个表查询结果联合起来，查询者只需要直接从视图中获取数据，不必考虑数据来源于不同表所带来的差异</li>
+</ul>
+
+<h2 id="toc_9">说一说三个范式</h2>
+
+<ul>
+<li>第一范式（1NF）：数据库表中的字段都是单一属性的，不可再分，这个单一属性由基本类型构成，包括整型、实数、字符型、逻辑型、日期型等；</li>
+<li>第二范式（2NF）：数据库表中不存在非关键字段对任一候选关键字段的部分函数依赖（部分函数依赖指的是存在组合关键字中的某些字段决定非关键字段的情况），也即所有非关键字段都完全依赖于任意一组候选；</li>
+<li>第三范式（3NF）：在第二范式的基础上，数据表中如果不存在非关键字段对任一候选关键字段的传递函数依赖则符合第三范式。所谓传递函数依赖，指的是如果存在 <code>A -&gt; B -&gt;</code> 的决定关系，则 C 传递函数依赖于 A。因此，满足第三范式的数据库表应该不存在如下依赖关系：关键字段 -&gt; 非关键字段 x -&gt; 非关键字段 y</li>
+</ul>
+
+
+		</div>
+
+		
+
+	</article>
+ 
+	<article>
+		 <header>
 		  	<h1 class="entry-title"><a href="15087296230858.html">MySQL索引原理及慢查询优化</a></h1>
 			<p class="meta"><time datetime="2017-10-23T11:33:43+08:00" 
 			pubdate data-updated="true">2017/10/23</time></p>
@@ -6558,7 +6678,7 @@ let airportNames = [String](airports.values)
 	  <ul id="recent_posts">
 	  
 	      <li class="post">
-	        <a href="programming.html"><strong>Programming&nbsp;(31)</strong></a>
+	        <a href="programming.html"><strong>Programming&nbsp;(32)</strong></a>
 	         <p class="cat-children-p"> 
 	        
 	        	<a href="python.html">Python&nbsp;(10)</a>&nbsp;&nbsp;
@@ -6573,7 +6693,7 @@ let airportNames = [String](airports.values)
 	        
 	        	<a href="network.html">Network&nbsp;(2)</a>&nbsp;&nbsp;
 	        
-	        	<a href="database.html">Database&nbsp;(3)</a>&nbsp;&nbsp;
+	        	<a href="database.html">Database&nbsp;(4)</a>&nbsp;&nbsp;
 	        
 	         </p> 
 	      </li>
@@ -6583,6 +6703,12 @@ let airportNames = [String](airports.values)
 	<section>
 	  <h1>Recent Posts</h1>
 	  <ul id="recent_posts">
+	  
+	      
+		      <li class="post">
+		        <a href="15087352731978.html">常见的面试题整理 —— 数据库篇</a>
+		      </li>
+	     
 	  
 	      
 		      <li class="post">
@@ -6605,12 +6731,6 @@ let airportNames = [String](airports.values)
 	      
 		      <li class="post">
 		        <a href="15081195874570.html">理解 Python WSGI</a>
-		      </li>
-	     
-	  
-	      
-		      <li class="post">
-		        <a href="15079748505440.html">怎样理解阻塞非阻塞与同步异步的区别？</a>
 		      </li>
 	     
 	  

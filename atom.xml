@@ -4,7 +4,7 @@
   <title><![CDATA[七录书斋]]></title>
   <link href="http://forresthcang.com/wiki/atom.xml" rel="self"/>
   <link href="http://forresthcang.com/wiki/"/>
-  <updated>2017-10-23T12:11:45+08:00</updated>
+  <updated>2017-10-23T13:01:15+08:00</updated>
   <id>http://forresthcang.com/wiki/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,120 @@
   </author>
   <generator uri="http://www.coderforart.com/">CoderForArt</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[常见的面试题整理 —— 数据库篇]]></title>
+    <link href="http://forresthcang.com/wiki/15087352731978.html"/>
+    <updated>2017-10-23T13:07:53+08:00</updated>
+    <id>http://forresthcang.com/wiki/15087352731978.html</id>
+    <content type="html"><![CDATA[
+<p>笔记来源：<a href="https://zhuanlan.zhihu.com/p/23713529">https://zhuanlan.zhihu.com/p/23713529</a></p>
+
+<h2 id="toc_0">什么是存储过程，有哪些优缺点？</h2>
+
+<p>存储过程是一些预编译的 SQL 语句。</p>
+
+<p>更加直白的理解：存储过程可以说是一个记录集，它是由一些 T-SQL 语句组成的代码块，这些 T-SQL 语句代码像一个方法一样实现一些功能（对单表或多表的增删改查），然后再给这个代码块取一个名字，在用到这个功能的时候调用它就行了。</p>
+
+<ul>
+<li>存储过程是一个预编译的代码块，执行效率比较高；</li>
+<li>一个存储过程替代大量 SQL 语句，可以降低网络通信量，提高通信效率；</li>
+<li>可以一定程度上确保数据安全。</li>
+</ul>
+
+<h2 id="toc_1">索引是什么，有什么作用以及优缺点？</h2>
+
+<p>索引是对数据库表中一或多列的值进行排序的结构，是帮助 MySQL 高效获取数据的数据结构。</p>
+
+<p>MySQL 数据库的几个基本的索引类型：普通索引、唯一索引、主键索引、全文索引。</p>
+
+<ul>
+<li>索引加快数据库的检索速度</li>
+<li>索引降低了插入、删除、修改等维护任务的速度</li>
+<li>唯一索引可以确保每一行数据的唯一性</li>
+<li>通过使用索引，可以在查询的过程中使用优化器，提高系统的性能</li>
+<li>索引需要占物理空间</li>
+</ul>
+
+<h2 id="toc_2">什么是事务？</h2>
+
+<p>事务（Transaction）是并发控制的基本单位。所谓的事务，它是一个操作序列，这些操作要么都执行，要么都不执行，它是一个不可分割的工作单位。事务是数据库维护数据一致性的单位，在每个事务结束时，都能保持数据一致性。</p>
+
+<p>事务具有以下四个基本特征：</p>
+
+<ol>
+<li>原子性：事务中包含的操作被看做一个逻辑单元，这个逻辑单元中的操作要么全部成功，要么全部失败。</li>
+<li>一致性：只有合法的数据可以被写入数据库，否则事务应该将其回滚到最初状态。</li>
+<li>隔离性：事务允许多个用户对同一个数据进行并发访问，而不破坏数据的正确性和完整性。同时，并行事务的修改必须与其他并行事务的修改相互独立。</li>
+<li>持久性：事务结束后，事务处理的结果必须能够得到固化。</li>
+</ol>
+
+<h2 id="toc_3">数据库的乐观锁和悲观锁是什么？</h2>
+
+<p>DBMS 中的并发控制的任务是确保在多个事务同时存取数据库中同一数据时不破坏事务的隔离性和统一性以及数据库的统一性。</p>
+
+<p>乐观并发控制（乐观锁）和悲观并发控制（悲观锁）是并发控制主要采用的技术手段。</p>
+
+<ul>
+<li>悲观锁：假定会发生并发生冲突，屏蔽一起可能违反数据完整性的操作</li>
+<li>乐观锁：假设不会发生并发生冲突，只在提交操作时检查是否违反数据完整性</li>
+</ul>
+
+<h2 id="toc_4">使用索引查询一定能提高查询性能吗？</h2>
+
+<p>通常，通过索引查询数据比全表扫描要快，但是我们也必须注意到它的代价。</p>
+
+<p>索引需要空间来存储，也需要定期维护，每当有记录在表中增减或索引被修改时，索引本身也会被修改。这意味着每条记录的 Insert，Delete，Update 将为此多付出 4、5 次的磁盘 IO。因为索引需要额外的存储空间和处理，那些不必要的索引反而会使查询反应时间变慢。使用索引查询不一定能提高查询性能，索引范围查询（Index Range Scan）适用于两种情况：</p>
+
+<ul>
+<li>基于一个范围的检索，一般查询返回结果集小于表中记录数的 30%</li>
+<li>基于非唯一性索引的检索</li>
+</ul>
+
+<h2 id="toc_5">简单说一说 drop、delete 与 truncate 的区别</h2>
+
+<ul>
+<li>delete 和 truncate 只删除表的数据不删除表的结构</li>
+<li>速度，一般来说：drop &gt; truncate &gt; delete</li>
+<li>delete 语句是 dml，这个操作会放到 rollback segment 中，事务提交之后才生效；如果有相应的 trigger，执行的时候将触发；truncate、drop 是 ddl，操作立即生效，原数据不放到 rollback segment 中，不能回滚，操作不触发 trigger。</li>
+</ul>
+
+<h2 id="toc_6">drop、delete 与 truncate 分别在什么场景下使用</h2>
+
+<ul>
+<li>不需要一张表的时候，用 drop</li>
+<li>想伤处部分数据行的时候，用 delete，并带上 where 语句</li>
+<li>保留表而删除所有数据的时候用 truncate</li>
+</ul>
+
+<h2 id="toc_7">超键、候选键、主键、外键分别是什么</h2>
+
+<ul>
+<li>超键：在关系中能唯一标识元组的属性集称为关系模式的超键。一个属性可以作为一个超键，多个属性组合在一起也可以作为一个超键。超键包含候选键和主键。</li>
+<li>候选键：是最小的超键，即没有冗余元素的超键。</li>
+<li>主键：数据库表中对储存数据对象给予唯一和完整标识的数据列或属性的组合。一个数据列只能有一个主键。且主键的取值不能缺失，即不能为空值（null）。</li>
+<li>外键：在一个表中存在的另一个表的主键称此表的外键。</li>
+</ul>
+
+<h2 id="toc_8">什么是视图，以及视图的使用场景有哪些</h2>
+
+<p>视图是一种虚拟的表，具有和物理表相同的功能。可以对视图进行增删改查操作，视图通常是有一个表或者多个表的行或列的子集。对视图的修改不影响基本表。它使得我们获取数据更容易，相比多表查询。</p>
+
+<ul>
+<li>只暴露部分字段给访问者，所以就建一个虚表，就是视图；</li>
+<li>查询的数据来源于不同的表，而查询者希望以统一的方式查询，这样也可以建立一个视图，把多个表查询结果联合起来，查询者只需要直接从视图中获取数据，不必考虑数据来源于不同表所带来的差异</li>
+</ul>
+
+<h2 id="toc_9">说一说三个范式</h2>
+
+<ul>
+<li>第一范式（1NF）：数据库表中的字段都是单一属性的，不可再分，这个单一属性由基本类型构成，包括整型、实数、字符型、逻辑型、日期型等；</li>
+<li>第二范式（2NF）：数据库表中不存在非关键字段对任一候选关键字段的部分函数依赖（部分函数依赖指的是存在组合关键字中的某些字段决定非关键字段的情况），也即所有非关键字段都完全依赖于任意一组候选；</li>
+<li>第三范式（3NF）：在第二范式的基础上，数据表中如果不存在非关键字段对任一候选关键字段的传递函数依赖则符合第三范式。所谓传递函数依赖，指的是如果存在 <code>A -&gt; B -&gt;</code> 的决定关系，则 C 传递函数依赖于 A。因此，满足第三范式的数据库表应该不存在如下依赖关系：关键字段 -&gt; 非关键字段 x -&gt; 非关键字段 y</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[MySQL索引原理及慢查询优化]]></title>
@@ -5072,218 +5186,6 @@ class Stock:
 <p>Python 之父 Guido 推荐的规范：</p>
 
 <p><img src="media/14871569977647/14872190162425.jpg" alt=""/></p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[The Python Tutorial Reading Notes]]></title>
-    <link href="http://forresthcang.com/wiki/14824095038232.html"/>
-    <updated>2016-12-22T20:25:03+08:00</updated>
-    <id>http://forresthcang.com/wiki/14824095038232.html</id>
-    <content type="html"><![CDATA[
-<h2 id="toc_0">Data Structures</h2>
-
-<h3 id="toc_1">More on Lists</h3>
-
-<ul>
-<li><code>list.append(x)</code>: Equivalent to <code>a[len(a):] = [x]</code></li>
-<li><code>list.extend(L)</code>: Extend the list by appending all the items in the given list. Equivalent to <code>a[len(a):] = L</code></li>
-<li><code>list.insert(i, x)</code>: The first argument is the index of the element before which to insert. <code>a.insert(len(a), x)</code> == <code>a.append(x)</code>.</li>
-<li><code>list.remove(x)</code>: Remove the first item form the list whose value is x.</li>
-<li><code>list.pop([i])</code>: Remove the item at the given position in the list, and return it. If no index is specified, <code>a.pop()</code> removes and returns the last item in the list.（parameters with square brackets are optional）</li>
-<li><code>list.clear()</code>: Remove all item from the list. Equivalent to <code>del a[:]</code></li>
-<li><code>list.index(x)</code>: Return the index in the list of the first item whose value is x.</li>
-<li><code>list.count(x)</code>: Return the number of times x appears in the list.</li>
-<li><code>list.sort(key=None, reverse=False)</code>: Sort the items of the list in place.</li>
-<li><code>list.reverse()</code>: Reverse the elements of the list in place.</li>
-<li><code>list.copy()</code>: Return a shallow copy of the list. Equivalent to <code>a[:]</code>.</li>
-</ul>
-
-<h4 id="toc_2">Using Lists as Stacks</h4>
-
-<p>Use <code>append</code> and <code>pop</code>.</p>
-
-<h4 id="toc_3">Using Lists as Queues</h4>
-
-<p>Lists are not efficient for this purpose. While appends and pops from the end of list are fast, doing inserts or pops from beginning of a list is slow.</p>
-
-<p>Better to use <code>collections.deque</code>.</p>
-
-<h4 id="toc_4">List Comprehensions</h4>
-
-<ul>
-<li><code>x = [item for item in series]</code></li>
-<li><code>x = [do_something(item) for item in series if expression]</code></li>
-</ul>
-
-<h4 id="toc_5">Nested List Comprehensions</h4>
-
-<p>The initial expression in a list comprehension can be any arbitrary expression, including another list comprehension.</p>
-
-<p>Example: <code>[[row[i] for row in matrix] for i in range(4)]</code>.</p>
-
-<h4 id="toc_6">The <code>del</code> statement</h4>
-
-<p>Remove an item from a list given its index. (Do not return a value) It can also remove slices from a list.</p>
-
-<p><code>del</code> can also be used to delete entire variables: <code>del a</code>.</p>
-
-<h3 id="toc_7">Tuples and Sequences</h3>
-
-<p>Tuples are <code>immutable</code>, and usually contain a heterogeneous sequence of elements that are accessed via unpacking or indexing. List are <code>mutable</code>, and their element are usually homogeneous and are accessed by iterating over the list.</p>
-
-<ul>
-<li>Empty tuples are constructed by and empty pair of parentheses: <code>empty = ()</code></li>
-<li>A tuple with one item is constructed by following a value with a comma:     <code>sigleton = &#39;hello&#39;,</code></li>
-</ul>
-
-<p>The statement <code>t = 1, 2, &#39;hello&#39;</code> is an example of <code>tuple packing</code>: the values are packed together in a tuple. The reverse operation is also possible: <code>x, y, z = t</code>.</p>
-
-<h3 id="toc_8">Sets</h3>
-
-<p><code>{}</code> or <code>set()</code> function can be used to create sets. Note: to create an empty set you have to use <code>set()</code>, not <code>{}</code>; the latter creates an empty dictionary.</p>
-
-<p>Example: </p>
-
-<pre><code class="language-python">a = set(&#39;abracadabra&#39;)
-b = set(&#39;alacazam&#39;)
-</code></pre>
-
-<ul>
-<li><code>a - b</code>: letters in a but not in b</li>
-<li><code>a | b</code>: letters in either a or b</li>
-<li><code>a &amp; b</code>: letters in both a and b</li>
-<li><code>a ^ b</code>: letters in a or b but not both</li>
-</ul>
-
-<p>Similaryly to list comprehensions, set comprehensions are also supported.</p>
-
-<h3 id="toc_9">Dictionaries</h3>
-
-<p>Dictionaries are indexed by keys, which can be any immutable type; strings and numbers can slways be keys. Tuples can be used as keys if they contain only one kind of item. You can&#39;t use use lists as keys, since lists can be modified in place using index assignments, slice assignments, or method like append() and extend().</p>
-
-<p>It is best to think of a dictionary as an unordered set of <code>key: value</code> pairs.</p>
-
-<ul>
-<li><code>del</code> can delete a <code>key: value</code></li>
-<li><code>list(d.keys())</code> on a dictionary returns a list of all the keys used in the dictionary, in arbitrary order (if you want it sorted, use <code>sortted(d.keys())</code> instead).</li>
-<li>To check whether a single key is in the dictionary, use the <code>in</code> keyword. (<code>in</code> or <code>not in</code>)</li>
-<li>Dict comprehensions can be used to create dictionaries from arbitrary key and value expressions: <code>{x: x**2 for x in range(10)}</code></li>
-<li>When the keys are simple strings, it is sometimes easier to specify pairs using keyword arguments: <code>dic(sape=1, guido=2, jack=3)</code> =&gt; <code>{&#39;sape&#39;: 1, &#39;jack&#39;: 3, &#39;guido&#39;: 2}</code></li>
-</ul>
-
-<h3 id="toc_10">Looping Techniques</h3>
-
-<p>When looping through dictionaries, the key and corresponding value can be retrieved at the same time using the items() method.</p>
-
-<pre><code class="language-python">knights = {&#39;gallahad&#39;: &#39;the pure&#39;, &#39;robin&#39;: &#39;the brave&#39;}
-for k, v in knights.items():
-    print(k, v)
-</code></pre>
-
-<p>When looping through a sequence, the position index and correspoding value can be retrieved at the same time using the <code>enumerate()</code> function.</p>
-
-<pre><code class="language-python">for i, v in enumerate([&#39;tic&#39;, &#39;tac&#39;, &#39;toe&#39;]):
-    print(i, v)
-</code></pre>
-
-<p>To loop over two or more sequences at the same time, the entries can be paired with the <code>zip()</code> function.</p>
-
-<pre><code class="language-python">numbers = [1, 2, 3]
-names = [&#39;one&#39;, &#39;two&#39;, &#39;three&#39;]
-for number, name in zip(numbers, names):
-    print(&#39;Number: {0}, Name: {1}&#39;.format(number, name))
-</code></pre>
-
-<p>To loop over a sequence in sorted order, use the <code>sorted()</code> function which return a new sorted list while leaving the source unaltered. <code>for item in soted(list)</code></p>
-
-<p>It is sometimes tempting to change a list while you are looping over it; however, it is often simple and safer to create a new list instead.</p>
-
-<h3 id="toc_11">More on Conditions</h3>
-
-<ul>
-<li><code>in</code> and <code>not in</code>: check whether a value occurs (or not) in a sequence.</li>
-<li><code>is</code> and <code>is not</code>: compare whether two objects are really the same object; this only matters for mutable objcts like lists.</li>
-<li>Comparisons can be chained. <code>a &lt; b == c</code></li>
-<li><code>and</code> and <code>or</code> are <code>short-circuit</code> operators</li>
-</ul>
-
-<h3 id="toc_12">Comparing Sequences and Other Types</h3>
-
-<p>The comparison uses lexicographical ordering.</p>
-
-<h2 id="toc_13">Modules</h2>
-
-<p>A module is a file containing Python definitions and statements. The file name is the module name with the suffix <code>.py</code> appended. Within a module, the module&#39;s name (as a string) is available as the value of the global variable <code>__name__</code>.</p>
-
-<h3 id="toc_14">More on Modules</h3>
-
-<p>Note that in general the practice of importing <code>*</code> from a module is frowned upon, since it often causes poorly readable code. (It ok to use in interactive sessions.)</p>
-
-<p>It&#39;s one module you want to test interactively, use <code>importlib.reload()</code>.</p>
-
-<pre><code class="language-python">import importlib
-importlib.reload(modulename)
-</code></pre>
-
-<h4 id="toc_15">Executing modules as scripts</h4>
-
-<pre><code class="language-python">if __name__ == &quot;__main__&quot;:
-    code
-</code></pre>
-
-<p>This is often used either to provide a convenient user interface to a module, or for testing purposes (running the module as a script executes a test suite).</p>
-
-<h4 id="toc_16">The Module Search Path</h4>
-
-<p>When a module named <em>spam</em> is imported, the interpreter first searches for a built-in module with that name. If not found, it then searches for a file named <code>spam.py</code> in a list of directories given by the variable <code>sys.path</code>, it is initialized from these locations:</p>
-
-<ul>
-<li>The directory containing the input script (or the current directory when no file is specified).</li>
-<li><code>PYTHONPATH</code> (a list of directory names, with the same syntax as the shell variable <em>PATH</em>).</li>
-<li>The installation-dependent default.</li>
-</ul>
-
-<p>After initialization, Python programs can modify <code>sys.path</code>. The directory containing the script being run is placed at the beginning of the search path, ahead of the standard library path. This means that scripts in that directory will be loaded instead of modules of the same name in the library directory.</p>
-
-<h4 id="toc_17">&quot;Compiled&quot; Python files</h4>
-
-<p>Python caches the compiled version of each module in the <code>__pycache__</code> directory. It generally contains the Python version number. This naming convention allows compiled modules from dirrerent release and different version of Python to coexist. (Example: <code>__pycache__/fib.python-27.pyc</code>)</p>
-
-<p>Python check the modification date of the source against the compiled version to see if it&#39;s out of date and needs to be recompiled.</p>
-
-<h3 id="toc_18">Standard Modules</h3>
-
-<pre><code class="language-python">&gt;&gt;&gt; import sys
-&gt;&gt;&gt; sys.ps1
-&#39;&gt;&gt;&gt; &#39;
-&gt;&gt;&gt; sys.ps2
-&#39;... &#39;
-&gt;&gt;&gt; sys.ps1 = &#39;C&gt; &#39;
-C&gt; print(&#39;Yuck!&#39;)
-Yuck!
-</code></pre>
-
-<p>The variable <code>sys.path</code> is a list of strings that determines the interpreter&#39;s search path for modules. You can modify it using standard list operations.</p>
-
-<h3 id="toc_19">The <code>dir()</code> Function</h3>
-
-<p>The built-in function <code>dir()</code> is used to find out which names a module defines.</p>
-
-<p>Without arguments, <code>dir()</code> lists the names you have defined currently.</p>
-
-<p>It list all types of names: variable, modules, functions, etc.</p>
-
-<h2 id="toc_20">Input and Output</h2>
-
-<h3 id="toc_21">Methods of File Objects</h3>
-
-<p>It is good practice to use the <code>with</code> keyword when dealing with file objects. This has the advantage that the file is properly closed after its suite finishes, even if an exceptiohn is raissed on the way. It is also much shorter thatn writing equivalent <code>try-finally</code> blocks:</p>
-
-<pre><code class="language-python">with open(&#39;workfile&#39;, &#39;r&#39;) as f:
-    read_data = f.read()
-</code></pre>
 
 ]]></content>
   </entry>
