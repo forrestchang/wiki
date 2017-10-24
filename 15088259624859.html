@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <title>
     
-  Python Cookbook - 七录书斋
+  Flask 中的上下文 - 七录书斋
   
 
   </title>
@@ -78,86 +78,53 @@ $(document).ready(function(event) {
 <div>
 	<article class="hentry" role="article">
 	<header>
-			  	<h1 class="entry-title">Python Cookbook</h1>
-				<p class="meta"><time datetime="2017-02-16T14:20:24+08:00" pubdate data-updated="true">2017/2/16</time></p>
+			  	<h1 class="entry-title">Flask 中的上下文</h1>
+				<p class="meta"><time datetime="2017-10-24T14:19:22+08:00" pubdate data-updated="true">2017/10/24</time></p>
 			 </header>
 		  	<div class="entry-content">
-			  	<h2 id="toc_0">调用父类的方法</h2>
+			  	<p>笔记来源：<a href="http://cizixs.com/2017/01/13/flask-insight-context">http://cizixs.com/2017/01/13/flask-insight-context</a></p>
 
-<p><code>super()</code> 的常见用法：</p>
+<p>在 Flask 中，视图函数需要知道它执行情况的请求信息（请求的 URL、参数、方法等）以及应用信息（应用中初始化的数据库等），才能够正确运行。</p>
 
-<ol>
-<li>在 <code>__init__()</code> 方法中确保父类被正确初始化了</li>
-<li>另外一个常见用法出现在覆盖 Python 特殊方法的代码中</li>
-</ol>
+<p>最直观的做法是把这些信息封装成一个对象，作为参数传递给视图函数。但是这样的话，所有的视图函数都需要添加对应的参数，即使该函数内部并没有使用到它。</p>
 
-<p>Ex:</p>
+<p>Flask 的做法是把这些信息作为类似全局变量的东西，视图函数需要的时候，可以使用 <code>from flask import request</code> 获取。但是这些对象和全局变量不同的是 —— 它们必须是动态的，因为在多线程或多协程的情况下，每个线程或者协程获取的都是自己独特的对象，不会互相干扰。</p>
 
-<pre><code class="language-python">class Proxy:
-    def __init__(self, obj):
-        self._obj = obj
+<p>如果对 Python 多线程比较熟悉的话，应该知道多线程中有个非常类似的概念 <code>threading.local</code>，可以实现多线程访问某个变量的时候只看到自己的数据。内部的原理说起来也很简单，这个对象有一个字典，保存了线程 id 对应的数据，读取该对象的时候，它动态地查询当前线程 id 对应的数据。Flask 上下文的实现也类似。</p>
 
-    # Delegate attribute lookup to internal obj
-    def __getattr__(self, name):
-        return getattr(self._obj, name)
+<p>上下文有关的内容定义在 <code>globals.py</code> 文件中。</p>
 
-    # Delegate attribute assignment
-    def __setattr__(self, name, value):
-        if name.startswith(&#39;_&#39;):
-            super().__setattr__(name, value) # Call original __setattr__
-        else:
-            setattr(self._obj, name, value)
+<pre><code class="language-python">def _lookup_req_object(name):
+    top = _request_ctx_stack.top
+    if top is None:
+        raise RuntimeError(_request_ctx_err_msg)
+    return getattr(top, name)
+
+
+def _lookup_app_object(name):
+    top = _app_ctx_stack.top
+    if top is None:
+        raise RuntimeError(_app_ctx_err_msg)
+    return getattr(top, name)
+
+
+def _find_app():
+    top = _app_ctx_stack.top
+    if top is None:
+        raise RuntimeError(_app_ctx_err_msg)
+    return top.app
+
+
+# context locals
+_request_ctx_stack = LocalStack()
+_app_ctx_stack = LocalStack()
+current_app = LocalProxy(_find_app)
+request = LocalProxy(partial(_lookup_req_object, &#39;request&#39;))
+session = LocalProxy(partial(_lookup_req_object, &#39;session&#39;))
+g = LocalProxy(partial(_lookup_app_object, &#39;g&#39;))
 </code></pre>
 
-<p>在上面代码中，<code>__setattr__()</code> 的实现包含一个名字检查。如果某个属性名以 <code>_</code> 开头，就通过 <code>super()</code> 调用原始的 <code>__setattr__()</code>，否则的话就委派给类内部的代理对象 <code>self._obj</code> 去处理。这看上去有点意思，因为就算没有显式指明某个类的父类，<code>super()</code> 仍然可以有效地工作。</p>
-
-<h2 id="toc_1">子类中扩展 Property</h2>
-
-<p>在自雷中扩展一个 property 可能会引起很多不易察觉的问题，因为一个 property 其实是 <code>getter</code>、<code>setter</code> 和 <code>deleter</code> 方法的几何，而不是单个的方法。因此，当你扩展一个 property 的时候，你需要先确定你是否要重新定义所有的方法还是说只修改其中的一个。</p>
-
-<h2 id="toc_2">创建新的类或实例属性</h2>
-
-<p>描述器：一个实现了三个核心的属性访问操作（get, set, delete）的类，分别为 <code>__get__()</code>, <code>__set__()</code> 和 <code>__delete__()</code> 这三个特殊的方法。这些方法接受一个实例作为输入，之后相应的操作实例实例底层的字典。</p>
-
-<p>为了使用一个描述器，需要将这个描述器的实例作为类属性放到一个类的定义中。</p>
-
-<p>一个基于描述器的高级代码：</p>
-
-<pre><code class="language-python"># Descriptor for a type-checked attribute
-class Typed:
-    def __init__(self, name, expected_type):
-        self.name = name
-        self.expected_type = expected_type
-    def __get__(self, instance, cls):
-        if instance is None:
-            return self
-        else:
-            return instance.__dict__[self.name]
-
-    def __set__(self, instance, value):
-        if not isinstance(value, self.expected_type):
-            raise TypeError(&#39;Expected &#39; + str(self.expected_type))
-        instance.__dict__[self.name] = value
-    def __delete__(self, instance):
-        del instance.__dict__[self.name]
-
-# Class decorator that applies it to selected attributes
-def typeassert(**kwargs):
-    def decorate(cls):
-        for name, expected_type in kwargs.items():
-            # Attach a Typed descriptor to the class
-            setattr(cls, name, Typed(name, expected_type))
-        return cls
-    return decorate
-
-# Example use
-@typeassert(name=str, shares=int, price=float)
-class Stock:
-    def __init__(self, name, shares, price):
-        self.name = name
-        self.shares = shares
-        self.price = price
-</code></pre>
+<p>Flask 提供两种上下文：application context 和 request context。application context 又演化出来两个变量：current_app 和 g，而 request context 则演化出来 request 和 session。</p>
 
 			</div>
 
@@ -200,12 +167,9 @@ s.setAttribute('data-timestamp', +new Date());
 
 	    <p class="meta">
 	    
-	        <a class="basic-alignment left" href="14887608416607.html" 
-	        title="Previous Post: 《算法》笔记">&laquo; 《算法》笔记</a>
 	    
-	    
-	        <a class="basic-alignment right" href="14871569977647.html" 
-	        title="Next Post: Python 风格指南笔记">Python 风格指南笔记 &raquo;</a>
+	        <a class="basic-alignment right" href="15087352731978.html" 
+	        title="Next Post: 常见的面试题整理 —— 数据库篇">常见的面试题整理 —— 数据库篇 &raquo;</a>
 	    
 	    </p>
 	  </footer>

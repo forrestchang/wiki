@@ -79,6 +79,65 @@ $(document).ready(function(event) {
 
 	<article>
 		 <header>
+		  	<h1 class="entry-title"><a href="15088259624859.html">Flask 中的上下文</a></h1>
+			<p class="meta"><time datetime="2017-10-24T14:19:22+08:00" 
+			pubdate data-updated="true">2017/10/24</time></p>
+		 </header>
+	  	<div class="entry-content">
+		  	
+		  	<p>笔记来源：<a href="http://cizixs.com/2017/01/13/flask-insight-context">http://cizixs.com/2017/01/13/flask-insight-context</a></p>
+
+<p>在 Flask 中，视图函数需要知道它执行情况的请求信息（请求的 URL、参数、方法等）以及应用信息（应用中初始化的数据库等），才能够正确运行。</p>
+
+<p>最直观的做法是把这些信息封装成一个对象，作为参数传递给视图函数。但是这样的话，所有的视图函数都需要添加对应的参数，即使该函数内部并没有使用到它。</p>
+
+<p>Flask 的做法是把这些信息作为类似全局变量的东西，视图函数需要的时候，可以使用 <code>from flask import request</code> 获取。但是这些对象和全局变量不同的是 —— 它们必须是动态的，因为在多线程或多协程的情况下，每个线程或者协程获取的都是自己独特的对象，不会互相干扰。</p>
+
+<p>如果对 Python 多线程比较熟悉的话，应该知道多线程中有个非常类似的概念 <code>threading.local</code>，可以实现多线程访问某个变量的时候只看到自己的数据。内部的原理说起来也很简单，这个对象有一个字典，保存了线程 id 对应的数据，读取该对象的时候，它动态地查询当前线程 id 对应的数据。Flask 上下文的实现也类似。</p>
+
+<p>上下文有关的内容定义在 <code>globals.py</code> 文件中。</p>
+
+<pre><code class="language-python">def _lookup_req_object(name):
+    top = _request_ctx_stack.top
+    if top is None:
+        raise RuntimeError(_request_ctx_err_msg)
+    return getattr(top, name)
+
+
+def _lookup_app_object(name):
+    top = _app_ctx_stack.top
+    if top is None:
+        raise RuntimeError(_app_ctx_err_msg)
+    return getattr(top, name)
+
+
+def _find_app():
+    top = _app_ctx_stack.top
+    if top is None:
+        raise RuntimeError(_app_ctx_err_msg)
+    return top.app
+
+
+# context locals
+_request_ctx_stack = LocalStack()
+_app_ctx_stack = LocalStack()
+current_app = LocalProxy(_find_app)
+request = LocalProxy(partial(_lookup_req_object, &#39;request&#39;))
+session = LocalProxy(partial(_lookup_req_object, &#39;session&#39;))
+g = LocalProxy(partial(_lookup_app_object, &#39;g&#39;))
+</code></pre>
+
+<p>Flask 提供两种上下文：application context 和 request context。application context 又演化出来两个变量：current_app 和 g，而 request context 则演化出来 request 和 session。</p>
+
+
+		</div>
+
+		
+
+	</article>
+ 
+	<article>
+		 <header>
 		  	<h1 class="entry-title"><a href="15081195874570.html">理解 Python WSGI</a></h1>
 			<p class="meta"><time datetime="2017-10-16T10:06:27+08:00" 
 			pubdate data-updated="true">2017/10/16</time></p>
@@ -2972,10 +3031,10 @@ Yuck!
 	  <ul id="recent_posts">
 	  
 	      <li class="post">
-	        <a href="programming.html"><strong>Programming&nbsp;(32)</strong></a>
+	        <a href="programming.html"><strong>Programming&nbsp;(33)</strong></a>
 	         <p class="cat-children-p"> 
 	        
-	        	<a href="python.html">Python&nbsp;(10)</a>&nbsp;&nbsp;
+	        	<a href="python.html">Python&nbsp;(11)</a>&nbsp;&nbsp;
 	        
 	        	<a href="algorithms.html">Algorithms&nbsp;(1)</a>&nbsp;&nbsp;
 	        
@@ -3000,6 +3059,12 @@ Yuck!
 	  
 	      
 		      <li class="post">
+		        <a href="15088259624859.html">Flask 中的上下文</a>
+		      </li>
+	     
+	  
+	      
+		      <li class="post">
 		        <a href="15087352731978.html">常见的面试题整理 —— 数据库篇</a>
 		      </li>
 	     
@@ -3019,12 +3084,6 @@ Yuck!
 	      
 		      <li class="post">
 		        <a href="15087226760041.html">MySQL 笔记</a>
-		      </li>
-	     
-	  
-	      
-		      <li class="post">
-		        <a href="15081195874570.html">理解 Python WSGI</a>
 		      </li>
 	     
 	  

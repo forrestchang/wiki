@@ -79,6 +79,65 @@ $(document).ready(function(event) {
 
 	<article>
 		 <header>
+		  	<h1 class="entry-title"><a href="15088259624859.html">Flask 中的上下文</a></h1>
+			<p class="meta"><time datetime="2017-10-24T14:19:22+08:00" 
+			pubdate data-updated="true">2017/10/24</time></p>
+		 </header>
+	  	<div class="entry-content">
+		  	
+		  	<p>笔记来源：<a href="http://cizixs.com/2017/01/13/flask-insight-context">http://cizixs.com/2017/01/13/flask-insight-context</a></p>
+
+<p>在 Flask 中，视图函数需要知道它执行情况的请求信息（请求的 URL、参数、方法等）以及应用信息（应用中初始化的数据库等），才能够正确运行。</p>
+
+<p>最直观的做法是把这些信息封装成一个对象，作为参数传递给视图函数。但是这样的话，所有的视图函数都需要添加对应的参数，即使该函数内部并没有使用到它。</p>
+
+<p>Flask 的做法是把这些信息作为类似全局变量的东西，视图函数需要的时候，可以使用 <code>from flask import request</code> 获取。但是这些对象和全局变量不同的是 —— 它们必须是动态的，因为在多线程或多协程的情况下，每个线程或者协程获取的都是自己独特的对象，不会互相干扰。</p>
+
+<p>如果对 Python 多线程比较熟悉的话，应该知道多线程中有个非常类似的概念 <code>threading.local</code>，可以实现多线程访问某个变量的时候只看到自己的数据。内部的原理说起来也很简单，这个对象有一个字典，保存了线程 id 对应的数据，读取该对象的时候，它动态地查询当前线程 id 对应的数据。Flask 上下文的实现也类似。</p>
+
+<p>上下文有关的内容定义在 <code>globals.py</code> 文件中。</p>
+
+<pre><code class="language-python">def _lookup_req_object(name):
+    top = _request_ctx_stack.top
+    if top is None:
+        raise RuntimeError(_request_ctx_err_msg)
+    return getattr(top, name)
+
+
+def _lookup_app_object(name):
+    top = _app_ctx_stack.top
+    if top is None:
+        raise RuntimeError(_app_ctx_err_msg)
+    return getattr(top, name)
+
+
+def _find_app():
+    top = _app_ctx_stack.top
+    if top is None:
+        raise RuntimeError(_app_ctx_err_msg)
+    return top.app
+
+
+# context locals
+_request_ctx_stack = LocalStack()
+_app_ctx_stack = LocalStack()
+current_app = LocalProxy(_find_app)
+request = LocalProxy(partial(_lookup_req_object, &#39;request&#39;))
+session = LocalProxy(partial(_lookup_req_object, &#39;session&#39;))
+g = LocalProxy(partial(_lookup_app_object, &#39;g&#39;))
+</code></pre>
+
+<p>Flask 提供两种上下文：application context 和 request context。application context 又演化出来两个变量：current_app 和 g，而 request context 则演化出来 request 和 session。</p>
+
+
+		</div>
+
+		
+
+	</article>
+ 
+	<article>
+		 <header>
 		  	<h1 class="entry-title"><a href="15087352731978.html">常见的面试题整理 —— 数据库篇</a></h1>
 			<p class="meta"><time datetime="2017-10-23T13:07:53+08:00" 
 			pubdate data-updated="true">2017/10/23</time></p>
@@ -189,6 +248,44 @@ $(document).ready(function(event) {
 <li>第二范式（2NF）：数据库表中不存在非关键字段对任一候选关键字段的部分函数依赖（部分函数依赖指的是存在组合关键字中的某些字段决定非关键字段的情况），也即所有非关键字段都完全依赖于任意一组候选；</li>
 <li>第三范式（3NF）：在第二范式的基础上，数据表中如果不存在非关键字段对任一候选关键字段的传递函数依赖则符合第三范式。所谓传递函数依赖，指的是如果存在 <code>A -&gt; B -&gt;</code> 的决定关系，则 C 传递函数依赖于 A。因此，满足第三范式的数据库表应该不存在如下依赖关系：关键字段 -&gt; 非关键字段 x -&gt; 非关键字段 y</li>
 </ul>
+
+<h2 id="toc_10">连接的种类</h2>
+
+<h3 id="toc_11">外连接</h3>
+
+<p>包括左向外连接、右向外连接或完整外部连接。</p>
+
+<h4 id="toc_12">左连接</h4>
+
+<p>left join 或 left outer join。</p>
+
+<p>左向外连接的结果集包括 left outer 子句中指定的左表的所有行，而不仅仅是连接所匹配的行。如果左表的某行在右表中没有匹配行，则在相关联的结果集行中右表的所有选择列表均为空值。</p>
+
+<h4 id="toc_13">右连接</h4>
+
+<p>right join 或 right outer join。</p>
+
+<p>右向外连接是左向外连接的反向连接。将返回右表的所有行。如果右表的某行在坐标中没有匹配行，则将左表返回空值。</p>
+
+<h4 id="toc_14">完整外部连接</h4>
+
+<p>full join 或 full outer join。</p>
+
+<p>完整外部连接返回左表和右表中的所有行。当某行在另一个表中没有匹配行时，则另一个表的选择列表包含空值。如果表之间有匹配行，则整个结果集行包含基表的数据值。</p>
+
+<h3 id="toc_15">内连接</h3>
+
+<p>内连接是用比较运算符比较要连接的值的连接。</p>
+
+<p>join 或 inner join。</p>
+
+<p>只返回符合条件的 table1 和 table 2 的列。</p>
+
+<h3 id="toc_16">交叉连接（完全）</h3>
+
+<p>cross join（不带条件 where）。</p>
+
+<p>没有 where 子句的交叉连接将产生连接所涉及的表的笛卡尔积。第一个表的行数乘以第二个表的行数等于笛卡尔积结果集的大小。</p>
 
 
 		</div>
@@ -6678,10 +6775,10 @@ let airportNames = [String](airports.values)
 	  <ul id="recent_posts">
 	  
 	      <li class="post">
-	        <a href="programming.html"><strong>Programming&nbsp;(32)</strong></a>
+	        <a href="programming.html"><strong>Programming&nbsp;(33)</strong></a>
 	         <p class="cat-children-p"> 
 	        
-	        	<a href="python.html">Python&nbsp;(10)</a>&nbsp;&nbsp;
+	        	<a href="python.html">Python&nbsp;(11)</a>&nbsp;&nbsp;
 	        
 	        	<a href="algorithms.html">Algorithms&nbsp;(1)</a>&nbsp;&nbsp;
 	        
@@ -6706,6 +6803,12 @@ let airportNames = [String](airports.values)
 	  
 	      
 		      <li class="post">
+		        <a href="15088259624859.html">Flask 中的上下文</a>
+		      </li>
+	     
+	  
+	      
+		      <li class="post">
 		        <a href="15087352731978.html">常见的面试题整理 —— 数据库篇</a>
 		      </li>
 	     
@@ -6725,12 +6828,6 @@ let airportNames = [String](airports.values)
 	      
 		      <li class="post">
 		        <a href="15087226760041.html">MySQL 笔记</a>
-		      </li>
-	     
-	  
-	      
-		      <li class="post">
-		        <a href="15081195874570.html">理解 Python WSGI</a>
 		      </li>
 	     
 	  
