@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <title>
     
-  S-表达式 - 七录书斋
+   - 七录书斋
   
 
   </title>
@@ -78,105 +78,11 @@ $(document).ready(function(event) {
 <div>
 	<article class="hentry" role="article">
 	<header>
-			  	<h1 class="entry-title">S-表达式</h1>
-				<p class="meta"><time datetime="2017-10-09T11:50:30+08:00" pubdate data-updated="true">2017/10/9</time></p>
+			  	<h1 class="entry-title"></h1>
+				<p class="meta"><time datetime="2017-11-21T18:11:17+08:00" pubdate data-updated="true">2017/11/21</time></p>
 			 </header>
 		  	<div class="entry-content">
-			  	<p>S-表达式（其中 S 代表「符号的」）是一种以人类可读的文本形式表达半结构化数据的约定。S-表达式可能以其在 Lisp 家族的编程语言中的使用而为人所知。语法细节和所支持的数据类型虽淫语言而异，但这些语言件最通用的特性则是使用 S-表达式 作为括号化的前缀表示法。</p>
-
-<p><img src="media/15075210302691/15075213452393.jpg" alt=""/></p>
-
-<h2 id="toc_0">数据类型和语法</h2>
-
-<p>S-表达式格式有多种变体，支持不同数据类型的各种不同语法。最广泛支持的是：</p>
-
-<ul>
-<li>列表和点对</li>
-<li>符号</li>
-<li>字符串</li>
-<li>整数</li>
-<li>浮点数</li>
-</ul>
-
-<h2 id="toc_1">在 Lisp 编程中的使用</h2>
-
-<p>S-表达式在 Lisp 中即用作代码，也用作数据。</p>
-
-<p>S-表达式可以是如数字这样的单个对象，包括特殊原子<code>nil</code>和<code>t</code>在内的 Lisp 原子，或写作<code>(x . y)</code>的 cons pair。更长的列表则有嵌套的 cons pair 组成，例如<code>(1 . (2 . (3 . nil)))</code>（亦可以写作更易理解的 <code>(1 2 3)</code>）。</p>
-
-<p>使用前缀表示方法，程序代码课写作 S-表达式。书写 Lisp 程序中额外的语法糖规则是，一般的表达式<code>(quote x)</code>可以省略为<code>&#39;x</code>。</p>
-
-<h3 id="toc_2">S-表达式的源码示例</h3>
-
-<pre><code class="language-scheme">(define (factorial x)
-    (if (zero? x) 1
-          (* x (factorial (- x 1)))))
-</code></pre>
-
-<h2 id="toc_3">解析</h2>
-
-<p>S-表达式经常与 XML 进行比较，一个关键的区别是 S-表达式在语法上要简单的多，因此更容易解析。</p>
-
-<pre><code class="language-python"># 一个简单的 S-表达式解析器
-def parse_sexp(string):
-    &quot;&quot;&quot;
-    &gt;&gt;&gt; parse_sexp(&quot;(+ 5 (+ 3 5))&quot;)
-    [[&#39;+&#39;, &#39;5&#39;, [&#39;+&#39;, &#39;3&#39;, &#39;5&#39;]]]
-    &quot;&quot;&quot;
-    sexp = [[]]
-    word = &#39;&#39;
-    in_str = False
-    for char in string:
-        if char == &#39;(&#39; and not in_str:
-            sexp.append([])
-        elif char == &#39;)&#39; and not in_str:
-            if word:
-                sexp[-1].append(word)
-                word = &#39;&#39;
-            temp = sexp.pop()
-            sexp[-1].append(temp)
-        elif char in (&#39; &#39;, &#39;\n&#39;, &#39;\t&#39;) and not in_str:
-            if word:
-                sexp[-1].append(word)
-                word = &#39;&#39;
-        elif char = &#39;\&quot;&#39;:
-            in_str = not in_str
-        else:
-            word += char
-    return sexp[0]
-</code></pre>
-
-<hr/>
-
-<p>S-表达式是二叉树的一种线性编码。</p>
-
-<pre><code>原子 -&gt; 数字|符号
-S表达式 -&gt; 原子|(S表达式 . S表达式)
-</code></pre>
-
-<p>书写 S-表达式，还要同时写很多「.」号，因此，Lisp 语言定义了一套 S-表达式的化简规则：</p>
-
-<ol>
-<li>如果一个点号右邻一个左括号，那么就可以将这个点号，左括号以及匹配的右括号一起去掉：<code>(a . (b . c))</code> &lt;=&gt; <code>(a b . c)</code></li>
-<li>如果一个点号右邻原子 nil，那么就可以把这个点号和原子 nil 一起去掉：<code>(a . (b . nil))</code> &lt;=&gt; <code>(a b . nil)</code> &lt;=&gt; <code>(a b)</code></li>
-</ol>
-
-<p>列表是一种特殊类型的 S-表达式，如果一个 S-表达式不是原子，而且经过化简可以把点号都去掉，就说这个 S-表达式是一个列表。</p>
-
-<p>例如：<code>(a .(b .(c . nil)))</code> &lt;=&gt; <code>(a b c)</code>。</p>
-
-<p>为了使用方便，还允许有空表，而且还定义空表等价于原子 nil，空表的记法，使 nil 身兼三职：</p>
-
-<ol>
-<li>nil 表示一个原子</li>
-<li>nil 表示空表</li>
-<li>nil 表示逻辑值「假」</li>
-</ol>
-
-<p>nil 成为了 Lisp 语言中唯一的既是原子又是列表的表达式。</p>
-
-<p>在 Scheme 中，它没有 nil 的概念，只有空表 <code>()</code>。</p>
-
+			  	
 			</div>
 
 		
@@ -187,7 +93,7 @@ S表达式 -&gt; 原子|(S表达式 . S表达式)
 			<strong>Categories:</strong>&nbsp; 
 			<span class="categories">
 			
-			    <a class='category' href='lisp.html'>Lisp</a>&nbsp;
+			    <a class='category' href='network.html'>Network</a>&nbsp;
 			 
 			</span>
 		    </p>
@@ -218,12 +124,12 @@ s.setAttribute('data-timestamp', +new Date());
 
 	    <p class="meta">
 	    
-	        <a class="basic-alignment left" href="15075498694747.html" 
-	        title="Previous Post: Python Tricks">&laquo; Python Tricks</a>
+	        <a class="basic-alignment left" href="15112591097718.html" 
+	        title="Previous Post: Nginx 笔记">&laquo; Nginx 笔记</a>
 	    
 	    
-	        <a class="basic-alignment right" href="15073552964811.html" 
-	        title="Next Post: Scheme 解释器相关笔记">Scheme 解释器相关笔记 &raquo;</a>
+	        <a class="basic-alignment right" href="15107536000528.html" 
+	        title="Next Post: RPC Notes">RPC Notes &raquo;</a>
 	    
 	    </p>
 	  </footer>
