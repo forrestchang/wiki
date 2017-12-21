@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <title>
     
-  什么是 Event Loop？ - 七录书斋
+  2016/08/08 阅读笔记 - 七录书斋
   
 
   </title>
@@ -78,57 +78,53 @@ $(document).ready(function(event) {
 <div>
 	<article class="hentry" role="article">
 	<header>
-			  	<h1 class="entry-title">什么是 Event Loop？</h1>
-				<p class="meta"><time datetime="2017-10-14T17:32:49+08:00" pubdate data-updated="true">2017/10/14</time></p>
+			  	<h1 class="entry-title">2016/08/08 阅读笔记</h1>
+				<p class="meta"><time datetime="2016-08-08T20:14:54+08:00" pubdate data-updated="true">2016/8/8</time></p>
 			 </header>
 		  	<div class="entry-content">
-			  	<p>笔记来源：<a href="http://www.ruanyifeng.com/blog/2013/10/event_loop.html">http://www.ruanyifeng.com/blog/2013/10/event_loop.html</a></p>
+			  	<h2 id="toc_0"><a href="https://www.quora.com/How-can-I-study-for-10+-hours-a-day-without-getting-depressed-and-how-can-I-make-myself-get-used-to-it">Quora: How can I study for 10+ hours a day without getting depressed and how can I make myself get used it?</a></h2>
 
-<p>Event Loop 指的是计算机系统的一种运行机制。JavaScript 就采用这种机制，来解决单线程运行带来的一些问题。</p>
-
-<p><img src="media/15079735695142/15079736411779.png" alt=""/></p>
-
-<p>想要理解 Event Loop，就要从程序的运行模式讲起。运行以后的程序叫做「进程」（process），一般情况下，一个进程一次只能执行一个任务。</p>
-
-<p>如果有很多任务需要执行，有三种方法：</p>
+<p><em>Such a stupid question.</em></p>
 
 <ol>
-<li>排队：因为一个进程一次只能执行一个任务，只好等前面的任务执行完了，再执行后面的任务；</li>
-<li>新建进程：使用 fork 命令，为每个任务新建一个进程；</li>
-<li>新建线程：因为进程太耗费资源，所以如今的程序往往允许一个进程包含多个线程，由线程去完成任务。</li>
+<li>Don&#39;t study more than 7.5 hours a day. You can&#39;t learn when you are exhausted.</li>
+<li>Take a day off per week. Do something you like on that day.</li>
+<li>Make a plan.What knowledge is most critical in each of the subjects? First, concentrate only on that.</li>
+<li>Study from low to high resolution.</li>
+<li>Nap. A lot.</li>
+<li>Study one topic for 2.5 hours. Then switch to another. Continue.</li>
+<li>Read. Then put down the book. Then summarize what you have read. Don&#39;t look at what you were reading when you summarize.</li>
 </ol>
-
-<p>以 JavaScript 语言为例，它是一种单线程语言，所有任务都在一个线程上完成，即采用上面第一种方法。一旦遇到大量任务或者遇到一个耗时的任务，网页就会出现「假死」，因为 JavaScript 停不下来，也就无法响应用户的行为。</p>
-
-<p>如果某个任务很耗时，比如设计很多 IO 操作，那么线程的运行大概是下面这样：</p>
-
-<p><img src="media/15079735695142/15079739551520.png" alt=""/></p>
-
-<p>上图的绿色部分是程序的运行时间，红色部分是等待时间。可以看到，由于 IO 操作很慢，所以这个线程的大部分运行时间都在空等 IO 操作返回结果。这种运行方式称为「同步模式」（synchronous IO）。</p>
-
-<p>如果采用多线程，同时运行多个任务，那很可能就是下面这样：</p>
-
-<p><img src="media/15079735695142/15079740565106.png" alt=""/></p>
-
-<p>上图表明，多线程不仅占用多倍的系统资源，也闲置多倍的资源，这显然不合理。</p>
-
-<p>Event Loop 就是为了解决这个问题而提出的。</p>
-
-<p><strong>Event Loop 是一种程序结构，用于等待和发送消息和事件。</strong></p>
-
-<p>简单说，就是在程序中设置两个线程：一个负责程序本身的运行，称为「主线程」，另一个负责主线程和其他进程（主要是各种 IO 操作）的通信，被称为「Event Loop 线程」（消息线程）。</p>
-
-<p><img src="media/15079735695142/15079742151620.png" alt=""/></p>
-
-<p>上图主线程的绿色部分，还是表示运行时间，而橙色部分表示空闲时间。每当遇到 IO 的时候，主线程就让 Event Loop 线程去通知相应的 IO 程序，然后接着往后运行，所以不存在红色的等待时间。等到 IO 程序完成操作，Event Loop 线程再把结果返回主线程。主线程就调用事先设定的回调函数，完成整个任务。</p>
-
-<p>可以看到，由于多出了橙色的空闲时间，所以主线程得以运行更多的惹怒，这就提高了运行效率。这种运行法式称为「异步模式」（asynchronous IO）。</p>
 
 <hr/>
 
-<p>文中提到的「阻塞」和「非阻塞」其实与「同步」「异步」并没有太大的关系。</p>
+<ol>
+<li>Avoid time specific plans unless you&#39;re a monk or living in an extremely isolated environment.</li>
+<li>Create a simple mechanism for notes and plans. You don&#39;t need any complex thing. The aim here is to work efficiently so these tools should be tools, not the whole story.</li>
+<li>Create tasks as atomic as possible. Task should not be long. Best practice is that the task can be done after 1-2 hours of efficient work. If the task is big, you divide it into subtasks. In other words, avoid context switching as much as possible.</li>
+<li>Get rid of all external distraction.</li>
+<li>Use Pomodoro Technique.</li>
+<li>If you have a long-run work and you can&#39;t complete it at the end of the day, take a note for tomorrow&#39;s yourself in order to remember the basic of teh task. And tomorrow, you start the day by glancing over the connected tasks.</li>
+</ol>
 
-<p>具体可以参考：<a href="15079748505440.html">怎样理解阻塞非阻塞与同步异步的区别？</a></p>
+<hr/>
+
+<p>If studying makes you depressed, it&#39;s because your mind considers it a chore that you&#39;re forced to do. Doing any such chore for long periods of time is awful and depressing. On the other hand, doing somehting you love is fun, even when it&#39;s physically or mentally exhausting. So what you need to do is make the experience more valuable and enjoyable.</p>
+
+<ol>
+<li>Knowing WHY you&#39;re learning something.</li>
+<li>Really understanding what you&#39;re learning.</li>
+</ol>
+
+<hr/>
+
+<ol>
+<li>Learn and practise proven efficient and effective study tools like SQ5R and Cornell Notes.
+
+<ul>
+<li>SQ5R reading/satudying strategy: [Survey, Question, Read, Record, Recite, Review, Reflect], </li>
+</ul></li>
+</ol>
 
 			</div>
 
@@ -140,7 +136,7 @@ $(document).ready(function(event) {
 			<strong>Categories:</strong>&nbsp; 
 			<span class="categories">
 			
-			    <a class='category' href='javascript.html'>JavaScript</a>&nbsp;
+			    <a class='category' href='programming.html'>Programming</a>&nbsp;
 			 
 			</span>
 		    </p>
@@ -171,12 +167,12 @@ s.setAttribute('data-timestamp', +new Date());
 
 	    <p class="meta">
 	    
-	        <a class="basic-alignment left" href="15079748505440.html" 
-	        title="Previous Post: 怎样理解阻塞非阻塞与同步异步的区别？">&laquo; 怎样理解阻塞非阻塞与同步异步的区别？</a>
+	        <a class="basic-alignment left" href="14871569977647.html" 
+	        title="Previous Post: Python 风格指南笔记">&laquo; Python 风格指南笔记</a>
 	    
 	    
-	        <a class="basic-alignment right" href="15079725923338.html" 
-	        title="Next Post: I don't understand Python's Asyncio">I don't understand Python's Asyncio &raquo;</a>
+	        <a class="basic-alignment right" href="14824095038232.html" 
+	        title="Next Post: The Python Tutorial Reading Notes">The Python Tutorial Reading Notes &raquo;</a>
 	    
 	    </p>
 	  </footer>

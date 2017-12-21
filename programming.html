@@ -2767,6 +2767,346 @@ def load_db(db):
  
 	<article>
 		 <header>
+		  	<h1 class="entry-title"><a href="14893895625395.html">《算法》笔记（二）· 排序</a></h1>
+			<p class="meta"><time datetime="2017-03-13T15:19:22+08:00" 
+			pubdate data-updated="true">2017/3/13</time></p>
+		 </header>
+	  	<div class="entry-content">
+		  	
+		  	<ul>
+<li>
+<a href="#toc_0">2.1 初级排序算法</a>
+<ul>
+<li>
+<ul>
+<li>
+<a href="#toc_1">2.1.1.3 额外的内存使用</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#toc_2">2.1.2 选择排序</a>
+</li>
+<li>
+<a href="#toc_3">2.1.3 插入排序</a>
+</li>
+<li>
+<a href="#toc_4">2.1.6 希尔排序</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#toc_5">2.2 归并排序</a>
+<ul>
+<li>
+<a href="#toc_6">2.2.1 原地归并的抽象方法</a>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<h2 id="toc_0">2.1 初级排序算法</h2>
+
+<h4 id="toc_1">2.1.1.3 额外的内存使用</h4>
+
+<p>排序算法的额外内存开销和运行时间是同等重要的。排序算法可以分为两类：</p>
+
+<ul>
+<li>原地排序算法</li>
+<li>需要额外内存空间来存储的其他排序算法</li>
+</ul>
+
+<h3 id="toc_2">2.1.2 选择排序</h3>
+
+<p>选择排序两个鲜明的特点：</p>
+
+<ol>
+<li>运行时间和输入无关。为了找出最小的元素而扫描一遍数组并不能为下一遍扫描提供什么信息。这种性质在某些情况下是缺点，因为使用选择排序的人可能会惊讶地发现，一个已经有序的数组或是主键全部相等的数组和一个元素随机排列的数组所用的排序时间竟然一样长。</li>
+<li>数据移动是最少的。每次交换都会改变两个数组元素的值，因此选择排序用了 N 次交换——交换次数和数组的大小是线性关系。</li>
+</ol>
+
+<p>选择排序实现：</p>
+
+<pre><code class="language-python">def selection_sort(a):
+    N = len(a)
+    for i in range(N):
+        mi = i
+        for j in range(i+1, N):
+            if a[j] &lt; a[mi]:
+                mi = j
+        a[i], a[mi] = a[mi], a[i]
+    return a
+</code></pre>
+
+<h3 id="toc_3">2.1.3 插入排序</h3>
+
+<p>与选择排序一样，当前索引左边的所有元素都是有序的，但它们最终的最终位置还不确定，为了给更小元素腾出空间，它们可能会被移动。但是当前索引到达数组的右端时，数组排序就完成了。</p>
+
+<p>与选择排序不同的是，插入排序所需的时间取决于输入中元素的初始顺序。例如，对一个很大且其中的元素已经有序（或接近有序）的数组进行排序将会比对随机顺序的数组或是逆序数组进行排序要快得多。</p>
+
+<p>插入排序对于实际应用中常见的某些类型的非随机数组很有效。当插入排序对一个有序数组进行排序，运行时间是线性的。</p>
+
+<pre><code class="language-python">def insertion_sort(a):
+    for i in range(1, len(a)):
+        for j in range(i, 0, -1):
+            if a[j] &lt; a[j-1]:
+                a[j], a[j-1] = a[j-1], a[j]
+    return a
+</code></pre>
+
+<p>对于 1 到 N-1 之间的每一个 i，将 a[i] 与 a[0] 到 a[i-1] 中比它小的所有元素依次有序地交换。在索引 i 由左向右变化的过程中，它左侧的元素总是有序的，所以当 i 到达数组的右端时排序就完成了。</p>
+
+<p>我们要考虑的更一般的情况是部分有序的数组。<strong>倒置</strong>指的是数组中的两个顺序颠倒的元素。比如 E X A M P L E 中有 11 对倒置：E-A X-A X-M X-P X-L X-E M-L M-E ... 如果数组中倒置的数量小于数组大小的某个倍数，那么我们说这个数组是部分有序的。</p>
+
+<p>下面是几种典型的部分有序的数组：</p>
+
+<ul>
+<li>数组中每个元素都距离它的最终位置都不远</li>
+<li>一个有序的大数组接一个小数组</li>
+<li>数组中只有几个元素的位置不正确</li>
+</ul>
+
+<p>插入排序对这样的数组很有效，而选择排序则不然。事实上，当倒置数量很少时，插入排序很可能比本章中的其他任何算法都要快。</p>
+
+<p>要大幅提高插入排序的速度并不难，只需要在内循环中将较大的元素都向右移动而不总是交换两个元素。</p>
+
+<h3 id="toc_4">2.1.6 希尔排序</h3>
+
+<p>为了展示初级排序算法性质的价值，我们将学习一种基于插入排序的快速排序算法。对于大规模乱序数组插入排序很慢，因为它智慧交换相邻的元素，因此元素只能一点一点地从数组的一段移动到另一端。希尔排序为了加快速度简单地改进了插入排序，交换不相邻的元素以对数组的局部进行排序，并最终插入排序将局部有序的数组排序。</p>
+
+<p>希尔排序的思想是使数组中任意间隔为 h 的元素都是有序的。这样的数组被称为 h 有序数组。换句话说，h 有序数组就是 h 个独立的有序数组编织在一起组成的一个数组，如下图所示。</p>
+
+<p><img src="http://omaacpco9.bkt.clouddn.com/2017-03-09-115612.jpg" alt=""/></p>
+
+<p>实现希尔排序的一种方法是对于每个 h，用插入排序将 h 个子数组独立地排序。但因为子数组是相互独立的，一个更简单的方法是在 h-子数组中将每个元素交换到比它大的元素之前去（将比它大的元素向右移动一格）。只需要在插入排序的代码中将移动元素的距离由 1 改为 h 即可。这样，希尔排序的实现就转化为了一个类似于插入排序但是用不同增量的过程。</p>
+
+<p>希尔排序更高效的原因是它权衡了子数组的规模性和有序性。排序之初，各个子数组都很短，排序之后子数组都是部分有序的，这两种情况都很适合插入排序。子数组部分有序的程度取决于递增序列的选择。</p>
+
+<pre><code class="language-python">def shell_sort(a):
+    h = 1
+    while h &lt; len(a) / 3:
+        h = 3 * h + 1
+    while h &gt;= 1:
+        for i in range(int(h), len(a)):
+            for j in range(i, int(h)-1, -1):
+                if a[j] &lt; a[j - int(h)]:
+                    a[j], a[j - int(h)] = a[j - int(h)], a[j]
+        h = h / 3
+    return a
+</code></pre>
+
+<h2 id="toc_5">2.2 归并排序</h2>
+
+<p>归并：即将两个有序数组归并成一个更大的有序数组。</p>
+
+<h3 id="toc_6">2.2.1 原地归并的抽象方法</h3>
+
+<p>实现归并的一种直截了当的方法是将两个不同的有序数组归并到第三个数组中。</p>
+
+<p>但是，当用归并将一个很大的数组排序时，我们需要进行很多次归并，因此在每次归并时都创建一个新数组来存储排序结果会带来问题。我们更希望有一种能够在原地归并的方法，这样就可以先将前半部分排序，再将后半部分排序，然后在数组中移动元素而不需要使用额外的空间。</p>
+
+<p>原地归并的抽象方法：</p>
+
+<pre><code class="language-python">
+</code></pre>
+
+
+		</div>
+
+		
+
+	</article>
+ 
+	<article>
+		 <header>
+		  	<h1 class="entry-title"><a href="14892800907505.html">《Python 核心编程》笔记（一）· 网络编程</a></h1>
+			<p class="meta"><time datetime="2017-03-12T08:54:50+08:00" 
+			pubdate data-updated="true">2017/3/12</time></p>
+		 </header>
+	  	<div class="entry-content">
+		  	
+		  	<ul>
+<li>
+<a href="#toc_0">2.3 套接字</a>
+<ul>
+<li>
+<a href="#toc_1">2.3.1 套接字</a>
+</li>
+<li>
+<a href="#toc_2">2.3.2 套接字地址：主机-端口对</a>
+</li>
+<li>
+<a href="#toc_3">2.3.3 面向连接的套接字与无连接的套接字</a>
+<ul>
+<li>
+<a href="#toc_4">1. 面向连接的套接字</a>
+</li>
+<li>
+<a href="#toc_5">2. 无连接的套接字</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href="#toc_6">2.4 Python 中的网络编程</a>
+<ul>
+<li>
+<a href="#toc_7">2.4.1 socket() 模块函数</a>
+</li>
+<li>
+<a href="#toc_8">2.4.2 套接字对象（内置）方法</a>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<h2 id="toc_0">2.3 套接字</h2>
+
+<p>本节内容：</p>
+
+<ul>
+<li>介绍套接字（socket），以及其背景知识</li>
+<li>讨论各种类型的套接字</li>
+<li>如何利用它们与运行在不同计算机上的进程相互通信</li>
+</ul>
+
+<h3 id="toc_1">2.3.1 套接字</h3>
+
+<p>套接字是计算机网络数据结构，它体现了上节中所描述得「通信端点」<sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>的概念。在任何类型的通信开始之前，网络应用程序必须创建套接字。</p>
+
+<p>套接字最初是为同一主机上的应用程序所创建，使得主机上运行的一个进程与另一个运行的进程进行通信，这就是所谓的<strong>进程间通信</strong>（Inter Process Communication，IPC）。有两种类型的套接字：基于文件的和面向网络的。</p>
+
+<p>UNIX 套接字使我们所讲的套接字的第一个家族，并且拥有一个「家族名字」AF_UNIX（又名 AF_LOCAL，在 POSIX1.g 标准中指定），它代表地址家族（address family）：UNIX。包括 Python 在内的大多数受欢迎的平台都使用术语「地址家族」及其所写 AF。</p>
+
+<p>因为两个进程运行在同一台计算机上，所以这些套接字都是基于文件的，这意味着文件系统支持它们的底层基础结构。</p>
+
+<p>第二种类型的套接字是基于网络的，它也有自己的家族名字 AF_INET，或者「地址家族」：因特网。另一个地址家族 AF_INET6 用于第 6 版因特网协议（IPv6）寻址。</p>
+
+<h3 id="toc_2">2.3.2 套接字地址：主机-端口对</h3>
+
+<p>一个网络地址由主机名和端口号组成，而这是网络通信所需要的。</p>
+
+<p>有效地端口号范围为 0~65536（小于 1024 的端口号预留给了系统）。</p>
+
+<p>可以查看 <code>\etc\services</code> 文件查看预留端口号的列表（以及服务器、协议和套接字类型）。</p>
+
+<h3 id="toc_3">2.3.3 面向连接的套接字与无连接的套接字</h3>
+
+<h4 id="toc_4">1. 面向连接的套接字</h4>
+
+<p>不管采用哪种地址家族，都有两种不同风格的套接字连接。第一种是面向连接的，这意味着在通信前必须先建立一个连接。这种类型的通信业称为「虚拟电路」或「流套接字」。</p>
+
+<p>面向连接的通信提供序列化的、可靠的和不重复的数据交互，而没有记录边界。这基本上意味着每条消息可以拆分成多个片段，并且每条消息片段都确保能够达到目的，然后按照顺序将它们组合到一起，最后将完整的消息传递给正在等待的应用程序。</p>
+
+<p>实现这种连接类型的主要协议是「传输控制协议」（TCP 协议）。为了创建 TCP 套接字，必须使用 SOCK_STREAM 作为套接字类型。TCP 套接字的名字 SOCK_STREAM 是基于流套接字的一种表示。因为这些套接字（AF_INET） 的网络版本使用「因特网协议」（IP） 来搜寻网络中的主机，所以整个系统通常结合着两种协议（TCP 和 IP） 来进行。</p>
+
+<h4 id="toc_5">2. 无连接的套接字</h4>
+
+<p>与虚拟电路形成鲜明对比的是数据报类型的套接字，它是一种无连接的套接字。这意味着，在通信开始之前不需要建立连接。</p>
+
+<p>此时，在数据传输的过程中并无法保证它的顺序性、可靠性或重复性。然而，数据报确实保存了记录边界，这就意味着消息是以整体发送的，而非首先分成多个片段。</p>
+
+<p>由于面向连接的的套接字所提供的保证，因此它们的设置以及对虚拟电路连接的维护需要大量的开销。数据报不需要这些，所以它的成本更加低廉。因此，它们通常能提供更好的性能。</p>
+
+<p>实现这种无连接类型的主要协议是「用户数据报协议」（UDP）。为了创建 UDP 套接字，必须使用 SOCK_DGRAM （来源于单词 datagram）作为套接字类型。因为这些套接字也使用因特网协议来寻找网络中的主机，所以这个系统也有一个更加普通的名字，即 UDP/IP。</p>
+
+<h2 id="toc_6">2.4 Python 中的网络编程</h2>
+
+<h3 id="toc_7">2.4.1 socket() 模块函数</h3>
+
+<p>要创建套接字，必须使用 socket.socket() 函数，它的一般语法如下：</p>
+
+<pre><code class="language-python">socket(socket_family, socket_type, protocol=0)
+</code></pre>
+
+<p>其中，<code>socket_family</code> 是 AF_UNIX 或 AF_INET，<code>socket_type</code> 是 SOCKET_STREAM 或 SOCK_DGRAM。<code>protocol</code> 通常省略，默认为 0。</p>
+
+<pre><code class="language-python">tcpSock = socket.socket(socket.AF_INET, sock.SOCK_STREAM)
+udpSock = socket.socket(socket.AF_INET, sock.SOCK_DGRAM)
+</code></pre>
+
+<p>一旦有了一个套接字对象，那么使用套接字对象的方法将可以进行进一步交互。</p>
+
+<h3 id="toc_8">2.4.2 套接字对象（内置）方法</h3>
+
+<ul>
+<li>服务器套接字方法
+
+<ul>
+<li>s.bind(): 将地址（主机名、端口号对）绑定到套接字上</li>
+<li>s.listen(): 设置并启动 TCP 监听器</li>
+<li>s.accept(): 被动接受 TCP 客户端连接，一直等待知道连接到达</li>
+</ul></li>
+<li>客户端套接字方法
+
+<ul>
+<li>s.connect(): 主动发起 TCP 服务器连接</li>
+<li>s.connect_ex(): connect() 的扩展版本，此时会以错误码的形式返回问题，而不是抛出一个异常</li>
+</ul></li>
+<li>普通套接字方法
+
+<ul>
+<li>s.recv(): 接受 TCP 消息</li>
+<li>s.recv_into(): 接受 TCP 消息到指定的缓冲区</li>
+<li>s.send(): 发送 TCP 消息</li>
+<li>s.sendall(): 完整地发送 TCP 消息</li>
+<li>s.recvfrom(): 接受 UDP 消息</li>
+<li>s.recvfrom_into(): 接收 UDP 消息到指定的缓冲区</li>
+<li>s.sendto(): 发送 UDP 消息</li>
+<li>s.getpeername(): 连接到套接字（TCP） 的远程地址</li>
+<li>s.getsockname(): 当前套接字地址</li>
+<li>s.getsockopt(): 返回给定套接字选项的值</li>
+<li>s.setsockopt(): 设置给定套接字选项的值</li>
+<li>s.shutdown(): 关闭连接</li>
+<li>s.close(): 关闭套接字</li>
+<li>s.detach(): 在未关闭文件描述符的情况下关闭套接字，返回文件描述符</li>
+<li>s.ioctl(): 控制套接字的模式（仅支持 Windows）</li>
+</ul></li>
+<li>面向阻塞的套接字方法
+
+<ul>
+<li>s.setblocking(): 设置套接字的阻塞或非阻塞模式</li>
+<li>s.settimeout(): 设置阻塞套接字操作的超时时间</li>
+<li>s.gettimeout(): 获取阻塞套接字操作的超时时间</li>
+</ul></li>
+<li>面向文件的套接字方法
+
+<ul>
+<li>s.fileno(): 套接字文件描述符</li>
+<li>s.makefile(): 创建于套接字关联的文件对象</li>
+</ul></li>
+<li>数据属性
+
+<ul>
+<li>s.family: 套接字家族</li>
+<li>s.type: 套接字类型</li>
+<li>s.proto: 套接字协议</li>
+</ul></li>
+</ul>
+
+<div class="footnotes">
+<hr/>
+<ol>
+
+<li id="fn1">
+<p>在服务器响应客户端请求之前，必须进行一些初步的设置流程来为之后的工作准备。首先会创造一个通信端点，它能够使服务器监听请求。&nbsp;<a href="#fnref1" rev="footnote">&#8617;</a></p>
+</li>
+
+</ol>
+</div>
+
+
+		</div>
+
+		
+
+	</article>
+ 
+	<article>
+		 <header>
 		  	<h1 class="entry-title"><a href="14892052747708.html">Python 面试笔记</a></h1>
 			<p class="meta"><time datetime="2017-03-11T12:07:54+08:00" 
 			pubdate data-updated="true">2017/3/11</time></p>
@@ -5236,6 +5576,107 @@ class _BagIterator(object):
  
 	<article>
 		 <header>
+		  	<h1 class="entry-title"><a href="14886163941964.html">March 2017</a></h1>
+			<p class="meta"><time datetime="2017-03-04T16:33:14+08:00" 
+			pubdate data-updated="true">2017/3/4</time></p>
+		 </header>
+	  	<div class="entry-content">
+		  	
+		  	<ul>
+<li>
+<a href="#toc_0">2017/03/04</a>
+<ul>
+<li>
+<a href="#toc_1">How do I as a student start contributing to open source?</a>
+</li>
+<li>
+<a href="#toc_2">How can a person get selected in Google Summer of Code?</a>
+</li>
+<li>
+<a href="#toc_3">平台后端开发(Python)面试记录</a>
+</li>
+<li>
+<a href="#toc_4">如何为你的 GitHub 开源项目写一份优秀的 README.md 文档？</a>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<h2 id="toc_0">2017/03/04</h2>
+
+<h3 id="toc_1"><a href="https://www.quora.com/How-do-I-as-a-student-start-contributing-to-open-source">How do I as a student start contributing to open source?</a></h3>
+
+<p>Nimit Shah:</p>
+
+<ol>
+<li>Start contributing to an open source project that you use in your day to day life</li>
+<li>Select a project from Google Summer of Code or GNOME Outreach Program for Women</li>
+</ol>
+
+<h3 id="toc_2"><a href="https://www.quora.com/How-can-a-person-get-selected-in-Google-Summer-of-Code">How can a person get selected in Google Summer of Code?</a></h3>
+
+<p>Ashwyn Sharma:</p>
+
+<p><strong>Do not apply for GSoC if you are not an Open Source Enthusiast!</strong></p>
+
+<p>Crucial steps involved in the process:</p>
+
+<ol>
+<li>Start with the list of accepted organisations in the past years and pick one of them.</li>
+<li>Contact the organisation telling them about yourself (in most cases - that you are a software developer who is new to their products/applications/platforms etc.) and how you wish to contribute to their codebase.</li>
+<li>Get yourself familiar with the codebase. A little perseverance at this stage may prove decisive of your future with both GSoC and Open Source in general. Pick up a simple bug/feature-request from the bug tracker of the given application and try to solve it. Not only this will increase your chances of acceptance dramatically, it will also help you get familiar with the developers and of course, the code itself. An important thing to remember is to make your presence felt amongst the developer community. This will help you at later stages of the application process.</li>
+<li>Provided you manage to solve the bug or develop that feature, the next step will be to commit your code to the Trunk/Central Repository.</li>
+<li>Next is the application period. As soon as Google announces the list of the accepted organisations, start looking for the prospective <strong>project ideas</strong>. Think over how you can go about executing these ideas. Talk to the prospective mentors about what you think of the idea and may be fetch more details about the ins and outs of project. Though Google allows you to submit your own original ideas as well, I have always believed that its better to choose from the list of the ideas provided by the organization. However, if the idea is truly meaningful and has a feasible implementation plan, there have been instances where original ideas have been accepted as well. If you haven&#39;t already, keep working on that bug and solve it, because if you haven&#39;t really proved your coding skills to the organisation yet, then  your chances of getting accepted gets even simmer, no matter how strong your application maybe.</li>
+<li>Start writing the proposal as early as possible. Make sure that before submitting the proposal, you get your proposal reviewed by your mentors as much as possible. The main ingredients of a good proposal are that it should address two kinds of audiences - one which is completely familiar with the technical details of the project (that would be your mentors and organisation devs) and the second one is a neutral not-so-technical audience which is able to understand the deliverables of the project (in most cases that would be the user base). Start coding up your idea.</li>
+</ol>
+
+<h3 id="toc_3"><a href="http://blog.csdn.net/huangxiongbiao/article/details/50733303">平台后端开发(Python)面试记录</a></h3>
+
+<ol>
+<li>手写 Python 生成器（带 yield 的函数）</li>
+<li>手写链表翻转</li>
+<li>Tornado 框架中的异步实现原理</li>
+<li>select, poll, epoll, epoll 改进了 select/poll 的什么地方</li>
+<li>线程与进程的区别</li>
+<li>进程间通信方式</li>
+<li>数据库原理（索引，B 树）</li>
+<li>TCP 四次握手过程</li>
+<li>Nginx 的转发原理</li>
+<li>Linux 文件系统</li>
+</ol>
+
+<h3 id="toc_4"><a href="https://www.diycode.cc/topics/498">如何为你的 GitHub 开源项目写一份优秀的 README.md 文档？</a></h3>
+
+<ul>
+<li>Project Title: one paragraph of description goes here.</li>
+<li>Getting Started: These istructions will get you a copy of the project up and running on your local machine for development and testing purposes.</li>
+<li>Prerequisties: what things you need to install the software and how to install them.</li>
+<li>Installing: A step by step series of examples that you have to get a development env running.</li>
+<li>Running the tests: Explain how to run the automated tests for this system.</li>
+<li>Break down into end to end tests: explain what these tests test and why</li>
+<li>And coding style tests: expalin what these tests test and why</li>
+<li>Deployment: add additional notes about how to deploy this on a live system</li>
+<li>Built with</li>
+<li>Contributing: please read CONTRIBUTING.md for details on our code of conduct, and the process for submitting pull requests to us.</li>
+<li>Authors</li>
+<li>License</li>
+<li>Acknowledgemets</li>
+</ul>
+
+<hr/>
+
+<p>中英文 readme 各写一份。</p>
+
+
+		</div>
+
+		
+
+	</article>
+ 
+	<article>
+		 <header>
 		  	<h1 class="entry-title"><a href="14872260244406.html">Python Cookbook</a></h1>
 			<p class="meta"><time datetime="2017-02-16T14:20:24+08:00" 
 			pubdate data-updated="true">2017/2/16</time></p>
@@ -5551,6 +5992,65 @@ class Stock:
  
 	<article>
 		 <header>
+		  	<h1 class="entry-title"><a href="14706584948925.html">2016/08/08 阅读笔记</a></h1>
+			<p class="meta"><time datetime="2016-08-08T20:14:54+08:00" 
+			pubdate data-updated="true">2016/8/8</time></p>
+		 </header>
+	  	<div class="entry-content">
+		  	
+		  	<h2 id="toc_0"><a href="https://www.quora.com/How-can-I-study-for-10+-hours-a-day-without-getting-depressed-and-how-can-I-make-myself-get-used-to-it">Quora: How can I study for 10+ hours a day without getting depressed and how can I make myself get used it?</a></h2>
+
+<p><em>Such a stupid question.</em></p>
+
+<ol>
+<li>Don&#39;t study more than 7.5 hours a day. You can&#39;t learn when you are exhausted.</li>
+<li>Take a day off per week. Do something you like on that day.</li>
+<li>Make a plan.What knowledge is most critical in each of the subjects? First, concentrate only on that.</li>
+<li>Study from low to high resolution.</li>
+<li>Nap. A lot.</li>
+<li>Study one topic for 2.5 hours. Then switch to another. Continue.</li>
+<li>Read. Then put down the book. Then summarize what you have read. Don&#39;t look at what you were reading when you summarize.</li>
+</ol>
+
+<hr/>
+
+<ol>
+<li>Avoid time specific plans unless you&#39;re a monk or living in an extremely isolated environment.</li>
+<li>Create a simple mechanism for notes and plans. You don&#39;t need any complex thing. The aim here is to work efficiently so these tools should be tools, not the whole story.</li>
+<li>Create tasks as atomic as possible. Task should not be long. Best practice is that the task can be done after 1-2 hours of efficient work. If the task is big, you divide it into subtasks. In other words, avoid context switching as much as possible.</li>
+<li>Get rid of all external distraction.</li>
+<li>Use Pomodoro Technique.</li>
+<li>If you have a long-run work and you can&#39;t complete it at the end of the day, take a note for tomorrow&#39;s yourself in order to remember the basic of teh task. And tomorrow, you start the day by glancing over the connected tasks.</li>
+</ol>
+
+<hr/>
+
+<p>If studying makes you depressed, it&#39;s because your mind considers it a chore that you&#39;re forced to do. Doing any such chore for long periods of time is awful and depressing. On the other hand, doing somehting you love is fun, even when it&#39;s physically or mentally exhausting. So what you need to do is make the experience more valuable and enjoyable.</p>
+
+<ol>
+<li>Knowing WHY you&#39;re learning something.</li>
+<li>Really understanding what you&#39;re learning.</li>
+</ol>
+
+<hr/>
+
+<ol>
+<li>Learn and practise proven efficient and effective study tools like SQ5R and Cornell Notes.
+
+<ul>
+<li>SQ5R reading/satudying strategy: [Survey, Question, Read, Record, Recite, Review, Reflect], </li>
+</ul></li>
+</ol>
+
+
+		</div>
+
+		
+
+	</article>
+ 
+	<article>
+		 <header>
 		  	<h1 class="entry-title"><a href="14824095038232.html">The Python Tutorial Reading Notes</a></h1>
 			<p class="meta"><time datetime="2016-07-17T20:25:03+08:00" 
 			pubdate data-updated="true">2016/7/17</time></p>
@@ -5759,6 +6259,287 @@ Yuck!
 <pre><code class="language-python">with open(&#39;workfile&#39;, &#39;r&#39;) as f:
     read_data = f.read()
 </code></pre>
+
+
+		</div>
+
+		
+
+	</article>
+ 
+	<article>
+		 <header>
+		  	<h1 class="entry-title"><a href="14674443542637.html">2016/07/02 阅读笔记</a></h1>
+			<p class="meta"><time datetime="2016-07-02T15:25:54+08:00" 
+			pubdate data-updated="true">2016/7/2</time></p>
+		 </header>
+	  	<div class="entry-content">
+		  	
+		  	<h2 id="toc_0"><a href="https://m.signalvnoise.com/how-i-became-and-stayed-a-successful-programmer-48f209362f68#.davwu8c5x">How I became (and stayed) a successful programmer</a></h2>
+
+<p>How do I take a new skill like programming, grow it, shape it, and tune it over time so I can achieve longevity in the industry?</p>
+
+<h3 id="toc_1">1. I surround myself with programmers who are way better than me</h3>
+
+<p>The best way to improve (at anything) is to learn from people better than you.</p>
+
+<p>I remind myself to talk less and to listen more.</p>
+
+<h3 id="toc_2">2. I occasionally leave my comfort zone</h3>
+
+<p>Leaving comfort zone helps me think differently by challenging a bunch of established ideas I already have.</p>
+
+<p>Maybe you don&#39;t want to do this constantly because it can be hard to get into a rhythm with your normal area of work. But in moderation it can really open your mind to new ways of thinking.</p>
+
+<p>Find a programming task that takes you out of your comfort zone and make it your next project. Then watch it pay off in spades.</p>
+
+<h3 id="toc_3">3. I value being independent</h3>
+
+<p>What&#39;t most inportant is how you choose to find the answers to your questions.</p>
+
+<p>This means I&#39;ll try to do most things myself first, and only when I really get stuck, I&#39;ll ask for help.</p>
+
+<p>Benefits:</p>
+
+<ul>
+<li>You learn how to be resourceful.</li>
+<li>You earn respect by being courteous of other people&#39;s time and work.</li>
+<li>You start developing your creativity.</li>
+</ul>
+
+<h2 id="toc_4"><a href="https://medium.freecodecamp.com/please-dont-quit-every-expert-was-once-a-beginner-6d8f8933a338#.d0nbkocf7">Please don&#39;t quit -- every expert was once a beginner</a></h2>
+
+<h3 id="toc_5">Great developments never come from within your comfort zone</h3>
+
+<p>It&#39;s always hard to push yourself to the next level, because it requires greater effort than the usual. It requires more energy, which may tire you physically and mentally.But don&#39;t think about that. Think about the result. The achievement.</p>
+
+<p>Every time you take a step toward expertise, no matter how small, it is still a step.</p>
+
+<h3 id="toc_6">Learn in diffuse mode</h3>
+
+<p>Since it may be hard to get a concept the first time you read about it, you can do something that will make it better for you and help you get it quickly.</p>
+
+<p>Read the full text with total focus (first time, even if you don&#39;t understand), okay? Now, read it again. After the second time, google the concept and try to read about it in different articles. That will help you see it from different angles, which will help you better understand it.</p>
+
+<p>Next time is to read the text a third time. Your understanding of the concept is much better now than it was the first time you read it, even though in all likelihood you&#39;re still early on in your quest to truly understand that concept.</p>
+
+<p>This medhod is called <strong>Diffuse mode</strong>. You can apply this type of learning toward applies to videos and tutorials, as well.</p>
+
+<p><strong>Every expert was once a beginner.</strong></p>
+
+<blockquote>
+<p>&quot;You never fail until you stop trying.&quot; - <strong>Albert Einstein</strong></p>
+</blockquote>
+
+<p>You should know that reaching a high level takes time.</p>
+
+<blockquote>
+<p>&quot;I&#39;m convinced that about half of what separates the successful Entrepreneurs from the non-successful ones is pure perseverance.&quot; - <strong>Steve Jobs</strong></p>
+</blockquote>
+
+<p>Some tips:</p>
+
+<ul>
+<li>Don&#39;t work alone.</li>
+<li>Don&#39;t wait for inspiration. <strong>Discipline is reliable.</strong></li>
+<li>Real work usually isn&#39;t fun.</li>
+<li>Practice, practice, and practice.</li>
+<li>Tutorials fish on your behalf, so you don&#39;t need to learn how to fish yourself. <strong>You need to read books.</strong></li>
+<li>Always try to understand a new concept using different resources.</li>
+<li>Don&#39;t just read. Build. Try, try, and keep trying.</li>
+<li>Frustration, boredom, tiredness, exhaustion -- these are all normal. </li>
+<li>Ask.</li>
+</ul>
+
+<blockquote>
+<p>&quot;Long-term consistency trumps short-term intensity.&quot; - <strong>Bruce Lee</strong></p>
+</blockquote>
+
+
+		</div>
+
+		
+
+	</article>
+ 
+	<article>
+		 <header>
+		  	<h1 class="entry-title"><a href="14636395892916.html">2016 Week 21 阅读笔记</a></h1>
+			<p class="meta"><time datetime="2016-05-19T14:33:09+08:00" 
+			pubdate data-updated="true">2016/5/19</time></p>
+		 </header>
+	  	<div class="entry-content">
+		  	
+		  	<h2 id="toc_0"><a href="http://mindhacks.cn/2011/11/04/how-to-interview-a-person-for-two-years/">怎样花两年时间去面试一个人</a></h2>
+
+<blockquote>
+<p>The great software developers, indeed, the best people in every field, are quite simply never on the market.j</p>
+
+<p>The average great software developer will apply for, total,maybe, four jobs in their entire career.</p>
+
+<p>—— <a href="http://www.joelonsoftware.com/articles/FindingGreatDevelopers.html">Joel Spolsky</a></p>
+
+<ol>
+<li>最好的人也许不投简历，就决定去哪里了。所以要在他们做决定之前找到他们。</li>
+<li>比较差的会投很多次简历，找不到工作的时间约多，投的简历越多，给整个 pool 带来很多噪音，top 10% 的简历也许根本不算全部人的 top 10%。</li>
+</ol>
+
+<p>—— 邹欣</p>
+</blockquote>
+
+<p>Joel Spolsky 写了一本书，专门讲了公司招聘的心得和体会，<a href="http://www.amazon.com/Smart-Gets-Things-Done-Technical/dp/1590598385/">《Smart and Gets Things Done》</a>。</p>
+
+<p>现在绝大多数应届生简历而言，也许最具信息量的部分不是「精通 xxx，熟悉 yyy，掌握 zzz」，不是「在 uuu 实习过」，也不是这个项目那个作业，反倒是越来越被认为不重要的一项：毕业学校。原因是简历上的其他条目的信息量太小了。</p>
+
+<p>很多时候，是否好好看完一本好书，对一个人的提升往往能达到质的区别。就算不好好看完一本书，马马虎虎看完，只要书是真的函数，也肯定会有很大提高。</p>
+
+<p>好书和坏书的差别，从本质上，就是学习效率和大方向的差别。读烂书浪费时间，但读好书却节省时间。</p>
+
+<p>「书单计划」的优点：</p>
+
+<ol>
+<li>清晰、明确。完全可度量。</li>
+<li>防伪：读没读过，随便一问便知。而正因为应聘者也知道这事不像实习经验可以忽悠，所以也不敢乱往简历上捅词。</li>
+<li>不在乎是否「泄题」：书单是完全公开的，无所谓，本来就是要你去读的。</li>
+<li>管你用心不用心读，只要读了，读完了，就有区别。（笔者注：根据经验，没有用心读完可能真的没有什么卵用）</li>
+<li>不存在「怎么做」的障碍：所有人都知道怎么读书——一页一页读。</li>
+<li>不需要招聘者投入精力：书单在此，就这么简单。</li>
+<li>评估的负担很大程度上转移到了应聘者身上：是不是认真看完了，有没有心得体会。</li>
+</ol>
+
+<p>「书单计划」的背后是另一个悲剧的现实，如果不是因为这个现实，这个计划也完全没有必要，那就是，中国 IT 大学教育当中要求学的书，和企业真正需要你读的书相比，不是完全不够用，就是写得不够好，或者更悲剧的就是根本用不上，所以在这个大背景下出来的牛人都是自己淘书自己学的。</p>
+
+<blockquote>
+<p>第一份工作的月薪 = 大学四年买过的技术书籍价格的总和</p>
+
+<p>—— 熊力</p>
+</blockquote>
+
+<p><strong>GitHub</strong></p>
+
+<p>有经验的面试者只要稍稍扫两眼一个人的 GitHub 历史，跳出几个 check-in 历史看一看，便完全能够迅速判断这个人是否满足他的要求。不再需要费劲心机地去想题目，去观察，去揣测，去花费大量的时间的同时还只能采样到几个极为有限的点。</p>
+
+<p>书单 + GitHub，就相当于一个两年左右的面试。</p>
+
+<p>没有哪个行业像 IT 行业这样特殊：没有什么东西不能够（应该）在互联网上学到的。</p>
+
+<hr/>
+
+<p>一些书单</p>
+
+<ol>
+<li>《编码的奥秘》</li>
+<li>《深入理解计算机系统》</li>
+<li>《Windows 核心编程》</li>
+<li>《程序员的自我修养》</li>
+<li>《代码大全》</li>
+<li>《程序员修炼之道》</li>
+<li>《编程珠玑》</li>
+<li>《编程之美》</li>
+<li>《The C Programming Language》</li>
+<li>《The C++ Programming Language》</li>
+<li>《Programming: Principles and Practice Using C++》</li>
+<li>《Accelerated C++》</li>
+<li>《计算机程序的构造和解释》</li>
+<li>《Clean Code》</li>
+<li>《Implementation Patterns》</li>
+<li>《Design Patterns》</li>
+<li>《Agile Software Development, Principles, Patterns, and Practices》</li>
+<li>《Refactoring》</li>
+<li>《C++ 编程思想》</li>
+<li>《Effective C++》</li>
+<li>《深度探索 C++ 对象模型》</li>
+<li>《C++ 语言的设计和演化》</li>
+<li>《C 专家编程》</li>
+<li>《C 陷阱与缺陷》</li>
+<li>《C 语言接口与实现》</li>
+<li>《Lua 程序设计》</li>
+<li>《Linkers and Loaders》</li>
+<li>《COM 本质论》</li>
+<li>《深入理解 Windows 操作系统》</li>
+<li>《Unix 编程艺术》</li>
+<li>《代码优化：有效使用内存》</li>
+<li>《深入理解 Linux 内核》</li>
+<li>《TCP/IP 详解》</li>
+<li>《软件随想录》</li>
+<li>《黑客与画家》</li>
+<li>《编程人生》</li>
+<li>《人月神话》</li>
+<li>《算法导论》</li>
+<li>《快速软件开发——有效控制与完成进度计划》</li>
+<li>《IT 项目管理那些事》</li>
+<li>《最后期限》</li>
+<li>《走出软件作坊》</li>
+<li>《你的灯亮着吗》</li>
+<li>《Algorithms》(by Sanjoy Dasgupta, Christos Papadimitriou and Umesh Vazirani)</li>
+<li>《Data Structures and Algorithms》</li>
+<li>《The Design of the UNIX Operating System》</li>
+<li>《Compilers》(龙书)</li>
+<li>《Computer Architecture: A Quantitative Approach》</li>
+<li>《Flow》</li>
+<li>《Outliers》（Why hard work and luck are both important）</li>
+</ol>
+
+<h2 id="toc_1"><a href="http://mindhacks.cn/2008/09/17/learning-habits-part3/">一直以来伴随我的一些学习习惯（三）：阅读方法</a></h2>
+
+<ol>
+<li>乘着对一件事有热情的时候，一股脑把万事那个最难的阶段熬过去。</li>
+<li>根据主题来查阅资料，而不是根据资料来查阅主题。按照主题来阅读，你会发现读的时候不再是老老实实地一本书看完再看另一本，而是非常频繁地从一本书跳到另一本书，从一处资料跳到另一处资料，从而来获得多个不同的人对同一个主题是如何讲解的。因为即便是经典的书，你也不能指望它对其中每一个主题的介绍都是尽善尽美的，有些书对某个主题（知识点）的介绍比较到位，有些书则对另一些知识点介绍得比较到位。而有时候一篇紧凑的 paper 比一本书上讲得还要好。我硬盘里面的书按照主题分类，每个主题下面都有一堆书，当我需要学习某个主题的知识时，我会把里面涉及这个主题的书都翻开来，索引到相关章节，然后挑讲得好的看。</li>
+<li>好资料，坏资料。好资料的特点：从问题出发；重点介绍方法背后的理念，注重直观解释，而不是方法的技术细节；按照方法被发明的时间流程来介绍（先是遇到什么问题，然后怎样分析，推理，最后发现目前所使用的方法）。坏资料的特点是好资料的反面：上来就讲方法细节，仿佛某方法是从天上掉下来的。根本不讲为什么要用这个方法，人们最初是因为面对什么问题才想到这个方法的，其间又是怎样才想出这个方法的，方法背后的直观思想又是什么。</li>
+<li>学习一个东西之前，首先在大脑中积累充分的「疑惑感」。即弄清面临的问题到底是什么，在浏览方法本身之前，最好先使劲问问自己能想到什么方法。一个公认的事实是，你对问题的疑惑越大，在之前做的自己的思考越多，当看到借到之后的印象就越深刻。</li>
+<li>有选择地阅读。这里的选择体现在两个地方，一是选择一本书中感兴趣的章节优先阅读，二是对一本书中技术性较弱或信息密度较低的部分快速地略读。一般来说，除了技术性非常强的书之外，大多数书的信息密度很低，有很多废话。一般来说在阅读的时候应该这样来切分内容：1. 问题是什么？2. 方案是什么？3. 例子是什么？如果是需要解释一个现象的，那么1. 现象是什么？2. 解释是什么？3. 之城这个解释的理由是什么？ 4. 例子是什么。</li>
+<li>为什么看不懂？1. 你看得不够使劲。对于这类情况，仔仔细细地再多读两遍，多试着去理解两遍，往往会恍然大悟。2. 其中涉及到了你不懂得概念，这是技术性的不理解，这种情况就需要 Cross Reference。如果一句话中用到了你不懂得概念，那就去查。奇怪的是很多人看不懂也不分析一下为什么不懂，就直接放弃了。正如解决问题一样，问题卡住解决不了了，第一时间要做的就是分析为什么解决不了，而不是直接求救。3. 作者讲述的顺序不对，你接着往下看，也许看到后面就明白前面的了。</li>
+<li>如何搜寻到好书。1. 同作者的著作。2. Amazon 相关推荐和主题相关的书列。3. 一本好的著作（或一份好的资料——不管是书还是网页）在参考资料里面重点提到的其他著作。4. 有时对于一个主题，可以搜索到好心人总结的参考资源导引，那是最好不过的。</li>
+</ol>
+
+<h2 id="toc_2"><a href="http://matt.might.net/articles/what-cs-majors-should-know/">What every computer science major should know</a></h2>
+
+<ul>
+<li>What should every student know to get a good job?</li>
+<li>Waht should every student know to maintain lifelong employment?</li>
+<li>What should every student know to enter graduate school?</li>
+<li>What should every student know to benefit society?</li>
+</ul>
+
+<p><strong>Portfolio versus resume</strong></p>
+
+<p>Every computer science major should build a portfolio.</p>
+
+<p>A portfolio could be as simple as a personal blog, with a post for each project or accomplishment. A better portfolio would include per-project pages, and publicly browsable code (hosted perhaps on github or Google code).</p>
+
+<p>Contributions to open source shold be linked and documented.</p>
+
+<p>A code portflolio allows employers to direcctly judge ablility. GPAs and resumes do not.</p>
+
+<p><strong>Technical communication</strong></p>
+
+<p>I would recommend that students master a presentation tool like PowerPoint or (my favorite) Keynote.</p>
+
+<p>For producing beautiful mathematival documentation, \(LaTex\) has not equal. All written assignments in techical courses should be submitted in LaTex.</p>
+
+<p><strong>An engineering core</strong></p>
+
+<p><strong>The Unix philosophy</strong></p>
+
+<p>The Unix philosophy is one that emphassizes linguistic abstraction and composition in order to effect computation.</p>
+
+<p><strong>Systems administration</strong></p>
+
+<p><strong>Programming Language</strong></p>
+
+<p><strong>Discrete mathematics</strong></p>
+
+<p><strong>Data structures and algorithms</strong></p>
+
+<p><strong>Theory</strong></p>
+
+<p><strong>Architecture</strong></p>
+
+<p><strong>Operating System</strong></p>
+
+<p><strong>Networking</strong></p>
+
+<p><strong>Security</strong></p>
 
 
 		</div>
@@ -6135,6 +6916,62 @@ let airportNames = [String](airports.values)
 </code></pre>
 
 <p>如果 <code>a</code> 为非空值（non-nil），那么 <code>b</code> 值将不会被计算，这也就是所谓的短路求值。</p>
+
+
+		</div>
+
+		
+
+	</article>
+ 
+	<article>
+		 <header>
+		  	<h1 class="entry-title"><a href="14623638528114.html">2016 Week 19 阅读笔记</a></h1>
+			<p class="meta"><time datetime="2016-05-04T20:10:52+08:00" 
+			pubdate data-updated="true">2016/5/4</time></p>
+		 </header>
+	  	<div class="entry-content">
+		  	
+		  	<h2 id="toc_0"><a href="http://swift.gg/2016/05/03/preparing-for-3-0-api-pruning/">准备好迎接 3.0 API 变化</a></h2>
+
+<p>在即将发布的 Swift 3 将在 Cocoa 和 CocoaTouch 上做出重大改变。</p>
+
+<p>某些 API 的名字变得更加简洁了。</p>
+
+<h2 id="toc_1"><a href="http://www.posteriorscience.net/?p=206">PROGRAMMING BY POKING: WHY MIT STOPPED TEACHING SICP</a></h2>
+
+<p>关于为什么 MIT 停止了赫赫有名的 6.001，Gerry Sussman 的回答：</p>
+
+<ol>
+<li>教了太多年，不想教了。</li>
+<li>这门课放到今天已经没有那么重要了。在 80 年代和 90 年代，工程师们通过把简单和易于理解的部分组成复杂的系统，SICP 就是为了提供这种抽象的语言而存在的。</li>
+</ol>
+
+<blockquote>
+<p>He said that programming today is “More like science. You grab this piece of library and you poke at it. You write programs that poke it and see what it does. And you say, ‘Can I tweak it to do the thing I want?&#39;”. The “analysis-by-synthesis” view of SICP — where you build a larger system out of smaller, simple parts — became irrelevant. Nowadays, we do programming by poking.</p>
+</blockquote>
+
+<p>为什么现在改用 Python 了？</p>
+
+<blockquote>
+<p>Python has a ton of libraries that make it applicable to many types of projects that instructors might want to assign (like writing software to control a robot.)</p>
+</blockquote>
+
+<p>Python 库多 -_-|||</p>
+
+<p>另外，Sussman 还说道 SICP 确实比现在使用 Python 教学更加 coherent。</p>
+
+<h2 id="toc_2"><a href="https://github.com/geeeeeeeeek/git-recipes/blob/master/sources/%E6%9E%9C%E5%A3%B3%E4%B8%AD%E7%9A%84Git.md">什么是 Git</a></h2>
+
+<p>Git 采用分散式架构，是分散式版本管理 DVCS（Distributed Version Control System）的代表。</p>
+
+<p><strong>性能</strong></p>
+
+<p>不同于某些版本管理软件，Git 在决定代码修改历史以及保存形式的时候不会被文件名的变化所愚弄，Git 关注的文件内容本身。在实际的操作中，Git 使用一种混合了差分编码（delta encoding，仅保存代码修改的差分），压缩，直接保存，以及版本元数据（version metadata objects）的管理方式。</p>
+
+<p><strong>安全性</strong></p>
+
+<p>Git 将保持所管理代码的整合性作为首要要务。所有的文件内容，文件相互关系，以及文件目录结构，版本，标签以及修改，都经过加密哈希校验算法（SHA1）的保护。这可以防止各种意外的代码修改食物，或者是第三者的恶意修改，使得代码修改历史完全有迹可循。</p>
 
 
 		</div>
@@ -6853,12 +7690,12 @@ let airportNames = [String](airports.values)
 	  <ul id="recent_posts">
 	  
 	      <li class="post">
-	        <a href="programming.html"><strong>Programming&nbsp;(36)</strong></a>
+	        <a href="programming.html"><strong>Programming&nbsp;(43)</strong></a>
 	         <p class="cat-children-p"> 
 	        
-	        	<a href="python.html">Python&nbsp;(11)</a>&nbsp;&nbsp;
+	        	<a href="python.html">Python&nbsp;(12)</a>&nbsp;&nbsp;
 	        
-	        	<a href="algorithms.html">Algorithms&nbsp;(1)</a>&nbsp;&nbsp;
+	        	<a href="algorithms.html">Algorithms&nbsp;(2)</a>&nbsp;&nbsp;
 	        
 	        	<a href="swift.html">Swift&nbsp;(11)</a>&nbsp;&nbsp;
 	        
