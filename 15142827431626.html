@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <title>
     
-  MySQL 笔记 - 七录书斋
+  Jinja2 笔记 - 七录书斋
   
 
   </title>
@@ -78,76 +78,104 @@ $(document).ready(function(event) {
 <div>
 	<article class="hentry" role="article">
 	<header>
-			  	<h1 class="entry-title">MySQL 笔记</h1>
-				<p class="meta"><time datetime="2017-10-23T09:37:56+08:00" pubdate data-updated="true">2017/10/23</time></p>
+			  	<h1 class="entry-title">Jinja2 笔记</h1>
+				<p class="meta"><time datetime="2017-12-26T18:05:43+08:00" pubdate data-updated="true">2017/12/26</time></p>
 			 </header>
 		  	<div class="entry-content">
-			  	<ul>
-<li>
-<a href="#toc_0">MySQL 数据库引擎种类</a>
-</li>
-<li>
-<a href="#toc_1">MySQL 锁类型</a>
-</li>
-<li>
-<a href="#toc_2">数据库设计数据类型需要注意哪些地方？</a>
-</li>
-<li>
-<a href="#toc_3">MySQL 几种备份方式</a>
-</li>
-</ul>
+			  	<h2 id="toc_0">模板设计者文档</h2>
 
+<p>模板仅仅是文本文件，它可以生成任何基于文本的格式（HTML、XML、CSV等）。</p>
 
-<h2 id="toc_0">MySQL 数据库引擎种类</h2>
+<p>模板包含变量或表达式，这两者再模板中会被替换为值，模板中还有标签，控制模板的逻辑。</p>
 
-<p>缺省情况下，MySQL 支持三个引擎：ISAM，MyISAM，HEAP，另外两种类型是 InnoDB，BerkleyDB。</p>
+<h3 id="toc_1">变量</h3>
 
-<p>ISAM：是一个定义明确且历经时间考验的数据表格管理方法，它在设计之时考虑到数据库被查询的次数要远大于更新的次数。因此 ISAM 执行读取操作的速度很快，而且不占用大量的内存和存储资源。ISAM 两个主要不足在于：它不支持事物处理，也不能容错，如果你的硬盘崩溃了，那么数据文件就无法恢复了。</p>
+<pre><code>{{ foo.bar }}
+</code></pre>
 
-<p>MyISAM：除了提供 ISAM 里所没有的索引和字段管理的大量功能，MyISAM 还能使用一种表格锁定机制，来优化多个并发的读写操作。其代价是你需要经常运行 OPTIMIZE TABLE 命令，来回复被更新机制浪费的空间。</p>
+<p>花括号不是变量的一部分，而是打印语句的一部分。</p>
 
-<p>HEAP：允许只驻留在内存里的临时表格。驻留在内存使得 HEAP 比 ISAM 和 MyISAM 的速度都快，但是它所管理的数据时不稳定的，而且如果在关机之前没有进行保存，那么所有的数据都会丢失。HEAP 在你需要使用 SELECT 表达式的时候非常有用。</p>
+<h3 id="toc_2">过滤器</h3>
 
-<p>InnoDB：在使用 MySQL 的时候，你所面对的每一个挑战几乎都源于 ISAM 和 MyISAM 数据库引擎不支持事务处理，也不支持外键。尽管 InnoDB 会慢很多，但是 InnoDB 包括了对事务处理和外键的支持，这两点是前面两个引擎所没有的。</p>
+<p>变量可以通过过滤器修改。过滤器与变量用管道<code>|</code>分割，并且也可以用圆括号传递可选参数。多个过滤器可以链式调用，前一个过滤器的输出会被后一个过滤器的输入。</p>
 
-<h2 id="toc_1">MySQL 锁类型</h2>
+<h3 id="toc_3">测试</h3>
 
-<p>根据锁的类型分，可以分为共享锁、排他锁、意向共享锁和意向排他锁。</p>
+<p>测试可以用于对照普通表达式测试一个变量。要测试一个变量或表达式，你要在变量后加一个 is 以及测试的名称。例如，要得出一个值是否定义过，可以用 <code>name is defined</code>，这回根据 name 是否定义返回 true 或 false</p>
 
-<p>根据锁的粒度分，可以分为行锁、表锁。</p>
+<p>测试也可以接受参数，如果测试只接受一个参数，你可以省去括号来分组它们，例如，下面的表达式做同样的事情：</p>
 
-<p>对于 MySql 而言，事务机制更多是靠底层的存储引擎来实现，因此，MySql 层面只有表锁，而支持事务的 InnoDB 存储引擎则实现了 行锁（记录锁，在行相应的索引记录上的锁），gap 锁（在索引记录间歇上的锁），next-key 锁（是记录锁和在此索引记录之间的 gap 上的锁的结合）。MySql 的记录锁实质是索引记录的锁，因为 InnoDB 是索引组织表；gap 锁是索引记录间隙的锁，这种锁只在 RR 隔离级别下有效；next-key 锁是记录锁加上记录之前的 gap 锁的组合，MySql 通过 gap 锁和 next-key 锁实现 RR 隔离级别。</p>
+<pre><code>{% if loop.index is divisibleby 3 %}
+{% if loop.index is divisibleby(3) %}
+</code></pre>
 
-<p>共享锁：由读表操作加上的锁，加锁后其他用户只能获取该表或行的共享锁，不能获取排它锁，也就说只能读不能写。</p>
+<h3 id="toc_4">注释</h3>
 
-<p>排它锁：由写表操作加上的锁，加锁后其他用户不能获取该表或行的任何锁，典型是 MySQL 事务中的更新操作。</p>
+<pre><code>{# note: disabled template because we no longer use this
+    {% for user in users %}
+        ...
+    {% endfor %}
+#}
+</code></pre>
 
-<p>意向共享锁（IS）：事务打算给数据行加行共享锁，事务在给一个数据行加共享锁之前必须先去的该表的 IS 锁。</p>
+<h3 id="toc_5">空白控制</h3>
 
-<p>意向排它锁（IX）：事务打算给数据行加行排它锁，事务在给一个数据行加排他锁前必须先取得该表的 IX 锁。</p>
+<p>默认配置中，模板引擎不会对空白做进一步修改，所以每个空白（空格、制表符、换行符等）都会原封不动地返回。如果应用配置了 Jinja 的 trim_blocks，模板标签后的第一个换行符会被自动移除。</p>
 
-<h2 id="toc_2">数据库设计数据类型需要注意哪些地方？</h2>
+<p>此外，你也可以手动剥离模板中的空白。当你再块（比如一个 for 标签、一段注释或变量表达式）的开始或结束防止一个减号，可以移除块前或块后的空白：</p>
 
-<ol>
-<li>VARCHAR 和 CHAR：varchar 是变长的，需要额外的 1-2 个字节存储，能节约空间，可能会对性能有帮助。但是由于是变长，可能发生碎片（如更新数据）。</li>
-<li>使用 ENUM（枚举类型）代替字符串类型，数据实际存储为整型。</li>
-<li>字符串类型：要尽可能避免使用字符串来做标识符，因为它占用了很多空间并且通常比整数类型要慢。</li>
-<li>还要特别注意完全「随机」的字符串，例如由 MDR5()、SHA1()、UUID()产生的字符串，它们产生的每一个新值都会被任意地保存在很大的空间范围内，这会减慢 Insert 及一些 select 查询。</li>
-<li>如果保存 UUID 值，应该移除其中的短横线，更好的办法是使用 UHEX() 把 UUID 值转化为 16 字节的数字，并把它保存在 Binary(16) 列中。</li>
-</ol>
+<pre><code>{% for item in seq -%}
+    {{ item }}
+{%- endfor %}
+</code></pre>
 
-<h2 id="toc_3">MySQL 几种备份方式</h2>
+<p>这会产生不带空白的所有元素，如果 seq 是 1 到 9 的数字列表，输出会是 <code>123456789</code>。</p>
 
-<ol>
-<li><p>逻辑备份：使用自带的 mysqldump 工具进行备份，备份成 sql 文件的形式。</p>
+<p>注：标签和减号之间不能有空白。</p>
 
-<ul>
-<li>优点：最大的好处是能够与正在运行的 mysql 自动协同工作，在运行期间可以确保备份是当时的点，它会自动将对应操作的表锁定，不允许其他用户修改（只能访问）。</li>
-<li>缺点：备份的速度比较慢。如果是数据量很多的时候，比较耗费时间。如果数据库服务处在提供给用户服务状态，在这段长时间操作过程中，意味着要锁定表，那么服务就会受到影响。</li>
-</ul></li>
-<li><p>物理备份：直接拷贝 mysql 的数据目录</p></li>
-<li><p>双机热备份：mysql 数据库没有增量备份的机制，当数据量太大的时候备份是一个很大的问题。优点：适合数据量大的时候，大的互联网公司对于 mysql 数据别分，都是采用热机备份，搭建多台数据库服务器，进行主从复制。</p></li>
-</ol>
+<h3 id="toc_6">转义</h3>
+
+<p>有时想要甚至必要让 Jinja 忽略部分，不会把它作为变量块来处理，例如，如果使用默认语法，你想在使用把 <code>{{</code> 作为原始字符串使用：</p>
+
+<pre><code>{{ &#39;{{&#39; }}
+</code></pre>
+
+<p>对于较大的段落，标记一个块未 raw 是有意义的，例如展示 Jinja 语法的实例，你可以在模板中用这个片段：</p>
+
+<pre><code>{% raw %}
+    &lt;ul&gt;
+    {% for item in seq %}
+        &lt;li&gt;{{ item }}&lt;/li&gt;
+    {% endfor %}
+    &lt;/ul&gt;
+{% endraw %}
+</code></pre>
+
+<h3 id="toc_7">行语句</h3>
+
+<p>如果应用启用了行语句，就可以把一个行标记为一个语句，例如如果配置行语句前缀为 <code>#</code>，下面两个例子是等价的：</p>
+
+<pre><code>&lt;ul&gt;
+# for item in seq
+    &lt;li&gt;{{ item }}&lt;/li&gt;
+# endfor
+&lt;/ul&gt;
+
+&lt;ul&gt;
+{% for item in seq %}
+    &lt;li&gt;{{ item }}&lt;/li&gt;
+{% endfor %}
+&lt;/ul&gt;
+</code></pre>
+
+<p>行语句前缀可以出线訾呵一行的任意位置，只要它前面没有文本，为了语句有更好的可读性，在块的开始以冒号结束：</p>
+
+<pre><code># for item in seq:
+    ...
+# endfor
+</code></pre>
+
+<p>注：如有未闭合的圆括号、花括号或方括号，行语句可以跨越多行。</p>
 
 			</div>
 
@@ -159,7 +187,7 @@ $(document).ready(function(event) {
 			<strong>Categories:</strong>&nbsp; 
 			<span class="categories">
 			
-			    <a class='category' href='database.html'>Database</a>&nbsp;
+			    <a class='category' href='python.html'>Python</a>&nbsp;
 			 
 			</span>
 		    </p>
@@ -190,12 +218,9 @@ s.setAttribute('data-timestamp', +new Date());
 
 	    <p class="meta">
 	    
-	        <a class="basic-alignment left" href="15087265203050.html" 
-	        title="Previous Post: MySQL 20 个经典面试题">&laquo; MySQL 20 个经典面试题</a>
 	    
-	    
-	        <a class="basic-alignment right" href="15081195874570.html" 
-	        title="Next Post: 理解 Python WSGI">理解 Python WSGI &raquo;</a>
+	        <a class="basic-alignment right" href="15133066531642.html" 
+	        title="Next Post: Waht is a mixin, and why are they useful?">Waht is a mixin, and why are they useful? &raquo;</a>
 	    
 	    </p>
 	  </footer>

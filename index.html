@@ -79,6 +79,363 @@ $(document).ready(function(event) {
 
 	<article>
 		 <header>
+		  	<h1 class="entry-title"><a href="15142827431626.html">Jinja2 笔记</a></h1>
+			<p class="meta"><time datetime="2017-12-26T18:05:43+08:00" 
+			pubdate data-updated="true">2017/12/26</time></p>
+		 </header>
+	  	<div class="entry-content">
+		  	
+		  	<h2 id="toc_0">模板设计者文档</h2>
+
+<p>模板仅仅是文本文件，它可以生成任何基于文本的格式（HTML、XML、CSV等）。</p>
+
+<p>模板包含变量或表达式，这两者再模板中会被替换为值，模板中还有标签，控制模板的逻辑。</p>
+
+<h3 id="toc_1">变量</h3>
+
+<pre><code>{{ foo.bar }}
+</code></pre>
+
+<p>花括号不是变量的一部分，而是打印语句的一部分。</p>
+
+<h3 id="toc_2">过滤器</h3>
+
+<p>变量可以通过过滤器修改。过滤器与变量用管道<code>|</code>分割，并且也可以用圆括号传递可选参数。多个过滤器可以链式调用，前一个过滤器的输出会被后一个过滤器的输入。</p>
+
+<h3 id="toc_3">测试</h3>
+
+<p>测试可以用于对照普通表达式测试一个变量。要测试一个变量或表达式，你要在变量后加一个 is 以及测试的名称。例如，要得出一个值是否定义过，可以用 <code>name is defined</code>，这回根据 name 是否定义返回 true 或 false</p>
+
+<p>测试也可以接受参数，如果测试只接受一个参数，你可以省去括号来分组它们，例如，下面的表达式做同样的事情：</p>
+
+<pre><code>{% if loop.index is divisibleby 3 %}
+{% if loop.index is divisibleby(3) %}
+</code></pre>
+
+<h3 id="toc_4">注释</h3>
+
+<pre><code>{# note: disabled template because we no longer use this
+    {% for user in users %}
+        ...
+    {% endfor %}
+#}
+</code></pre>
+
+<h3 id="toc_5">空白控制</h3>
+
+<p>默认配置中，模板引擎不会对空白做进一步修改，所以每个空白（空格、制表符、换行符等）都会原封不动地返回。如果应用配置了 Jinja 的 trim_blocks，模板标签后的第一个换行符会被自动移除。</p>
+
+<p>此外，你也可以手动剥离模板中的空白。当你再块（比如一个 for 标签、一段注释或变量表达式）的开始或结束防止一个减号，可以移除块前或块后的空白：</p>
+
+<pre><code>{% for item in seq -%}
+    {{ item }}
+{%- endfor %}
+</code></pre>
+
+<p>这会产生不带空白的所有元素，如果 seq 是 1 到 9 的数字列表，输出会是 <code>123456789</code>。</p>
+
+<p>注：标签和减号之间不能有空白。</p>
+
+<h3 id="toc_6">转义</h3>
+
+<p>有时想要甚至必要让 Jinja 忽略部分，不会把它作为变量块来处理，例如，如果使用默认语法，你想在使用把 <code>{{</code> 作为原始字符串使用：</p>
+
+<pre><code>{{ &#39;{{&#39; }}
+</code></pre>
+
+<p>对于较大的段落，标记一个块未 raw 是有意义的，例如展示 Jinja 语法的实例，你可以在模板中用这个片段：</p>
+
+<pre><code>{% raw %}
+    &lt;ul&gt;
+    {% for item in seq %}
+        &lt;li&gt;{{ item }}&lt;/li&gt;
+    {% endfor %}
+    &lt;/ul&gt;
+{% endraw %}
+</code></pre>
+
+<h3 id="toc_7">行语句</h3>
+
+<p>如果应用启用了行语句，就可以把一个行标记为一个语句，例如如果配置行语句前缀为 <code>#</code>，下面两个例子是等价的：</p>
+
+<pre><code>&lt;ul&gt;
+# for item in seq
+    &lt;li&gt;{{ item }}&lt;/li&gt;
+# endfor
+&lt;/ul&gt;
+
+&lt;ul&gt;
+{% for item in seq %}
+    &lt;li&gt;{{ item }}&lt;/li&gt;
+{% endfor %}
+&lt;/ul&gt;
+</code></pre>
+
+<p>行语句前缀可以出线訾呵一行的任意位置，只要它前面没有文本，为了语句有更好的可读性，在块的开始以冒号结束：</p>
+
+<pre><code># for item in seq:
+    ...
+# endfor
+</code></pre>
+
+<p>注：如有未闭合的圆括号、花括号或方括号，行语句可以跨越多行。</p>
+
+
+		</div>
+
+		
+
+	</article>
+ 
+	<article>
+		 <header>
+		  	<h1 class="entry-title"><a href="15133066531642.html">Waht is a mixin, and why are they useful?</a></h1>
+			<p class="meta"><time datetime="2017-12-15T10:57:33+08:00" 
+			pubdate data-updated="true">2017/12/15</time></p>
+		 </header>
+	  	<div class="entry-content">
+		  	
+		  	<p><a href="https://stackoverflow.com/questions/533631/what-is-a-mixin-and-why-are-they-useful">https://stackoverflow.com/questions/533631/what-is-a-mixin-and-why-are-they-useful</a></p>
+
+<p>mixin 是一种多重继承的特殊形式，有两种情况下可以使用到：</p>
+
+<ol>
+<li>在一个 class 中想提供很多可选的 features</li>
+<li>在很多不同的 class 中响使用一个 particular feature</li>
+</ol>
+
+<p>For an example of number one, consider werkzeug&#39;s request and response system. You can make a plain old request object by saying:</p>
+
+<pre><code class="language-python">from werkzeug import BaseRequest
+
+
+class Request(BaseRequest):
+    pass
+</code></pre>
+
+<p>If I want to add accept header support, I would make that:</p>
+
+<pre><code class="language-python">from werkzeug import BaseRequest, AcceptMixin
+
+
+class Request(BaseRequest, AcceptMixin):
+    pass
+</code></pre>
+
+<p>If I wanted to make a request object that supports accept headers, etags, authentication, and user agent support, I could do this:</p>
+
+<pre><code class="language-python">from werkzeug import BaseRequest, AcceptMixin, ETagRequestMixin, UserAgentMixin, AuthenticationMixin
+
+class Request(BaseRequest, AcceptMixin, ETagRequestMixin, UserAgentMixin, AuthenticationMixin):
+    pass
+</code></pre>
+
+<p>The difference is subtle, but in the above examples, the mixin classes weren&#39;t made to stand on their own. In more traditional multiple inheritance, the <code>AuthenticationMixin</code> (for example) would probably be somthing more like <code>Authenticator</code>. That is, the class would probably be designed to stand on its own.</p>
+
+
+		</div>
+
+		
+
+	</article>
+ 
+	<article>
+		 <header>
+		  	<h1 class="entry-title"><a href="15127168765298.html">[笔记]编写高质量代码：改善Python程序的91个建议</a></h1>
+			<p class="meta"><time datetime="2017-12-08T15:07:56+08:00" 
+			pubdate data-updated="true">2017/12/8</time></p>
+		 </header>
+	  	<div class="entry-content">
+		  	
+		  	<h2 id="toc_0">建议6：编写函数的4个原则</h2>
+
+<ol>
+<li>函数设计要尽量短小，嵌套层次不宜过深，函数中需要用到分支和循环的地方，尽量不要嵌套过深，控制在三层以内；</li>
+<li>函数声明应该做到合理、简单、易于使用；</li>
+<li>函数的设计应该考虑向下兼容</li>
+<li>一个函数只做一件事，尽量保证函数语句粒度的一致性；</li>
+</ol>
+
+<h2 id="toc_1">建议7：将常量集中到一个文件</h2>
+
+<p>实现一个常量类：</p>
+
+<pre><code class="language-python">class const(object):
+    class ConstError(TypeError): pass
+    class ConstCaseError(ConstError): pass
+    
+    def __setattr__(self, name, value):
+        if name in self.__dict__:
+            raise self.ConstError(&#39;Can not change const %s&#39; % name)
+        if not name.isupper():
+            raise self.ConstCaseError(&#39;Const name %s is not all uppercase&#39; % name)
+        self.__dict__[name] = value
+
+import sys
+sys.modules[__name__] = const()
+</code></pre>
+
+<h2 id="toc_2">建议16：分清 == 与 is 的适用场景</h2>
+
+<p><img src="media/15127168765298/15127182809050.jpg" alt=""/></p>
+
+<p>is 的作用是用来检查对象的标识符是否一致，也就是比较两个对象在内存中的地址是否一样，它并不适合用来比较两个字符串是否相等。</p>
+
+<p><code>is</code> 不能被重载，<code>==</code> 可以被重载。</p>
+
+<p>Python 中有字符串驻留机制（string interning）：对于较小的字符串，为了提高系统的性能会保留其值的一个副本，当创建新的字符串的时候直接指向该副本即可。（小整数也有这样的实现机制）</p>
+
+<h2 id="toc_3">建议18：构建合理的包层次来管理module</h2>
+
+<p>一个可供参考的 Python 目录结构：</p>
+
+<pre><code>ProjectName/
+    |---README
+    |----LICENSE
+    |----setup.py
+    |-----requirements.txt
+    |------sample/
+    |    |----__init__.py
+    |    |----core.py
+    |    |----helpers.py
+    |------docs/
+    |    |------conf.py
+    |    |------index.rst
+    |------bin/
+    |------package/
+    |    |-----__init__.py
+    |    |-----subpackage/
+    |    |------........
+    |------tests/
+    |    |------test_basic.py
+    |    |------test_advanced.py 
+</code></pre>
+
+<h2 id="toc_4">建议19：有节制地使用from...import语句</h2>
+
+<p>Python 的 import 机制：</p>
+
+<p>Python 在初始化运行环境的时候会预先加载一批内建模块到内存当中，这些模块的相关信息被放在 sys.modules 中，当加载一个模块的时候，解释器实际上要完成以下任务：</p>
+
+<ol>
+<li>在 sys.modules 中进行搜索查看该模块是否已经存在，如果存在，则将其导入到当前的局部命名空间，加载结束；</li>
+<li>如果在 sys.modules 中找不到对应的模块名称，则为需要导入的模块创建一个字典对象，并将该对象插入到 sys.modules 中；</li>
+<li>加载前确认是否需要对模块对应的文件进行编译，如果需要则先进行编译；</li>
+<li>执行动态加载，在当前模块的命名空间中执行编译后的字节码，并将其中所有的对象放入模块对应的字典中；</li>
+</ol>
+
+<p>需要注意的是，直接使用 <code>import a</code> 和 <code>from a import B</code> 这两者之间有点差别，后者直接将 B 暴露于当前的局部空间，而将 a 加载到 sys.modules 集合。</p>
+
+<h2 id="toc_5">建议24：遵循异常处理的几点基本原则</h2>
+
+<p>异常处理流程图：</p>
+
+<p><img src="media/15127168765298/15127203613596.jpg" alt=""/></p>
+
+<p>异常处理需要遵循以下几点基本原则：</p>
+
+<ol>
+<li>注意异常的粒度。在 try 中放入过多的代码带来的问题是如果程序中抛出异常，将会较难定位，给 debug 带来不便，因此应尽量只在可能抛出异常的语句块前面放入 try 语句；</li>
+<li>谨慎使用单独的 except 语句处理所有的异常，最好能定位具体的异常；</li>
+<li>注意异常捕获的顺序，在合适的层次处理异常，为了更精确地定位错误发生的原因，推荐的方法是将继承结构中子类异常在前面的 except 中抛出，父类异常在后面的 except 中抛出；</li>
+<li>使用更为友好的异常信息，遵守异常参数的规范。</li>
+</ol>
+
+<h2 id="toc_6">建议38：使用copy模块深拷贝对象</h2>
+
+<ul>
+<li>浅拷贝（shallow copy）：构造一个新的复合对象并将从原对象中发现的引用插入到该对象中。浅拷贝的实现方式有工厂函数、切片操作、copy 模块中的 copy 操作；</li>
+<li>深拷贝（deep copy）：构造一个新的复合对象，对于从原对象中发现的引用继续执行拷贝，因此产生的对象不受其他对象的影响。需要以来 copy 模块中的 deepcopy 操作。</li>
+</ul>
+
+<h2 id="toc_7">建议44：理解模块pickle优劣</h2>
+
+<p>pickle 虽然很好用，但是也存在一些缺陷：</p>
+
+<ol>
+<li>pickle 不能保证操作的原子性。在一个 pickle 调用中如果发生异常，可能部分数据已经被保存；</li>
+<li>pickle 存在安全性问题。由于 loads() 可以接收字符串作为参数，这意味着精心设计的字符串给入侵提供了一种可能。如果想要进一步提高安全性，用户可以通过继承类 pickle.Unpickler 并重写 find_class() 方法来实现；</li>
+<li>pickle 协议是 Python 特定的，不同语言之间的兼容性难以保障。</li>
+</ol>
+
+<h2 id="toc_8">建议50：利用模块实现单例模式</h2>
+
+<p>单例的 3 个需求：</p>
+
+<ol>
+<li>只能有一个实例；</li>
+<li>必须自行创建这个实例；</li>
+<li>必须自行向整个系统提供这个实例。</li>
+</ol>
+
+<p>Python 中使用 <code>__new__</code> 实现一个单例模式：</p>
+
+<pre><code class="language-python">class Singleton(object):
+    _instance = None
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super(Singleton, cls).__new__(cls, *args, **kwargs)
+        return cls._instance
+</code></pre>
+
+
+		</div>
+
+		
+
+	</article>
+ 
+	<article>
+		 <header>
+		  	<h1 class="entry-title"><a href="15119252883641.html">Git Cheat Sheet</a></h1>
+			<p class="meta"><time datetime="2017-11-29T11:14:48+08:00" 
+			pubdate data-updated="true">2017/11/29</time></p>
+		 </header>
+	  	<div class="entry-content">
+		  	
+		  	<h2 id="toc_0">0x00 移除 Git 仓库中的文件</h2>
+
+<p>我们想要把文件从 Git 仓库中移除，但任然希望保留在当前的工作目录中。</p>
+
+<pre><code>git rm --cached file-you-want-to-remove
+</code></pre>
+
+<h2 id="toc_1">0x01 取消暂存的文件</h2>
+
+<pre><code>git reset HEAD &lt;file&gt;
+</code></pre>
+
+<h2 id="toc_2">0x02 删除本地和远程分支</h2>
+
+<p>删除本地分支：</p>
+
+<pre><code>git branch -d branch_name
+git branch -D branch_name
+</code></pre>
+
+<p>删除远程分支：</p>
+
+<pre><code>git push &lt;remote_name&gt; --delete &lt;branch_name&gt;
+</code></pre>
+
+<h2 id="toc_3">0x03 回退上一次的 commit</h2>
+
+<pre><code>$ git commit -m &quot;Something terribly misguided&quot;              (1)
+$ git reset HEAD~                                           (2)
+&lt;&lt; edit files as necessary &gt;&gt;                               (3)
+$ git add ...                                               (4)
+$ git commit -c ORIG_HEAD                                   (5)
+</code></pre>
+
+
+		</div>
+
+		
+
+	</article>
+ 
+	<article>
+		 <header>
 		  	<h1 class="entry-title"><a href="15112591097718.html">Nginx 笔记</a></h1>
 			<p class="meta"><time datetime="2017-11-21T18:11:49+08:00" 
 			pubdate data-updated="true">2017/11/21</time></p>
@@ -7674,10 +8031,10 @@ let airportNames = [String](airports.values)
 	  <ul id="recent_posts">
 	  
 	      <li class="post">
-	        <a href="programming.html"><strong>Programming&nbsp;(42)</strong></a>
+	        <a href="programming.html"><strong>Programming&nbsp;(46)</strong></a>
 	         <p class="cat-children-p"> 
 	        
-	        	<a href="python.html">Python&nbsp;(12)</a>&nbsp;&nbsp;
+	        	<a href="python.html">Python&nbsp;(16)</a>&nbsp;&nbsp;
 	        
 	        	<a href="algorithms.html">Algorithms&nbsp;(2)</a>&nbsp;&nbsp;
 	        
@@ -7704,31 +8061,31 @@ let airportNames = [String](airports.values)
 	  
 	      
 		      <li class="post">
+		        <a href="15142827431626.html">Jinja2 笔记</a>
+		      </li>
+	     
+	  
+	      
+		      <li class="post">
+		        <a href="15133066531642.html">Waht is a mixin, and why are they useful?</a>
+		      </li>
+	     
+	  
+	      
+		      <li class="post">
+		        <a href="15127168765298.html">[笔记]编写高质量代码：改善Python程序的91个建议</a>
+		      </li>
+	     
+	  
+	      
+		      <li class="post">
+		        <a href="15119252883641.html">Git Cheat Sheet</a>
+		      </li>
+	     
+	  
+	      
+		      <li class="post">
 		        <a href="15112591097718.html">Nginx 笔记</a>
-		      </li>
-	     
-	  
-	      
-		      <li class="post">
-		        <a href="15107536000528.html">RPC Notes</a>
-		      </li>
-	     
-	  
-	      
-		      <li class="post">
-		        <a href="15088259624859.html">Flask 中的上下文</a>
-		      </li>
-	     
-	  
-	      
-		      <li class="post">
-		        <a href="15087352731978.html">常见的面试题整理 —— 数据库篇</a>
-		      </li>
-	     
-	  
-	      
-		      <li class="post">
-		        <a href="15087296230858.html">MySQL索引原理及慢查询优化</a>
 		      </li>
 	     
 	  

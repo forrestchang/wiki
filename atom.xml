@@ -4,7 +4,7 @@
   <title><![CDATA[七录书斋]]></title>
   <link href="http://forresthcang.com/wiki/atom.xml" rel="self"/>
   <link href="http://forresthcang.com/wiki/"/>
-  <updated>2017-12-21T14:52:26+08:00</updated>
+  <updated>2017-12-21T14:53:01+08:00</updated>
   <id>http://forresthcang.com/wiki/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,339 @@
   </author>
   <generator uri="http://www.coderforart.com/">CoderForArt</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Jinja2 笔记]]></title>
+    <link href="http://forresthcang.com/wiki/15142827431626.html"/>
+    <updated>2017-12-26T18:05:43+08:00</updated>
+    <id>http://forresthcang.com/wiki/15142827431626.html</id>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">模板设计者文档</h2>
+
+<p>模板仅仅是文本文件，它可以生成任何基于文本的格式（HTML、XML、CSV等）。</p>
+
+<p>模板包含变量或表达式，这两者再模板中会被替换为值，模板中还有标签，控制模板的逻辑。</p>
+
+<h3 id="toc_1">变量</h3>
+
+<pre><code>{{ foo.bar }}
+</code></pre>
+
+<p>花括号不是变量的一部分，而是打印语句的一部分。</p>
+
+<h3 id="toc_2">过滤器</h3>
+
+<p>变量可以通过过滤器修改。过滤器与变量用管道<code>|</code>分割，并且也可以用圆括号传递可选参数。多个过滤器可以链式调用，前一个过滤器的输出会被后一个过滤器的输入。</p>
+
+<h3 id="toc_3">测试</h3>
+
+<p>测试可以用于对照普通表达式测试一个变量。要测试一个变量或表达式，你要在变量后加一个 is 以及测试的名称。例如，要得出一个值是否定义过，可以用 <code>name is defined</code>，这回根据 name 是否定义返回 true 或 false</p>
+
+<p>测试也可以接受参数，如果测试只接受一个参数，你可以省去括号来分组它们，例如，下面的表达式做同样的事情：</p>
+
+<pre><code>{% if loop.index is divisibleby 3 %}
+{% if loop.index is divisibleby(3) %}
+</code></pre>
+
+<h3 id="toc_4">注释</h3>
+
+<pre><code>{# note: disabled template because we no longer use this
+    {% for user in users %}
+        ...
+    {% endfor %}
+#}
+</code></pre>
+
+<h3 id="toc_5">空白控制</h3>
+
+<p>默认配置中，模板引擎不会对空白做进一步修改，所以每个空白（空格、制表符、换行符等）都会原封不动地返回。如果应用配置了 Jinja 的 trim_blocks，模板标签后的第一个换行符会被自动移除。</p>
+
+<p>此外，你也可以手动剥离模板中的空白。当你再块（比如一个 for 标签、一段注释或变量表达式）的开始或结束防止一个减号，可以移除块前或块后的空白：</p>
+
+<pre><code>{% for item in seq -%}
+    {{ item }}
+{%- endfor %}
+</code></pre>
+
+<p>这会产生不带空白的所有元素，如果 seq 是 1 到 9 的数字列表，输出会是 <code>123456789</code>。</p>
+
+<p>注：标签和减号之间不能有空白。</p>
+
+<h3 id="toc_6">转义</h3>
+
+<p>有时想要甚至必要让 Jinja 忽略部分，不会把它作为变量块来处理，例如，如果使用默认语法，你想在使用把 <code>{{</code> 作为原始字符串使用：</p>
+
+<pre><code>{{ &#39;{{&#39; }}
+</code></pre>
+
+<p>对于较大的段落，标记一个块未 raw 是有意义的，例如展示 Jinja 语法的实例，你可以在模板中用这个片段：</p>
+
+<pre><code>{% raw %}
+    &lt;ul&gt;
+    {% for item in seq %}
+        &lt;li&gt;{{ item }}&lt;/li&gt;
+    {% endfor %}
+    &lt;/ul&gt;
+{% endraw %}
+</code></pre>
+
+<h3 id="toc_7">行语句</h3>
+
+<p>如果应用启用了行语句，就可以把一个行标记为一个语句，例如如果配置行语句前缀为 <code>#</code>，下面两个例子是等价的：</p>
+
+<pre><code>&lt;ul&gt;
+# for item in seq
+    &lt;li&gt;{{ item }}&lt;/li&gt;
+# endfor
+&lt;/ul&gt;
+
+&lt;ul&gt;
+{% for item in seq %}
+    &lt;li&gt;{{ item }}&lt;/li&gt;
+{% endfor %}
+&lt;/ul&gt;
+</code></pre>
+
+<p>行语句前缀可以出线訾呵一行的任意位置，只要它前面没有文本，为了语句有更好的可读性，在块的开始以冒号结束：</p>
+
+<pre><code># for item in seq:
+    ...
+# endfor
+</code></pre>
+
+<p>注：如有未闭合的圆括号、花括号或方括号，行语句可以跨越多行。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Waht is a mixin, and why are they useful?]]></title>
+    <link href="http://forresthcang.com/wiki/15133066531642.html"/>
+    <updated>2017-12-15T10:57:33+08:00</updated>
+    <id>http://forresthcang.com/wiki/15133066531642.html</id>
+    <content type="html"><![CDATA[
+<p><a href="https://stackoverflow.com/questions/533631/what-is-a-mixin-and-why-are-they-useful">https://stackoverflow.com/questions/533631/what-is-a-mixin-and-why-are-they-useful</a></p>
+
+<p>mixin 是一种多重继承的特殊形式，有两种情况下可以使用到：</p>
+
+<ol>
+<li>在一个 class 中想提供很多可选的 features</li>
+<li>在很多不同的 class 中响使用一个 particular feature</li>
+</ol>
+
+<p>For an example of number one, consider werkzeug&#39;s request and response system. You can make a plain old request object by saying:</p>
+
+<pre><code class="language-python">from werkzeug import BaseRequest
+
+
+class Request(BaseRequest):
+    pass
+</code></pre>
+
+<p>If I want to add accept header support, I would make that:</p>
+
+<pre><code class="language-python">from werkzeug import BaseRequest, AcceptMixin
+
+
+class Request(BaseRequest, AcceptMixin):
+    pass
+</code></pre>
+
+<p>If I wanted to make a request object that supports accept headers, etags, authentication, and user agent support, I could do this:</p>
+
+<pre><code class="language-python">from werkzeug import BaseRequest, AcceptMixin, ETagRequestMixin, UserAgentMixin, AuthenticationMixin
+
+class Request(BaseRequest, AcceptMixin, ETagRequestMixin, UserAgentMixin, AuthenticationMixin):
+    pass
+</code></pre>
+
+<p>The difference is subtle, but in the above examples, the mixin classes weren&#39;t made to stand on their own. In more traditional multiple inheritance, the <code>AuthenticationMixin</code> (for example) would probably be somthing more like <code>Authenticator</code>. That is, the class would probably be designed to stand on its own.</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[[笔记]编写高质量代码：改善Python程序的91个建议]]></title>
+    <link href="http://forresthcang.com/wiki/15127168765298.html"/>
+    <updated>2017-12-08T15:07:56+08:00</updated>
+    <id>http://forresthcang.com/wiki/15127168765298.html</id>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">建议6：编写函数的4个原则</h2>
+
+<ol>
+<li>函数设计要尽量短小，嵌套层次不宜过深，函数中需要用到分支和循环的地方，尽量不要嵌套过深，控制在三层以内；</li>
+<li>函数声明应该做到合理、简单、易于使用；</li>
+<li>函数的设计应该考虑向下兼容</li>
+<li>一个函数只做一件事，尽量保证函数语句粒度的一致性；</li>
+</ol>
+
+<h2 id="toc_1">建议7：将常量集中到一个文件</h2>
+
+<p>实现一个常量类：</p>
+
+<pre><code class="language-python">class const(object):
+    class ConstError(TypeError): pass
+    class ConstCaseError(ConstError): pass
+    
+    def __setattr__(self, name, value):
+        if name in self.__dict__:
+            raise self.ConstError(&#39;Can not change const %s&#39; % name)
+        if not name.isupper():
+            raise self.ConstCaseError(&#39;Const name %s is not all uppercase&#39; % name)
+        self.__dict__[name] = value
+
+import sys
+sys.modules[__name__] = const()
+</code></pre>
+
+<h2 id="toc_2">建议16：分清 == 与 is 的适用场景</h2>
+
+<p><img src="media/15127168765298/15127182809050.jpg" alt=""/></p>
+
+<p>is 的作用是用来检查对象的标识符是否一致，也就是比较两个对象在内存中的地址是否一样，它并不适合用来比较两个字符串是否相等。</p>
+
+<p><code>is</code> 不能被重载，<code>==</code> 可以被重载。</p>
+
+<p>Python 中有字符串驻留机制（string interning）：对于较小的字符串，为了提高系统的性能会保留其值的一个副本，当创建新的字符串的时候直接指向该副本即可。（小整数也有这样的实现机制）</p>
+
+<h2 id="toc_3">建议18：构建合理的包层次来管理module</h2>
+
+<p>一个可供参考的 Python 目录结构：</p>
+
+<pre><code>ProjectName/
+    |---README
+    |----LICENSE
+    |----setup.py
+    |-----requirements.txt
+    |------sample/
+    |    |----__init__.py
+    |    |----core.py
+    |    |----helpers.py
+    |------docs/
+    |    |------conf.py
+    |    |------index.rst
+    |------bin/
+    |------package/
+    |    |-----__init__.py
+    |    |-----subpackage/
+    |    |------........
+    |------tests/
+    |    |------test_basic.py
+    |    |------test_advanced.py 
+</code></pre>
+
+<h2 id="toc_4">建议19：有节制地使用from...import语句</h2>
+
+<p>Python 的 import 机制：</p>
+
+<p>Python 在初始化运行环境的时候会预先加载一批内建模块到内存当中，这些模块的相关信息被放在 sys.modules 中，当加载一个模块的时候，解释器实际上要完成以下任务：</p>
+
+<ol>
+<li>在 sys.modules 中进行搜索查看该模块是否已经存在，如果存在，则将其导入到当前的局部命名空间，加载结束；</li>
+<li>如果在 sys.modules 中找不到对应的模块名称，则为需要导入的模块创建一个字典对象，并将该对象插入到 sys.modules 中；</li>
+<li>加载前确认是否需要对模块对应的文件进行编译，如果需要则先进行编译；</li>
+<li>执行动态加载，在当前模块的命名空间中执行编译后的字节码，并将其中所有的对象放入模块对应的字典中；</li>
+</ol>
+
+<p>需要注意的是，直接使用 <code>import a</code> 和 <code>from a import B</code> 这两者之间有点差别，后者直接将 B 暴露于当前的局部空间，而将 a 加载到 sys.modules 集合。</p>
+
+<h2 id="toc_5">建议24：遵循异常处理的几点基本原则</h2>
+
+<p>异常处理流程图：</p>
+
+<p><img src="media/15127168765298/15127203613596.jpg" alt=""/></p>
+
+<p>异常处理需要遵循以下几点基本原则：</p>
+
+<ol>
+<li>注意异常的粒度。在 try 中放入过多的代码带来的问题是如果程序中抛出异常，将会较难定位，给 debug 带来不便，因此应尽量只在可能抛出异常的语句块前面放入 try 语句；</li>
+<li>谨慎使用单独的 except 语句处理所有的异常，最好能定位具体的异常；</li>
+<li>注意异常捕获的顺序，在合适的层次处理异常，为了更精确地定位错误发生的原因，推荐的方法是将继承结构中子类异常在前面的 except 中抛出，父类异常在后面的 except 中抛出；</li>
+<li>使用更为友好的异常信息，遵守异常参数的规范。</li>
+</ol>
+
+<h2 id="toc_6">建议38：使用copy模块深拷贝对象</h2>
+
+<ul>
+<li>浅拷贝（shallow copy）：构造一个新的复合对象并将从原对象中发现的引用插入到该对象中。浅拷贝的实现方式有工厂函数、切片操作、copy 模块中的 copy 操作；</li>
+<li>深拷贝（deep copy）：构造一个新的复合对象，对于从原对象中发现的引用继续执行拷贝，因此产生的对象不受其他对象的影响。需要以来 copy 模块中的 deepcopy 操作。</li>
+</ul>
+
+<h2 id="toc_7">建议44：理解模块pickle优劣</h2>
+
+<p>pickle 虽然很好用，但是也存在一些缺陷：</p>
+
+<ol>
+<li>pickle 不能保证操作的原子性。在一个 pickle 调用中如果发生异常，可能部分数据已经被保存；</li>
+<li>pickle 存在安全性问题。由于 loads() 可以接收字符串作为参数，这意味着精心设计的字符串给入侵提供了一种可能。如果想要进一步提高安全性，用户可以通过继承类 pickle.Unpickler 并重写 find_class() 方法来实现；</li>
+<li>pickle 协议是 Python 特定的，不同语言之间的兼容性难以保障。</li>
+</ol>
+
+<h2 id="toc_8">建议50：利用模块实现单例模式</h2>
+
+<p>单例的 3 个需求：</p>
+
+<ol>
+<li>只能有一个实例；</li>
+<li>必须自行创建这个实例；</li>
+<li>必须自行向整个系统提供这个实例。</li>
+</ol>
+
+<p>Python 中使用 <code>__new__</code> 实现一个单例模式：</p>
+
+<pre><code class="language-python">class Singleton(object):
+    _instance = None
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super(Singleton, cls).__new__(cls, *args, **kwargs)
+        return cls._instance
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Git Cheat Sheet]]></title>
+    <link href="http://forresthcang.com/wiki/15119252883641.html"/>
+    <updated>2017-11-29T11:14:48+08:00</updated>
+    <id>http://forresthcang.com/wiki/15119252883641.html</id>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">0x00 移除 Git 仓库中的文件</h2>
+
+<p>我们想要把文件从 Git 仓库中移除，但任然希望保留在当前的工作目录中。</p>
+
+<pre><code>git rm --cached file-you-want-to-remove
+</code></pre>
+
+<h2 id="toc_1">0x01 取消暂存的文件</h2>
+
+<pre><code>git reset HEAD &lt;file&gt;
+</code></pre>
+
+<h2 id="toc_2">0x02 删除本地和远程分支</h2>
+
+<p>删除本地分支：</p>
+
+<pre><code>git branch -d branch_name
+git branch -D branch_name
+</code></pre>
+
+<p>删除远程分支：</p>
+
+<pre><code>git push &lt;remote_name&gt; --delete &lt;branch_name&gt;
+</code></pre>
+
+<h2 id="toc_3">0x03 回退上一次的 commit</h2>
+
+<pre><code>$ git commit -m &quot;Something terribly misguided&quot;              (1)
+$ git reset HEAD~                                           (2)
+&lt;&lt; edit files as necessary &gt;&gt;                               (3)
+$ git add ...                                               (4)
+$ git commit -c ORIG_HEAD                                   (5)
+</code></pre>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Nginx 笔记]]></title>
@@ -1652,1255 +1985,6 @@ S表达式 -&gt; 原子|(S表达式 . S表达式)
 <p>nil 成为了 Lisp 语言中唯一的既是原子又是列表的表达式。</p>
 
 <p>在 Scheme 中，它没有 nil 的概念，只有空表 <code>()</code>。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Scheme 解释器相关笔记]]></title>
-    <link href="http://forresthcang.com/wiki/15073552964811.html"/>
-    <updated>2017-10-07T13:48:16+08:00</updated>
-    <id>http://forresthcang.com/wiki/15073552964811.html</id>
-    <content type="html"><![CDATA[
-<h2 id="toc_0">Scheme 程序的语法和语义</h2>
-
-<ul>
-<li>语法（syntax）：指的是字母排列成正确表达式或声明的顺序；</li>
-<li>语义（semantics）：指的是这些表达式或声明的意义。</li>
-</ul>
-
-<p>Scheme 的语法非常简单：</p>
-
-<ul>
-<li>Scheme 程序中只有表达式，表达式和声明之间并无区别；</li>
-<li>数字（例如 10）和符号（例如 A）被称为原子表达式（atomic expression），它们无法被拆分成更小的表达式。</li>
-<li>除此以外的一切都是列表表达式（list expression）：以 <code>(</code> 为首，以 <code>)</code> 为尾，中间包括这零个或更多表达式。列表的第一个元素决定了它的含义：
-
-<ul>
-<li>若第一个元素是关键字，例如 <code>(if ...)</code>，那么这个列表是一个特殊形式（special form）；特殊形式的意义取决于关键字；</li>
-<li>若第一个元素并非关键字，例如<code>(fn ...)</code>，那这个列表则是函数调用。</li>
-</ul></li>
-</ul>
-
-<h2 id="toc_1">语言解释器做些什么</h2>
-
-<p>一个计算机语言的解释器分为两部分：</p>
-
-<ol>
-<li>分析（parse）：解释器的分析部分将程序以一串字符串形式读入，依照语法规则（syntactic rules）验证其正确性并将程序转换成一种内部表达形式。在一个简单的解释器中，内部表达形式是一个树形结构，人们一般将其称为抽象语法树（abstract syntax tree）。抽象语法树的结构和程序中层层嵌套的声明及表达式非常接近，几乎可以说是完美对应。在编译器之中万网存在多个内部表达式，一开始先转换成抽象语法树，随后再转换成可以直接被计算器执行的指令序列。</li>
-<li>执行（execution）：内部表达式被按照语言的语法规则进行处理，以此来进行计算。</li>
-</ol>
-
-<pre><code>程序 --&gt; [parser] --&gt; 抽象语法树 --&gt; [eval] --&gt; 结果
-</code></pre>
-
-<h3 id="toc_2">分析：parser, tokenize, read_from_tokens</h3>
-
-<p>依照传统，分析被分成两个部分：</p>
-
-<ol>
-<li>词法分析（lexical analysis）：在这一部分中，输入的字符串被拆分为一系列的 token；</li>
-<li>语法分析（syntactic analysis）：将 token 汇编为抽象语法树。</li>
-</ol>
-
-<h2 id="toc_3">环境（Environments）</h2>
-
-<p>eval 函数接收两个参数：一个我们想要求值的表达式 x，还有一个环境 env，x 将在这个环境中被求值。环境指的是变量名和它们值之间的映射。eval 默认会使用全局环境（global environment）进行求值，全局环境包含着一系列的标准函数（比如 sqrt, max, * 这类操作符）。这一环境可以用用户定义的变量扩展，语法为<code>(define variable value)</code>。我们可以用 Python 自带的字典来实现环境，字典中的键对为 <code>{变量: 值}</code> 的形式。</p>
-
-<h2 id="toc_4">Scheme 的语法规则</h2>
-
-<table>
-<thead>
-<tr>
-<th>表达式（Expression）</th>
-<th>语法（Syntax）</th>
-<th>语义（Semantics）和范例</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>变量引用（variable reference）</td>
-<td>var</td>
-<td>该符号被认为是变量名；它的值是变量的值。</td>
-</tr>
-<tr>
-<td>字面常量（constant literal）</td>
-<td>number</td>
-<td>一个数字（number）求值得到它自身。</td>
-</tr>
-<tr>
-<td>条件（conditional）</td>
-<td>(if test conseq alt)</td>
-<td>对 test 进行求值；如果结果为真，对 conseq 进行求值并返回结果；否则对 alt 进行求值并返回结果。</td>
-</tr>
-<tr>
-<td>定义（definition）</td>
-<td>(define var exp)</td>
-<td>定义一个新的变量，将 var 的值定义为 exp 求值得到的结果。</td>
-</tr>
-<tr>
-<td>过程调用（procedure call）</td>
-<td>(proc arg...)</td>
-<td>如果 proc 不是 if/define/quote 其中之一，那它就被认为是一个过程（procedure）。对 proc 和所有的 args 求值，然后将 proc 过程应用于所有的 args 之上。</td>
-</tr>
-<tr>
-<td>引用（quotation）</td>
-<td>(quote exp)</td>
-<td>直接按字面返回 exp，不对其进行求值。范例：(quote (+ 1 2)) --&gt; (+ 1 2)</td>
-</tr>
-<tr>
-<td>赋值（assignment）</td>
-<td>(set! var exp)</td>
-<td>对 exp 进行求值并将结果赋值给 var，exp 必须在之前定义过（被 define 定义过或者是包含 set! 表达式的过程中的一个参数）</td>
-</tr>
-<tr>
-<td>过程（procedure）</td>
-<td>(lambda (var...) (exp))</td>
-<td>创造一个过程，参数为 var...，exp为过程的主体，范例：(lambda (r) (* pi (* r r)))</td>
-</tr>
-</tbody>
-</table>
-
-<p>lambda 特殊形式会创建一个过程（procedure）：</p>
-
-<pre><code class="language-scheme">&gt;&gt;&gt; (define circle-area (lambda (r) (* pi (* r r))))
-&gt;&gt;&gt; (circle-area 10)
-314.159265359
-</code></pre>
-
-<p>过程调用 (circle-area 10) 使我们队过程的主体部分 (* pi (* r r)) 进行求值。求值所在的环境中 pi 与 r 的值同全局环境相同，而 r 的值为 10.事实上，解释器并不会简单地在全局环境之中将 r 的值设为 10。如果我们将 r 用于其他用途会怎么样？我们不希望对 circle-area 的调用改变 r 的值，因此我们希望讲一个局部变量 r 设为 10，这样就不会影响到其他同名的变量。因此，我们需要构建一种新的环境，允许同时创建局部和全局变量。</p>
-
-<p>想法如下：在我们对 <code>(circle-area 10)</code> 求值时，首先提取过程主体部分 <code>(* pi (* r r))</code>，随后在仅有一个本地变量 r 的环境中求值，但该环境同时也能访问全局环境。下图演示了这种环境模型，局部环境（蓝色）嵌套在全局环境（红色）之中：</p>
-
-<p><img src="media/15073552964811/15073755364588.jpg" alt=""/></p>
-
-<p>当我们在一个被嵌套的环境中查找变量时，首先在本层查找，如果没有找到对应值的话就到外一层查找。</p>
-
-<pre><code class="language-python">class Procedure(object):
-    &quot;用户定义的Scheme过程。&quot;
-    def __init__(self, parms, body, env):
-        self.parms, self.body, self.env = parms, body, env
-    def __call__(self, *args): 
-        return eval(self.body, Env(self.parms, args, self.env))
-
-class Env(dict):
-    &quot;环境是以{&#39;var&#39;:val}为键对的字典，它还带着一个指向外层环境的引用。&quot;
-    def __init__(self, parms=(), args=(), outer=None):
-        self.update(zip(parms, args))
-        self.outer = outer
-    def find(self, var):
-        &quot;寻找变量出现的最内层环境。&quot;
-        return self if (var in self) else self.outer.find(var)
-
-global_env = standard_env()
-</code></pre>
-
-<p>我们看到每个过程有 3 个组成部分：一个包含变量名的列表，一个主体表达式，以及一个外层环境。外层环境使得我们在局部环境中无法找到变量时有下一个地方可以寻找。</p>
-
-<p>环境是 dict 的子类，因此它含有 dict 拥有的所有方法。除此之外还有两个额外的方法：</p>
-
-<ol>
-<li>构造器 <code>__init__</code> 接受一个变量名列表以及对应的变量值列表，构造一个新环境，内部形式为 {variable: value} 键对，并拥有一个纸箱外层环境的引用；</li>
-<li>find 函数用于找到某个变量所在的正确环境，可能是内层环境也可能是更外层的环境。</li>
-</ol>
-
-<p>要想知道这部分的工作原理，我们首先来看看 eval 的定义。注意，现在我们需要调用 env.find(x) 来寻找变量处于哪一层环境之中；随后我们才能从那一层环境中提取 x（define 分支的定义没有改变，因为 define 总是向最内一层的环境添加变量）。同时我们还增加了两个判定分支：set! 分支中，我们寻找变量所处的环境并将其设为新的值；通过 lambda，我们可以传入参数列表、主体以及环境以创建一个新的过程。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[《流利的 Python》笔记]]></title>
-    <link href="http://forresthcang.com/wiki/15058857487655.html"/>
-    <updated>2017-09-20T13:35:48+08:00</updated>
-    <id>http://forresthcang.com/wiki/15058857487655.html</id>
-    <content type="html"><![CDATA[
-<ul>
-<li>
-<a href="#toc_0">第 17 章：使用 futures 处理并发</a>
-<ul>
-<li>
-<a href="#toc_1">示例：网络下载的三种风格</a>
-<ul>
-<li>
-<a href="#toc_2">依序下载的脚本</a>
-</li>
-<li>
-<a href="#toc_3">使用 concurrent.futures 模块下载</a>
-</li>
-<li>
-<a href="#toc_4">futures 在哪里</a>
-</li>
-</ul>
-</li>
-<li>
-<a href="#toc_5">阻塞型 I/O 和 GIL</a>
-</li>
-<li>
-<a href="#toc_6">使用 concurrent.futures 模块启动进程</a>
-</li>
-<li>
-<a href="#toc_7">实现 Executor.map 方法</a>
-</li>
-<li>
-<a href="#toc_8">显示下载进度并处理错误</a>
-</li>
-<li>
-<a href="#toc_9">杂谈</a>
-</li>
-</ul>
-</li>
-<li>
-<a href="#toc_10">第 18 章：使用 asyncio 包处理并发</a>
-<ul>
-<li>
-<a href="#toc_11">线程与协程对比</a>
-<ul>
-<li>
-<a href="#toc_12">asyncio.Future：故意不阻塞</a>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<a href="#toc_13">第 19 章：动态属性和特性</a>
-<ul>
-<li>
-<a href="#toc_14">使用动态属性转化数据</a>
-<ul>
-<li>
-<a href="#toc_15">使用动态属性访问 JSON 类数据</a>
-</li>
-<li>
-<a href="#toc_16">处理无效的属性名</a>
-</li>
-<li>
-<a href="#toc_17">使用 <code>__new__</code> 方法以灵活的方式创建对象</a>
-</li>
-<li>
-<a href="#toc_18">使用 shelve 模块调整 OSCON 数据源的结构</a>
-</li>
-<li>
-<a href="#toc_19">使用特性获取链接的记录</a>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-
-<h2 id="toc_0">第 17 章：使用 futures 处理并发</h2>
-
-<blockquote>
-<p>抨击线程的往往是系统程序员，他们考虑的使用场景对一般的应用程序员来说，也许一生都不会遇到……应用程序员遇到的使用场景，99% 的情况下只需知道如何派生一堆独立的线程，然后用队列收集结果。—— Michele Simionato</p>
-</blockquote>
-
-<p>本章主要讨论 Python 3.2 引入的 concurrent.futures 模块，这个库封装了前面引文中 Michele 所述的模式，特别易于使用。</p>
-
-<p>这一章还会介绍 futures 的概念，futures 指一种对象，表示异步执行的操作。这个概念的作用很大，是 corcurrent.futures 模块和 asyncio 包的基础。</p>
-
-<h3 id="toc_1">示例：网络下载的三种风格</h3>
-
-<p>为了高效处理网络 I/O，需要使用并发，因为网络有很高的延迟，所以为了不浪费 CPU 周期去等待，最好在收到网络相应之前做些其他事情。</p>
-
-<p>为了通过代码说明这一点，我写了三个示例程序：从网上下载 20 个国家的国旗图像。第一个示例程序 flag.py 是依序下载的：下载完一个图像，并将其保存在硬盘中之后，才请求下载下一个图像；另外两个脚本是并发下载的：几乎同时请求所有图像，每下载完一个文件就保存一个文件。flags_threadpool.py 脚本使用 concurrent.futures 模块，而 flags_asyncio.py 脚本是会用 asyncio 包。</p>
-
-<h4 id="toc_2">依序下载的脚本</h4>
-
-<pre><code class="language-python"># flags.py：依序下载的脚本；另外两个脚本会重用其中几个函数
-
-import os
-import time
-import sys
-
-import requests
-
-POP20_CC = (&#39;CN IN US ID BR PK NG BD RU JP &#39;
-            &#39;MX PH VN ET EG DE IR TR CD FR&#39;).split()
-
-BASE_URL = &#39;http://flupy.org/data/flags&#39;
-
-DEST_DIR = &#39;/Users/jiayuan/Downloads/&#39;
-
-
-def save_flag(img, filename):
-    path = os.path.join(DEST_DIR, filename)
-    with open(path, &#39;wb&#39;) as fp:
-        fp.write(img)
-        
-
-def get_flag(cc):
-    url = &#39;{}/{cc}/{cc}.gif&#39;.format(BASE_URL, cc=cc.lower())
-    resp = requests.get(url)
-    return resp.content
-
-
-def show(text):
-    print(text, end=&#39; &#39;)
-    sys.stdout.flush()
-    
-    
-def download_many(cc_list):
-    for cc in sorted(cc_list):
-        image = get_flag(cc)
-        show(cc)
-        save_flag(image, cc.lower() + &#39;.gif&#39;)
-    return len(cc_list)
-
-
-def main(download_many):
-    t0 = time.time()
-    count = download_many(POP20_CC)
-    elapsed = time.time() - t0
-    msg = &#39;\n{} flags downloads in {:.2f}s&#39;
-    print(msg.format(count, elapsed))
-</code></pre>
-
-<p>测试结果：</p>
-
-<pre><code class="language-python">&gt;&gt;&gt; main(download_many)
-BD BR CD CN DE EG ET FR ID IN IR JP MX NG PH PK RU TR US VN 
-20 flags downloads in 30.90s
-</code></pre>
-
-<h4 id="toc_3">使用 concurrent.futures 模块下载</h4>
-
-<p>concurrent.futures 模块的主要特色是 ThreadPoolExecutor 和 ProcessPollExecutor 类，这两个类实现的接口能分别在不同的线程或进程中执行可调用的对象。这两个雷子啊内部维护这一个工作线程或进程池，以及要执行的任务队列。不过，这个接口抽象层级很高，像下载国旗这种简单的案例，无需关心任何实现细节。</p>
-
-<pre><code class="language-python"># flags_threadpool.py: 使用 futures.ThreadPoolExecutor 类实现多线程下载的脚本
-from concurrent import futures
-
-MAX_WORKERS = 20
-
-
-def download_one(cc):
-    image = get_flag(cc)
-    show(cc)
-    save_flag(image, cc.lower() + &#39;.gif&#39;)
-    return cc
-
-
-def download_many(cc_list):
-    workers = min(MAX_WORKERS, len(cc_list))
-    with futures.ThreadPoolExecutor(workers) as executor:
-        res = executor.map(download_one, sorted(cc_list)) # 1
-        
-    return len(list(res)) # 2
-</code></pre>
-
-<p>测试结果：</p>
-
-<pre><code class="language-python">&gt;&gt;&gt; main(download_many)
-IN VN BD FR DE JP CN ID BR PH EG NG ET MX IR RU US CD PK TR 
-20 flags downloads in 70.05s
-</code></pre>
-
-<p>关于这个示例的一些注解：</p>
-
-<ul>
-<li>1）map 方法的作用与内置的 map 函数类似，不过 download_one 函数会在多个线程中并发调用；map 方法返回一个生成器，因此可以迭代，获取各个函数返回的值。</li>
-<li>2）返回获取的结果数量；如果有线程抛出异常，异常会在这里抛出，这与隐式调用 next() 函数从迭代器中获取相应的返回值一样</li>
-</ul>
-
-<h4 id="toc_4">futures 在哪里</h4>
-
-<p>futures 是 concurrent.futures 模块和 asyncio 包的重要组件，作为这两个库的用户，我们有时却见不到 Future。</p>
-
-<p>从 Python 3.4 起，标准库中有两个名为 futures 的类：concurrent.futures.Future 和 asyncio.Future。这两个类的作用相同：<strong>两个 futures 类的实例都表示可能已经完成或者尚未完成的延迟计算</strong>。这与 Twisted 引擎中的 Deferred 类、Tornado 框架中的 Future 类，以及多个 JavaScript 库中的 Promise 对象类似。</p>
-
-<p><strong>futures 封装待完成的操作，可以放入队列，完成的状态可以查询，得到结果（或抛出异常），后可以获取结果（或异常）</strong>。</p>
-
-<p>我们要记住一件事：通常情况下自己不应该创建 futures，而只能由并发框架（concurrent.futures 或 asyncio）实例化。原因很简单：futures 表示终将发生的事情，而<strong>确定某件事会发生的唯一方式是执行的时间已经排定</strong>。因此，只有排定把某事件交给 concurrent.futures.Executor 子类处理时，才会创建 concurrent.futures.Future 实例。例如，Executor.submit() 方法的参数时一个可调用的对象，调用这个方法后会为传入的可调用对象排期，并返回一个 future。</p>
-
-<p>客户端代码不应该改变 futures 的状态，并发框架在 future 表示的延迟计算结束后会改变 futures 的状态，而我们无法控制计算何时结束。</p>
-
-<p>这两种 future 都有 .done() 方法，这个方法不阻塞，返回值是布尔值，指明 future 链接的可调用对象是否已经执行。客户端代码通常不会询问 future 是否运行结束，而是会等待通知。因此，两个 future 类都有 .add_done_callback() 方法：这个方法只有一个参数，类型是可调用的对象，futures 运行结束后会调用指定的可调用对象。</p>
-
-<p>此外，还有 .result() 方法。在 Future 运行结束后调用的话，这个方法在两个 Future 类中的作用相同：返回可调用对象的结果，或者重新抛出执行可调用的对象时抛出的异常。</p>
-
-<p>但是，如果 Future 没有运行结束，result 方法在两个 Future 类中的行为相差很大。对于 concurrenct.futures.Future 实例来说，调用 f.result() 方法会阻塞调用方所在的线程，直到有结果可返回。此时，result 方法可以接收可选的 timeout 参数，如果在指定的时间内 Future 没有运行完毕，会抛出 TimeoutError 异常。asyncio.Future.result 方法不支持设定超时时间，在那个库中获取 Future 的结果最好使用 yield from 结构。不过，对 concurrent.futures.Future 实例不能这么做。</p>
-
-<p>这两个库中有几个函数会返回 Future，其他函数则使用 Future，以用户易于理解的方式实现自身。使用 Executor.map 方法属于后者：返回值是一个迭代器，迭代器的 <code>__next__</code> 方法调用各个 Future 的 result 方法，因此我们得到的是各个 Future 的结果，而非 Future 本身。</p>
-
-<p>为了从使用的角度理解 Future，我们可以使用 concurrent.futures.as_completed 函数重写上节的示例，这个函数的参数是一个 Future 列表，返回值是一个迭代器，在 Future 运行结束后产出 Future。</p>
-
-<p>为了使用 futures.as_completed 函数，只需修改 download_many 函数，把较抽象的 executor.map 调用换成两个 for 循环：一个用于创建并排定 Future，另一个用于获取 Future 的结果。同时，我们会添加几个 print 调用，显式运行结束前后的 Future。</p>
-
-<pre><code class="language-python"># flags_threadpool_ac.py: 把 download_many 函数中的 executor.map 方法换成 executor.submit 方法和 futures.as_completed 函数
-
-def download_many(cc_list):
-    cc_list = cc_list[:5]
-    with futures.ThreadPoolExecutor(max_workers=3) as executor:
-        to_do = []
-        for cc in sorted(cc_list):
-            future = executor.submit(download_one, cc)
-            to_do.append(future)
-            msg = &#39;Scheduled for {}: {}&#39;
-            print(msg.format(cc, future))
-            
-        results = []
-        for future in futures.as_completed(to_do):
-            res = future.result()
-            msg = &#39;{} result: {!r}&#39;
-            print(msg.format(future, res))
-            results.append(res)
-    return len(results)
-</code></pre>
-
-<p>测试结果：</p>
-
-<pre><code class="language-python">&gt;&gt;&gt; main(download_many)
-Scheduled for BR: &lt;Future at 0x109a12be0 state=running&gt;
-Scheduled for CN: &lt;Future at 0x109a12da0 state=running&gt;
-Scheduled for ID: &lt;Future at 0x109a620f0 state=running&gt;
-Scheduled for IN: &lt;Future at 0x1099b9710 state=pending&gt;
-Scheduled for US: &lt;Future at 0x106ac29e8 state=pending&gt;
-IDCN BR  &lt;Future at 0x109a12da0 state=finished returned str&gt; result: &#39;CN&#39;
-&lt;Future at 0x109a620f0 state=finished returned str&gt; result: &#39;ID&#39;
-&lt;Future at 0x109a12be0 state=finished returned str&gt; result: &#39;BR&#39;
-IN &lt;Future at 0x1099b9710 state=finished returned str&gt; result: &#39;IN&#39;
-US &lt;Future at 0x106ac29e8 state=finished returned str&gt; result: &#39;US&#39;
-
-5 flags downloads in 3.81s
-</code></pre>
-
-<p>注意，在这个示例中调用 future.result() 方法绝不会堵塞，因为 future 由 as_completed 函数产出。</p>
-
-<p>严格来说，我们目前测试的并发脚本都不能并行下载，使用 concurrent.futures 库实现的两个示例收到 GIL 的限制。</p>
-
-<p>有个问题：既然 Python 线程受 GIL 的限制，任何时候都只允许运行一个线程，那个为什么 flags_threadpool.py 脚本的下载速度会比 flags.py 脚本快 5 倍？</p>
-
-<h3 id="toc_5">阻塞型 I/O 和 GIL</h3>
-
-<p>CPython 解释器本身就不是线程安全的，因此有全局解释器锁，一次只允许使用一个线程执行 Python 字节码。因此，一个 Python 进程通常不能同时使用多个 CPU 核心（语言无关，解释器相关）。</p>
-
-<p>编写 Python 代码时无法控制 GIL，不过，执行耗时的任务时，可以使用一个内置的函数或一个使用 C 语言编写的扩展释放 GIL。</p>
-
-<p>然而，标准库中所有执行阻塞型 I/O 操作的函数，在等待操作系统返回结果时都会释放 GIL。这意味着在 Python 语言这个层次上可以使用多线程，而 IO 密集型 Python 程序能从中受益：一个 Python 线程等待网络响应时，阻塞型 IO 函数会释放 GIL，再运行一个线程。</p>
-
-<p>Python 标准库中所有阻塞型 IO 函数都会释放 GIL，允许其他线程运行。因此，尽管有 GIL，Python 线程还是能在 IO 密集型应用中发挥作用。</p>
-
-<p>下面加单说明如何在 CPU 密集型作业中使用 concurrent.futures 模块轻松绕开 GIL。</p>
-
-<h3 id="toc_6">使用 concurrent.futures 模块启动进程</h3>
-
-<p>concurrent.futures 模块实现的是真正的并行计算，因为它使用 ProcessPoolExecutor 类把工作分配给多个 Python 进程处理，因此，如果需要做 CPU 密集型处理，使用这个模块能绕开 GIL，利用所有可用的 CPU 核心。</p>
-
-<p>ProcessPoolExecutor 和 ThreadPoolExecutor 类都实现了通用的 Executor 接口，因此使用 concurrent.futures 模块能轻松地把基于线程的方案转换成基于进程的方案。</p>
-
-<p>下载国旗的示例或其他 IO 密集型作业使用 ProcessPoolExecutor 类得不到任何好处，因为对于 CPU 密集型的处理来说，不吭呢要求使用超过 CPU 数量的进程，而对于 IO 密集型来说，可以在一个 ThreadPoolExecutor 实例中使用 10 个、100 个或 1000 个线程，最佳线程数取决于做的是什么事，以及可用内存是多少，因此要自习测试才能找到最佳的线程数。</p>
-
-<p>ProcessPoolExecutor 的价值体现在 CPU 密集型作业上。有两个 CPU 密集型的脚本：</p>
-
-<ul>
-<li>arcfour_futures.py: 这个脚本纯粹使用 Python 实现 RC4 算法；</li>
-<li>sha_futures.py: 这个脚本使用标准库中的 haslib 模块（使用 OpenSSL 库实现）实现 SHA-256 算法。</li>
-</ul>
-
-<p>这两个脚本除了显示汇总结果外，没有使用 IO，测试的结果如下：</p>
-
-<p><img src="media/15058857487655/15063175994496.jpg" alt=""/></p>
-
-<p>可以看出，对加密算法来说，使用 ProcessPoolExecutor 类派生 4 个工作进程后（如果有 4 个 CPU 核心的话），性能可能提高两倍。</p>
-
-<p>如果使用 Python 处理 CPU 密集型工作，应该试试 PyPy，使用 PyPy 运行上面脚本，速度快乐 3.8~5.1 倍。</p>
-
-<h3 id="toc_7">实现 Executor.map 方法</h3>
-
-<p>下面通过一个演示程序来研究线程池的行为，这个程序会创建一个包含 3 个 worker 的线程池，运行 5 个可调用对象，输出带有时间戳的消息。</p>
-
-<p>若想并发运行多个可调用对象，最简单的方式是使用 Executor.map 方法。Executor.map 函数易于使用，不过有个特性可能有用，也可能没用，具体情况取决于需求：这个函数返回结果的顺序与调用开始的顺序一致。如果第一个调用生成结果用时 10 秒，而其他调用只用 1 秒，代码会阻塞 10 秒，获取 map 方法返回的生成器产出的第一个结果。在此之后，获取后续结果时不会阻塞，因为后续的调用已经结束。如果必须等到获取所有结果后再处理，这种行为没有问题；不过，通常更可取的做法是，不管提交的顺序，只要有结果就获取。为此，要把 Executor.submit 方法和 futures.as_completed 函数结合起来使用。</p>
-
-<p>executor.submit 和 futures.as_completed 这个组合比 executor.map 更灵活，因为 submit 方法能处理不同的可调用对象和参数，而 executor.map 只能处理参数不同的同一个可调用对象。此外，传给 futures.as_completed 函数的 futres 集合可以来自多个 Executor 实例，例如一些由 ThreadPoolExecutor 实例创建，另一些由 ProcessPoolExecutor 实例创建。</p>
-
-<h3 id="toc_8">显示下载进度并处理错误</h3>
-
-<p>之前的示例脚本中没有处理错误，这么做是为了便于阅读和比较三种方案（依序、多线程和异步）的结构。</p>
-
-<p>这三个示例在负责下载一个文件的函数（download_one）中使用相同的策略处理 HTTP 404 错误，其他异常则向上冒泡，交给 download_many 函数处理。</p>
-
-<pre><code class="language-python"># flags2_sequential.py: 负责下载的基本函数；flags2_threadpool.py 脚本重用了这两个函数
-
-def get_flag(base_url, cc):
-    url = &#39;{}/{cc}.gif&#39;.format(base_url, cc=cc.lower())
-    resp = requests.get(url)
-    if resp.status_code != 200:
-        resp.raise_for_status()
-    return resp.content
-
-
-def download_one(cc, base_url, verbose=False):
-    try:
-        image = get_flag(base_url, cc)
-    except requests.exceptions.HTTPError as exc:
-        res = exc.response
-        if res.status_code == 404:
-            status = HTTPSatus.not_fount
-            msg = &#39;not found&#39;
-        else:
-            raise
-    else:
-        save_flag(image, cc.lower() + &#39;.gif&#39;)
-        status = HTTPStatus.ok
-        msg = &#39;OK&#39;
-        
-    if verbose:
-        print(cc, msg)
-        
-    return Result(status, cc)
-</code></pre>
-
-<p>Python 线程特别适合 IO 密集型应用，concurrent.futures 模块大大简化了某些使用场景下 Python 线程的用法。下面讨论不适合使用 ThreadPoolExecutor 或 ProcessPoolExecutor 类时，有哪些替代方案。</p>
-
-<h3 id="toc_9">杂谈</h3>
-
-<p>concurrent.futures 包把线程、进程和队列视作服务的基础设施，不用自己动手直接处理。当然，这个包针对的是简单的作业，也就是所谓的「高度并行」问题，编写应用（而非操作系统或数据库服务器）时，遇到的大部分并发问题都属于这一种。</p>
-
-<p>GIL 简化了了 CPython 解释器和 C 语言扩展的实现，得益于 GIL，Python 有很多 C 语言扩展。GIL 并不会导致 Python 线程没有用武之地，因为标准库中每一个阻塞型 IO 函数都会释放 GIL，Python 线程特别适合在 IO 密集型系统中使用。</p>
-
-<h2 id="toc_10">第 18 章：使用 asyncio 包处理并发</h2>
-
-<blockquote>
-<p>并发是指一次处理多件事；<br/>
-并行是指一次做多件事；<br/>
-二者不同，但是有联系；<br/>
-一个关于结构，一个关于执行；<br/>
-并发用于制定方案，用来解决可能并行的问题。<br/>
-—— Rob Pike（Go 语言的创造者之一）</p>
-</blockquote>
-
-<p>真正的并行需要多个核心。现代的笔记本电脑有 4 个 CPU 核心，但是通常不经意间就有超过 100 个进程同时运行。因此，实际上大多数过程都是并发处理的，而不是并行处理。</p>
-
-<p>本章介绍 asyncio 包，这个包使用事件循环驱动的协程实现并发。asyncio 大量使用 yield from 表达式，因此与 Python 旧版不兼容。</p>
-
-<p>本章讨论以下话题：</p>
-
-<ul>
-<li>对比一个简单的多线程程序和对应的 asyncio 版，说明多线程和异步任务之间的关系</li>
-<li>asyncio.Futures 类与 concurrent.futures.Future 类之间的区别</li>
-<li>第 17 章中下载国旗的那些示例的异步版</li>
-<li>摒弃线程或进程，如何使用异步编程管理网络应用中的高并发</li>
-<li>在异步编程中，与回调相比，协程显著提升性能的方式</li>
-<li>如何把阻塞的操作交给线程池处理，从而避免阻塞事件循环</li>
-<li>使用 asyncio 编写服务器，重新审视 Web 应用对高并发的处理方式</li>
-<li>为什么 asyncio 已经准备好了对 Python 生态系统产生重大影响</li>
-</ul>
-
-<h3 id="toc_11">线程与协程对比</h3>
-
-<p>有一次讨论线程和 GIL 时，Michele Simionato 发布了一个简单但有趣的示例：在长时间计算的过程中，使用 multiprocessing 包在控制台中显示一个由 ASCII 字符「\/-\」构成的动画旋转指针。</p>
-
-<p>我们改写了 Simionato 的示例，一个借由 threading 模块使用线程实现，一个借由 asyncio 包使用协程实现。我们这么做是为了让你对比两种实现，理解如何不使用线程来实现并发行为。</p>
-
-<pre><code class="language-python"># spinner_thread.py: 通过线程以动画形式显示文本格式旋转指针
-import threading
-import itertools
-import time
-import sys
-
-
-class Signal:
-    go = True
-
-
-def spin(msg, signal):
-    write, flush = sys.stdout.write, sys.stdout.flush
-    for char in itertools.cycle(&#39;|/-\\&#39;):
-        status = char + &#39; &#39; + msg
-        write(status)
-        flush()
-        write(&#39;\x08&#39; * len(status))  # 这是显示文本动画的诀窍所在：使用退格符（\x08）把光标移回来
-        time.sleep(.1)
-        if not signal.go:
-            break
-    write(&#39; &#39; * len(status) + &#39;\x08&#39; * len(status))  # 使用空格键清除状态信息，把光标移回开头
-
-
-def slow_function():
-    # 假装等待 I/O 一段时间
-    time.sleep(3)  # 调用 sleep 函数会阻塞主线程，不过一定哟啊这么做，以便释放 GIL，创建从属线程
-    return 42
-
-
-def supervisor():
-    signal = Signal()
-    spinner = threading.Thread(
-        target=spin,
-        args=(&#39;thinking&#39;, signal)
-    )
-    print(&#39;spinner object: &#39;, spinner)
-    spinner.start()
-    result = slow_function()
-    signal.go = False
-    spinner.join()
-    return result
-
-
-def main():
-    result = supervisor()
-    print(&#39;Answer: &#39;, result)
-
-
-if __name__ == &#39;__main__&#39;:
-    main()
-
-</code></pre>
-
-<p>注意，Python 没有提供终止线程的 API，这是有意为之的。若想关闭线程，必须给线程发送消息。这里我们使用的是 signal.go 属性：在主线程中把它设置为 False 后，spinner 线程最终会注意到，然后干净地退出。</p>
-
-<p>下面来看如何使用 @asyncio.coroutine 装饰器替代线程，实现相同的行为。asyncio 包使用的「协程」是较严格的定义。适合 asyncio API 的协程在定义体中必须使用 yield from，而不能使用 yield。此外，适合 asyncio 的协程要由调用方驱动，并由调用方通过 yield from 调用；或者把协程传给 asyncio 包中的某个函数，例如 asyncio.async(...) 和本章要介绍的其他函数，从而驱动协程。最后，@asyncio.coroutine 装饰器应该用在协程上，如下述示例所示。</p>
-
-<pre><code class="language-python"># spinner_asyncio.py: 通过协程以动画形式显示文本式旋转指针
-import asyncio
-import itertools
-import sys
-
-
-@asyncio.coroutine
-def spin(msg):
-    write, flush = sys.stdout.write, sys.stdout.flush
-    for char in itertools.cycle(&#39;|/-\\&#39;):
-        status = char + &#39; &#39; + msg
-        write(status)
-        flush()
-        write(&#39;\x08&#39; * len(status))
-        try:
-            yield from asyncio.sleep(.1)
-        except asyncio.CancelledError:
-            break
-    write(&#39; &#39; * len(status) + &#39;\x08&#39; * len(status))
-
-
-@asyncio.coroutine
-def slow_function():
-    # 假装等待 I/O 一段时间
-    yield from asyncio.sleep(3)
-    return 42
-
-
-@asyncio.coroutine
-def supervisor():
-    spinner = asyncio.async(spin(&#39;thinking!&#39;))
-    print(&#39;spinner object: &#39;, spinner)
-    result = yield from slow_function()
-    spinner.cancel()
-    return result
-
-
-def main():
-    loop = asyncio.get_event_loop()
-    result = loop.run_until_complete(supervisor())
-    loop.close()
-    print(&#39;Answer: &#39;, result)
-
-
-if __name__ == &#39;__main__&#39;:
-    main()
-
-</code></pre>
-
-<p>若非想阻塞主线程，从而冻结事件循环或整个应用，否则不要在 asyncio 协程中使用 time.sleep(...)。如果协程需要在一段时间内什么也不做，应该使用 yield from asyncio.sleep(DELAY)。</p>
-
-<p>使用 @asyncio.coroutine 装饰器不是强制要求，但是强烈建议这么做，因为这样能在一众普通的函数中把协程凸显出来，也有助于调试：如果还没从中产出值，协程就被垃圾回收了（意味着有操作未完成，因此有可能是个缺陷），那就可以发出警告。<strong>这个装饰器不会预激协程。</strong></p>
-
-<p>上面两个例子中的 supervisor 实现之间的主要区别概述如下：</p>
-
-<ul>
-<li>asyncio.Task 对象差不多与 threading.Thread 对象等效，「Task 对象像是实现协作式多任务库（如 gevent）中的绿色线程（green thread）」。</li>
-<li>Task 对象用于驱动协程，Thread 对象用于调用可调用的对象。</li>
-<li>Task 对象不由自己手动实例化，而是通过把协程传给 asyncio.async(...) 函数或 loop.create_task(...) 方法获取。</li>
-<li>获取的 Task 对象已经排定了运行时间；Thread 实例则必须调用 start 方法，明确告知让它运行。</li>
-<li>在线程版 supervisor 函数中，slow_function 函数是普通的函数，直接由线程调用。在异步版 supervisor 函数中，slow_function 函数时协程，由 yield from 驱动。</li>
-<li>没有 API 能从外部终止线程，因为线程随时可能被终端，导致系统处于无效状态。如果想终止任务，可以使用 Task.cancel() 实例方法，在协程内部抛出 CancelledError 异常。协程可以在暂停的 yield 处捕获这个异常，处理终止请求。</li>
-<li>supervisor 协程必须在 main 函数中由 loop.run_until_complete 方法执行。</li>
-</ul>
-
-<p>使用线程编程，因为调度程序任何时候都能终端线程，所以必须记住保留锁，去保护程序中的重要部分，防止多步操作在执行的过程中终端，防止数据处于无效状态。而协程默认会做好全方位保护，以防止中断。我们必须显式产出才能让程序的余下部分运行。对协程来说，无需保留锁，在多个线程之间同步操作，协程自身就会同步，因为在任意时刻只有一个协程运行。想交出控制权时，可以使用 yield 或 yield from 把控制权交还给调度程序。这就是能够安全地取消协程的原因：按照定义，协程只能在暂停的 yield 处取消，因此可以处理 CancelledError 异常，执行清理操作。</p>
-
-<h4 id="toc_12">asyncio.Future：故意不阻塞</h4>
-
-<p>asyncio.Future 类与 concurrent.futures.Future 类的接口基本一致，不过实现方式不同，不可以互换。</p>
-
-<p>期物只是调度执行某物的结果，在 asyncio 包中， BaseEventLoop.create_task() 方法接收一个协程，排定它的运行时间，然后返回一个 asyncio.Task 实例——也是 asyncio.Future 类的实例，因为 Task 是 Future 的子类，用于包装协程。这与调用 Executor.submit() 方法创建 concurrent.futures.Future 实例是一个道理。</p>
-
-<p>使用 yield from 处理期物，等待期物运行完毕这一步无需我们关心，而且不会阻塞事件循环，因为在 asyncio 包中，yield from 的作用是把控制权交还给事件循环。</p>
-
-<p>注意，使用 yield from 处理期物与使用 add_done_callback 方法处理协程的作用一样：延迟的操作结束后，事件循环不会触发回调对象，而是设置期物的返回值；而 yield from 表达式则在暂停的协程中产生返回值，回复执行协程。</p>
-
-<p>总之，因为 asyncio.Future 类的目的是与 yield from 一起使用，所以通常不需要使用以下方法：</p>
-
-<ul>
-<li>无需调用 my_future.add_done_callback()，因为可以直接把像在期物运行结束后执行的操作放在协程中 yield from my_future 表达式的后面。这是协程的一大优势：协程时可以暂停和恢复的函数。</li>
-<li>无需调用 my_future.result()，因为 yield from 从期物中产出的值就是结果（例如 result = yield from my_future）。</li>
-</ul>
-
-<h2 id="toc_13">第 19 章：动态属性和特性</h2>
-
-<p>在 Python 中，数据的属性和处理数据的方法统称「属性」（attribute）。其实，方法只是「可调用」的「属性」。除了这二者之外，我们还可以创建「特性」（property），在不改变类接口的前提下，使用「存取方法」（即读值方法和设值方法）修改数据属性。这与「统一访问原则」相符：</p>
-
-<pre><code>不管服务是由存储还是计算机实现的，一个模块提供的所有服务都应该通过统一的方式使用。
-</code></pre>
-
-<p>除了特性，Python 还提供了丰富的 API，用于控制属性的访问权限，以及实现动态属性。使用点号访问属性时（如 obj.attr），Python 解释器会调用特殊的方法（如 <code>__getattr__</code> 和 <code>__setattr__</code>）计算属性。用户自己定义的类可以通过 <code>__getattr__</code> 方法实现「虚拟属性」，当访问不存在的属性时（如 obj.no_such_attribute），即时计算属性的值。</p>
-
-<p>动态创建属性是一种元编程。</p>
-
-<h3 id="toc_14">使用动态属性转化数据</h3>
-
-<p>在接下来的几个示例中，我们要使用动态属性处理 O&#39;Reilly 为 OSCON 2016 大会提供的 JSON 格式数据源。</p>
-
-<p>数据集：<a href="http://www.oreilly.com/pub/sc/osconfeed">http://www.oreilly.com/pub/sc/osconfeed</a></p>
-
-<p>我们编写的第一个脚本只用于下载那个 OSCON 数据源。示例 19-2 没有用到元编程。</p>
-
-<pre><code class="language-python"># 示例 19-2 osconfeed.py: 下载 osconfeed.json
-from urllib.request import urlopen
-import warnings
-import os
-import json
-
-URL = &#39;http://www.oreilly.com/pub/sc/osconfeed&#39;
-JSON = &#39;data/osconfeed.json&#39;
-
-
-def load():
-    if not os.path.exists(JSON):
-        msg = &#39;downloading {} to {}&#39;.format(URL, JSON)
-        warnings.warn(msg)
-        with urlopen(URL) as remote, open(JSON, &#39;wb&#39;) as local:
-            local.write(remote.read())
-            
-    with open(JSON) as fp:
-        return json.load(fp)
-</code></pre>
-
-<p>有了 19-2 中的代码，我们可以审查数据源中的任何字段。</p>
-
-<p><img src="media/15058857487655/15079842995320.jpg" alt=""/></p>
-
-<h4 id="toc_15">使用动态属性访问 JSON 类数据</h4>
-
-<p>示例 19-2 十分简单，不过，<code>feed[&#39;Schedule&#39;][&#39;speakers&#39;][-1][&#39;name&#39;]</code> 这种句法很冗长。在 JavaScript 中，可以使用 <code>feed.Schedule.events[40].name</code> 来获取那个值。在 Python 中，可以实现一个近似字典的类，达到同样的效果。我自己实现了 FrozenJSON 类，比大多数实现都简单，因为只支持读取，即只能访问数据。不过，这个类能递归，自动处理嵌套的映射和列表。</p>
-
-<p><img src="media/15058857487655/15079845272578.jpg" alt=""/></p>
-
-<p>FrozenJSON 类的关键是 <code>__getattr__</code> 方法。我们要记住重要的一点，<strong>仅当无法使用常规的方法获取属性（即在实例、类或超类中找不到指定的属性），解释器才会调用特殊的 <code>__getattr__</code> 方法</strong>。</p>
-
-<p>如示例 19-5 所示，FrozenJSON 类只有两个方法（<code>__init__</code> 和 <code>__getattr__</code>）和一个实例属性 <code>__data</code>。因此，尝试获取其他属性会触发解释器调用 <code>__getattr__</code> 方法。这个方法首先查看 self._data 字典中有没有指定名称的属性（不是键），这样 FrozenJSON 实例便可以处理字典中的所有方法，例如把 items 方法委托给 self.__data.items() 方法。如果 self.__data 没有指定名称的属性，那么 <code>__getattr__</code> 方法一那个名称为键，从 self.__data 中获取一个元素，传给 FrozenJSON.build 方法。这样就能深入 JSON 数据的嵌套结构，使用类方法 build 把每一层嵌套转化成一个 FrozenJSON 实例。</p>
-
-<pre><code class="language-python"># explore0.py: 把一个 JSON 数据集转换成一个嵌套着 FrozenJSON 
-# 对象、列表和简单类型的 FrozenJSON 对象
-
-from collections import abc
-
-
-class FrozenJSON:
-    &quot;&quot;&quot;一个只读接口，使用属性表示法访问 JSON 类对象&quot;&quot;&quot;
-    def __init__(self, mapping):
-        self.__data = dict(mapping)
-        
-    def __getattr__(self, name):
-        if hasattr(self.__data, name):
-            return getattr(self.__data, name)
-        else:
-            return FrozenJSON.build(self.__data[name])
-        
-    @classmethod
-    def build(cls, obj):
-        if isinstance(obj, abc.Mapping):
-            return cls(obj)
-        elif isinstance(obj, abc.MutableSequence):
-            return [cls.build(item) for item in obj]
-        else:
-            return obj
-</code></pre>
-
-<p>解释一下 build 这个类方法：如果 obj 是 Mapping，那就构造一个 FrozenJSON 对象；如果是 MutableSequence 对象，必然是列表，因此，我们把 obj 中每个元素递归地传给 .build() 方法，构造一个列表；如果既不是字典也不是列表，那么原封不动地返回元素。</p>
-
-<p>注意，我们没有缓存或转换原始数据源。在迭代数据源的过程中，嵌套的数据结构不断被转换成 FrozenJSON 对象。这么做没问题，因为数据集不大，而且这个脚本只用于访问或转换数据。</p>
-
-<h4 id="toc_16">处理无效的属性名</h4>
-
-<p>FrozenJSON 类有个缺陷：没有对名称为 Python 关键字的属性做特殊处理。</p>
-
-<p>FrozenJSON 类的目的是为了便于访问数据，因此更好的方法是检查传给 FrozenJSON.__init__ 方法的映射中是否有键的名称为关键字，如果有，那么在键名后加上 <code>_</code>，然后通过 <code>xxx.class_</code> 这样的方式读取。</p>
-
-<p>解决方法：</p>
-
-<pre><code class="language-python">class FrozenJSON:
-    &quot;&quot;&quot;一个只读接口，使用属性表示法访问 JSON 类对象&quot;&quot;&quot;
-    def __init__(self, mapping):
-        self.__data = {}
-        for key, value in mapping.items():
-            if keyword.iskeyword(key):
-                key += &#39;_&#39;
-            self.__data[key] = value
-</code></pre>
-
-<p>对动态属性的名称做了一些处理之后，我们要分析 FrozenJSON 类的另一个重要功能——类方法 build 的逻辑。这个方法吧嵌套结构转换成 FrozenJSON 实例或 FrozenJSON 实例列表，因此 <code>__getattr__</code> 方法使用这个方法访问属性时，能为不同的值返回不同类型的对象。</p>
-
-<h4 id="toc_17">使用 <code>__new__</code> 方法以灵活的方式创建对象</h4>
-
-<p>除了在类方法实现 build 的逻辑之外，还可以在 <code>__new__</code> 方法中实现。</p>
-
-<p>我们通常把 <code>__init__</code> 称为构造方法，这是从其他语言借鉴过来的术语。其实，用于构造实例的是特殊方法 <code>__new__</code>：这是个类方法（使用特殊方式处理，因此不必使用 @classmethod 装饰器），必须返回一个实例。返回的实例会作为第一个参数（即 self）传给 <code>__init__</code> 方法。因为调用 <code>__init__</code> 方法时要传入实例，而且禁止返回任何值，所以 <code>__init__</code> 方法其实是「初始化方法」，真正的构造方法时 <code>__new__</code>。我们几乎不需要自己编写 new 方法，因为从 object 类继承的实现已经足够了。</p>
-
-<p>刚才说明的过程，即从 new 方法到 init 方法，是最常见的，但不是唯一的。new 方法也可以返回其他类的实例，此时，解释器不会调用 init 方法。</p>
-
-<p>也就是说，Python 构建对象的过程可以使用下述伪代码描述：</p>
-
-<pre><code class="language-python">def object_maker(the_class, some_arg):
-    new_object = the_class.__new__(some_arg)
-    if isinstance(new_object, the_class):
-        the_class.__init__(new_object, some_arg)
-    return new_object
-    
-# 下述两个语句的作用基本等效
-x = Foo(&#39;bar&#39;)
-x = object_maker(Foo, &#39;bar&#39;)
-</code></pre>
-
-<p>下面是 FrozenJSON 的另一个版本，把之前在类方法 build 中的逻辑移动到了 new 方法中。</p>
-
-<pre><code class="language-python"># explore2.py: 使用 new 方法取代 build 方法，构建可能是也可能不是 FrozenJSON 实例的新对象
-
-from collections import abc
-import keyword
-
-
-class FrozenJSON:
-    &quot;&quot;&quot;一个只读接口，使用属性表示法访问 JSON 类对象&quot;&quot;&quot;
-    def __init__(self, mapping):
-        self.__data = {}
-        for key, value in mapping.items():
-            if keyword.iskeyword(key):
-                key += &#39;_&#39;
-            self.__data[key] = value
-        
-    def __getattr__(self, name):
-        if hasattr(self.__data, name):
-            return getattr(self.__data, name)
-        else:
-            return FrozenJSON(self.__data[name])
-        
-    def __new__(cls, obj):
-        if isinstance(obj, abc.Mapping):
-            return super().__new__(cls)
-        elif isinstance(obj, abc.MutableSequence):
-            return [cls.build(item) for item in obj]
-        else:
-            return obj
-</code></pre>
-
-<p>new 方法的第一个参数时类，因为创建的对象通常是那个类的实例。所以，在 <code>FrozenJSON.__new__</code> 方法中，<code>super().__new__(cls)</code> 表达式会调用 <code>object.__new__(FrozenJSON)</code>，而 object 类构建的实例其实是 FrozenJSON 实例，即那个实例的 <code>__class__</code> 属性存储的是 FrozenJSON 类的引用。</p>
-
-<h4 id="toc_18">使用 shelve 模块调整 OSCON 数据源的结构</h4>
-
-<p>pickle 是 Python 对象序列化格式的包，shelve 模块提供了 pickle 存储方式。</p>
-
-<p>shelve.open 高阶函数返回一个 shelve.Shelf 实例，这是简单的键值对象数据库，背后由 dbm 模块支持，具有下述特点：</p>
-
-<ul>
-<li>shelve.Shelf 是 abc.MutableMapping 的子类，因此提供了处理映射类型的重要方法；</li>
-<li>此外，shelve.Shelf 类还停工了几个管理 I/O 的方法，如 sync 和 close；它也是一个上下文管理器；</li>
-<li>只要把新值赋予键，就会保存键和值；</li>
-<li>键必须是字符串；</li>
-<li>值必须是 pickle 模块能处理的对象。</li>
-</ul>
-
-<p>现在值得关注的是，shelve 模块为识别 OSCON 的日程数据提供了一种简单有效的方式。我们将从 JSON 文件中读取所有记录，将其存在一个 shelve.Shelf 对象中，键由记录类型和编号组成（例如，&#39;event.33050&#39;），而值使我们即将定义的 Record 类的实例。</p>
-
-<p><img src="media/15058857487655/15080695765233.jpg" alt=""/></p>
-
-<pre><code class="language-python"># schedule1.py: 访问保存在 shelve.Shelf 对象里的 OSCOn日程数据
-
-import warnings
-import osconfeed
-
-DB_NAME = &#39;data/schedule1_db&#39;
-CONFERENCE = &#39;conference.115&#39;
-
-
-class Record:
-    def __init__(self, **kwargs):
-        self.__dict__.update(kwargs)
-        
-
-def load_db(db):
-    raw_data = osconfeed.load()
-    warnings.warn(&#39;loading &#39; + DB_NAME)
-    for collections, rec_list in raw_data[&#39;Schedule&#39;].items():
-        record_type = collection[:-1]
-        for record in rec_list:
-            key = &#39;{}.{}&#39;.format(record_type, record[&#39;serial&#39;])
-            record[&#39;serial&#39;] = key
-            db[key] = Record(**record)
-</code></pre>
-
-<p><code>Record.__init__</code> 方法展示了一个流行的 Python 技巧。我们知道，对象的 <code>__dict__</code> 属性中存储着对象的属性——前提是类中没有声明 <code>__slots__</code> 属性。因此，更新实例的 dict 属性，把值设为一个映射，能快速地在那个实例中创建一堆属性。</p>
-
-<p>像上面那样调整日程和数据集之后，我们可以扩展 Record 类，让它提供一个有用的服务：自动获取 event 记录引用的 venue 和 speaker 记录。这与 Django ORM 访问 models.ForeignKey 字段时所做的事类似：得到的不是键，而是链接的模型对象。</p>
-
-<h4 id="toc_19">使用特性获取链接的记录</h4>
-
-<p>下一个版本的目标是，对于从 Shelf 对象中获取的 event 记录来说，读取它的 venue 或 speakers 属性时返回的不是编号，而是完整的记录对象，用法如下所示：</p>
-
-<p><img src="media/15058857487655/15080745702654.jpg" alt=""/></p>
-
-<p><img src="media/15058857487655/15080746859163.jpg" alt=""/></p>
-
-<p>上图绘出了本节要分析的几个类。</p>
-
-<ul>
-<li>Record
-
-<ul>
-<li><code>__init__</code> 方法与 schedule1.py 脚本中的一样；为了辅助测试，添加了 <code>__eq__</code> 方法；</li>
-</ul></li>
-<li>DbRecord
-
-<ul>
-<li>Record 类的子类，添加了 <code>__db</code> 类属性，用于设置和获取 <code>__db</code> 属性的 set_db 和 get_db 静态方法，用于从数据库中获取记录的 fetch 类方法，以及辅助调试和测试的 <code>__repr__</code> 实例方法；</li>
-</ul></li>
-<li>Event
-
-<ul>
-<li>DBRecord 类的子类，添加了用于获取所链接记录的 venue 和 speakers 属性，以及特殊的 repr 方法。</li>
-</ul></li>
-</ul>
-
-<p>DbRecord.__db 类属性的作用是存储打开的 shelve.Shelf 数据库引用，以便在需要使用数据库的 DbRecord.fetch 方法以及 Event.venue 和 Event.speakers 属性中使用。我把 __db 设为私有类属性，然后定义了普通的读值方法和设值方法，以防不小心覆盖 __db 属性的值。基于一个重要的原因，我没有使用特性去管理 __db 属性：特性是用于管理实例属性的类属性。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[《算法》笔记（二）· 排序]]></title>
-    <link href="http://forresthcang.com/wiki/14893895625395.html"/>
-    <updated>2017-03-13T15:19:22+08:00</updated>
-    <id>http://forresthcang.com/wiki/14893895625395.html</id>
-    <content type="html"><![CDATA[
-<ul>
-<li>
-<a href="#toc_0">2.1 初级排序算法</a>
-<ul>
-<li>
-<ul>
-<li>
-<a href="#toc_1">2.1.1.3 额外的内存使用</a>
-</li>
-</ul>
-</li>
-<li>
-<a href="#toc_2">2.1.2 选择排序</a>
-</li>
-<li>
-<a href="#toc_3">2.1.3 插入排序</a>
-</li>
-<li>
-<a href="#toc_4">2.1.6 希尔排序</a>
-</li>
-</ul>
-</li>
-<li>
-<a href="#toc_5">2.2 归并排序</a>
-<ul>
-<li>
-<a href="#toc_6">2.2.1 原地归并的抽象方法</a>
-</li>
-</ul>
-</li>
-</ul>
-
-
-<h2 id="toc_0">2.1 初级排序算法</h2>
-
-<h4 id="toc_1">2.1.1.3 额外的内存使用</h4>
-
-<p>排序算法的额外内存开销和运行时间是同等重要的。排序算法可以分为两类：</p>
-
-<ul>
-<li>原地排序算法</li>
-<li>需要额外内存空间来存储的其他排序算法</li>
-</ul>
-
-<h3 id="toc_2">2.1.2 选择排序</h3>
-
-<p>选择排序两个鲜明的特点：</p>
-
-<ol>
-<li>运行时间和输入无关。为了找出最小的元素而扫描一遍数组并不能为下一遍扫描提供什么信息。这种性质在某些情况下是缺点，因为使用选择排序的人可能会惊讶地发现，一个已经有序的数组或是主键全部相等的数组和一个元素随机排列的数组所用的排序时间竟然一样长。</li>
-<li>数据移动是最少的。每次交换都会改变两个数组元素的值，因此选择排序用了 N 次交换——交换次数和数组的大小是线性关系。</li>
-</ol>
-
-<p>选择排序实现：</p>
-
-<pre><code class="language-python">def selection_sort(a):
-    N = len(a)
-    for i in range(N):
-        mi = i
-        for j in range(i+1, N):
-            if a[j] &lt; a[mi]:
-                mi = j
-        a[i], a[mi] = a[mi], a[i]
-    return a
-</code></pre>
-
-<h3 id="toc_3">2.1.3 插入排序</h3>
-
-<p>与选择排序一样，当前索引左边的所有元素都是有序的，但它们最终的最终位置还不确定，为了给更小元素腾出空间，它们可能会被移动。但是当前索引到达数组的右端时，数组排序就完成了。</p>
-
-<p>与选择排序不同的是，插入排序所需的时间取决于输入中元素的初始顺序。例如，对一个很大且其中的元素已经有序（或接近有序）的数组进行排序将会比对随机顺序的数组或是逆序数组进行排序要快得多。</p>
-
-<p>插入排序对于实际应用中常见的某些类型的非随机数组很有效。当插入排序对一个有序数组进行排序，运行时间是线性的。</p>
-
-<pre><code class="language-python">def insertion_sort(a):
-    for i in range(1, len(a)):
-        for j in range(i, 0, -1):
-            if a[j] &lt; a[j-1]:
-                a[j], a[j-1] = a[j-1], a[j]
-    return a
-</code></pre>
-
-<p>对于 1 到 N-1 之间的每一个 i，将 a[i] 与 a[0] 到 a[i-1] 中比它小的所有元素依次有序地交换。在索引 i 由左向右变化的过程中，它左侧的元素总是有序的，所以当 i 到达数组的右端时排序就完成了。</p>
-
-<p>我们要考虑的更一般的情况是部分有序的数组。<strong>倒置</strong>指的是数组中的两个顺序颠倒的元素。比如 E X A M P L E 中有 11 对倒置：E-A X-A X-M X-P X-L X-E M-L M-E ... 如果数组中倒置的数量小于数组大小的某个倍数，那么我们说这个数组是部分有序的。</p>
-
-<p>下面是几种典型的部分有序的数组：</p>
-
-<ul>
-<li>数组中每个元素都距离它的最终位置都不远</li>
-<li>一个有序的大数组接一个小数组</li>
-<li>数组中只有几个元素的位置不正确</li>
-</ul>
-
-<p>插入排序对这样的数组很有效，而选择排序则不然。事实上，当倒置数量很少时，插入排序很可能比本章中的其他任何算法都要快。</p>
-
-<p>要大幅提高插入排序的速度并不难，只需要在内循环中将较大的元素都向右移动而不总是交换两个元素。</p>
-
-<h3 id="toc_4">2.1.6 希尔排序</h3>
-
-<p>为了展示初级排序算法性质的价值，我们将学习一种基于插入排序的快速排序算法。对于大规模乱序数组插入排序很慢，因为它智慧交换相邻的元素，因此元素只能一点一点地从数组的一段移动到另一端。希尔排序为了加快速度简单地改进了插入排序，交换不相邻的元素以对数组的局部进行排序，并最终插入排序将局部有序的数组排序。</p>
-
-<p>希尔排序的思想是使数组中任意间隔为 h 的元素都是有序的。这样的数组被称为 h 有序数组。换句话说，h 有序数组就是 h 个独立的有序数组编织在一起组成的一个数组，如下图所示。</p>
-
-<p><img src="http://omaacpco9.bkt.clouddn.com/2017-03-09-115612.jpg" alt=""/></p>
-
-<p>实现希尔排序的一种方法是对于每个 h，用插入排序将 h 个子数组独立地排序。但因为子数组是相互独立的，一个更简单的方法是在 h-子数组中将每个元素交换到比它大的元素之前去（将比它大的元素向右移动一格）。只需要在插入排序的代码中将移动元素的距离由 1 改为 h 即可。这样，希尔排序的实现就转化为了一个类似于插入排序但是用不同增量的过程。</p>
-
-<p>希尔排序更高效的原因是它权衡了子数组的规模性和有序性。排序之初，各个子数组都很短，排序之后子数组都是部分有序的，这两种情况都很适合插入排序。子数组部分有序的程度取决于递增序列的选择。</p>
-
-<pre><code class="language-python">def shell_sort(a):
-    h = 1
-    while h &lt; len(a) / 3:
-        h = 3 * h + 1
-    while h &gt;= 1:
-        for i in range(int(h), len(a)):
-            for j in range(i, int(h)-1, -1):
-                if a[j] &lt; a[j - int(h)]:
-                    a[j], a[j - int(h)] = a[j - int(h)], a[j]
-        h = h / 3
-    return a
-</code></pre>
-
-<h2 id="toc_5">2.2 归并排序</h2>
-
-<p>归并：即将两个有序数组归并成一个更大的有序数组。</p>
-
-<h3 id="toc_6">2.2.1 原地归并的抽象方法</h3>
-
-<p>实现归并的一种直截了当的方法是将两个不同的有序数组归并到第三个数组中。</p>
-
-<p>但是，当用归并将一个很大的数组排序时，我们需要进行很多次归并，因此在每次归并时都创建一个新数组来存储排序结果会带来问题。我们更希望有一种能够在原地归并的方法，这样就可以先将前半部分排序，再将后半部分排序，然后在数组中移动元素而不需要使用额外的空间。</p>
-
-<p>原地归并的抽象方法：</p>
-
-<pre><code class="language-python">
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[《Python 核心编程》笔记（一）· 网络编程]]></title>
-    <link href="http://forresthcang.com/wiki/14892800907505.html"/>
-    <updated>2017-03-12T08:54:50+08:00</updated>
-    <id>http://forresthcang.com/wiki/14892800907505.html</id>
-    <content type="html"><![CDATA[
-<ul>
-<li>
-<a href="#toc_0">2.3 套接字</a>
-<ul>
-<li>
-<a href="#toc_1">2.3.1 套接字</a>
-</li>
-<li>
-<a href="#toc_2">2.3.2 套接字地址：主机-端口对</a>
-</li>
-<li>
-<a href="#toc_3">2.3.3 面向连接的套接字与无连接的套接字</a>
-<ul>
-<li>
-<a href="#toc_4">1. 面向连接的套接字</a>
-</li>
-<li>
-<a href="#toc_5">2. 无连接的套接字</a>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<a href="#toc_6">2.4 Python 中的网络编程</a>
-<ul>
-<li>
-<a href="#toc_7">2.4.1 socket() 模块函数</a>
-</li>
-<li>
-<a href="#toc_8">2.4.2 套接字对象（内置）方法</a>
-</li>
-</ul>
-</li>
-</ul>
-
-
-<h2 id="toc_0">2.3 套接字</h2>
-
-<p>本节内容：</p>
-
-<ul>
-<li>介绍套接字（socket），以及其背景知识</li>
-<li>讨论各种类型的套接字</li>
-<li>如何利用它们与运行在不同计算机上的进程相互通信</li>
-</ul>
-
-<h3 id="toc_1">2.3.1 套接字</h3>
-
-<p>套接字是计算机网络数据结构，它体现了上节中所描述得「通信端点」<sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup>的概念。在任何类型的通信开始之前，网络应用程序必须创建套接字。</p>
-
-<p>套接字最初是为同一主机上的应用程序所创建，使得主机上运行的一个进程与另一个运行的进程进行通信，这就是所谓的<strong>进程间通信</strong>（Inter Process Communication，IPC）。有两种类型的套接字：基于文件的和面向网络的。</p>
-
-<p>UNIX 套接字使我们所讲的套接字的第一个家族，并且拥有一个「家族名字」AF_UNIX（又名 AF_LOCAL，在 POSIX1.g 标准中指定），它代表地址家族（address family）：UNIX。包括 Python 在内的大多数受欢迎的平台都使用术语「地址家族」及其所写 AF。</p>
-
-<p>因为两个进程运行在同一台计算机上，所以这些套接字都是基于文件的，这意味着文件系统支持它们的底层基础结构。</p>
-
-<p>第二种类型的套接字是基于网络的，它也有自己的家族名字 AF_INET，或者「地址家族」：因特网。另一个地址家族 AF_INET6 用于第 6 版因特网协议（IPv6）寻址。</p>
-
-<h3 id="toc_2">2.3.2 套接字地址：主机-端口对</h3>
-
-<p>一个网络地址由主机名和端口号组成，而这是网络通信所需要的。</p>
-
-<p>有效地端口号范围为 0~65536（小于 1024 的端口号预留给了系统）。</p>
-
-<p>可以查看 <code>\etc\services</code> 文件查看预留端口号的列表（以及服务器、协议和套接字类型）。</p>
-
-<h3 id="toc_3">2.3.3 面向连接的套接字与无连接的套接字</h3>
-
-<h4 id="toc_4">1. 面向连接的套接字</h4>
-
-<p>不管采用哪种地址家族，都有两种不同风格的套接字连接。第一种是面向连接的，这意味着在通信前必须先建立一个连接。这种类型的通信业称为「虚拟电路」或「流套接字」。</p>
-
-<p>面向连接的通信提供序列化的、可靠的和不重复的数据交互，而没有记录边界。这基本上意味着每条消息可以拆分成多个片段，并且每条消息片段都确保能够达到目的，然后按照顺序将它们组合到一起，最后将完整的消息传递给正在等待的应用程序。</p>
-
-<p>实现这种连接类型的主要协议是「传输控制协议」（TCP 协议）。为了创建 TCP 套接字，必须使用 SOCK_STREAM 作为套接字类型。TCP 套接字的名字 SOCK_STREAM 是基于流套接字的一种表示。因为这些套接字（AF_INET） 的网络版本使用「因特网协议」（IP） 来搜寻网络中的主机，所以整个系统通常结合着两种协议（TCP 和 IP） 来进行。</p>
-
-<h4 id="toc_5">2. 无连接的套接字</h4>
-
-<p>与虚拟电路形成鲜明对比的是数据报类型的套接字，它是一种无连接的套接字。这意味着，在通信开始之前不需要建立连接。</p>
-
-<p>此时，在数据传输的过程中并无法保证它的顺序性、可靠性或重复性。然而，数据报确实保存了记录边界，这就意味着消息是以整体发送的，而非首先分成多个片段。</p>
-
-<p>由于面向连接的的套接字所提供的保证，因此它们的设置以及对虚拟电路连接的维护需要大量的开销。数据报不需要这些，所以它的成本更加低廉。因此，它们通常能提供更好的性能。</p>
-
-<p>实现这种无连接类型的主要协议是「用户数据报协议」（UDP）。为了创建 UDP 套接字，必须使用 SOCK_DGRAM （来源于单词 datagram）作为套接字类型。因为这些套接字也使用因特网协议来寻找网络中的主机，所以这个系统也有一个更加普通的名字，即 UDP/IP。</p>
-
-<h2 id="toc_6">2.4 Python 中的网络编程</h2>
-
-<h3 id="toc_7">2.4.1 socket() 模块函数</h3>
-
-<p>要创建套接字，必须使用 socket.socket() 函数，它的一般语法如下：</p>
-
-<pre><code class="language-python">socket(socket_family, socket_type, protocol=0)
-</code></pre>
-
-<p>其中，<code>socket_family</code> 是 AF_UNIX 或 AF_INET，<code>socket_type</code> 是 SOCKET_STREAM 或 SOCK_DGRAM。<code>protocol</code> 通常省略，默认为 0。</p>
-
-<pre><code class="language-python">tcpSock = socket.socket(socket.AF_INET, sock.SOCK_STREAM)
-udpSock = socket.socket(socket.AF_INET, sock.SOCK_DGRAM)
-</code></pre>
-
-<p>一旦有了一个套接字对象，那么使用套接字对象的方法将可以进行进一步交互。</p>
-
-<h3 id="toc_8">2.4.2 套接字对象（内置）方法</h3>
-
-<ul>
-<li>服务器套接字方法
-
-<ul>
-<li>s.bind(): 将地址（主机名、端口号对）绑定到套接字上</li>
-<li>s.listen(): 设置并启动 TCP 监听器</li>
-<li>s.accept(): 被动接受 TCP 客户端连接，一直等待知道连接到达</li>
-</ul></li>
-<li>客户端套接字方法
-
-<ul>
-<li>s.connect(): 主动发起 TCP 服务器连接</li>
-<li>s.connect_ex(): connect() 的扩展版本，此时会以错误码的形式返回问题，而不是抛出一个异常</li>
-</ul></li>
-<li>普通套接字方法
-
-<ul>
-<li>s.recv(): 接受 TCP 消息</li>
-<li>s.recv_into(): 接受 TCP 消息到指定的缓冲区</li>
-<li>s.send(): 发送 TCP 消息</li>
-<li>s.sendall(): 完整地发送 TCP 消息</li>
-<li>s.recvfrom(): 接受 UDP 消息</li>
-<li>s.recvfrom_into(): 接收 UDP 消息到指定的缓冲区</li>
-<li>s.sendto(): 发送 UDP 消息</li>
-<li>s.getpeername(): 连接到套接字（TCP） 的远程地址</li>
-<li>s.getsockname(): 当前套接字地址</li>
-<li>s.getsockopt(): 返回给定套接字选项的值</li>
-<li>s.setsockopt(): 设置给定套接字选项的值</li>
-<li>s.shutdown(): 关闭连接</li>
-<li>s.close(): 关闭套接字</li>
-<li>s.detach(): 在未关闭文件描述符的情况下关闭套接字，返回文件描述符</li>
-<li>s.ioctl(): 控制套接字的模式（仅支持 Windows）</li>
-</ul></li>
-<li>面向阻塞的套接字方法
-
-<ul>
-<li>s.setblocking(): 设置套接字的阻塞或非阻塞模式</li>
-<li>s.settimeout(): 设置阻塞套接字操作的超时时间</li>
-<li>s.gettimeout(): 获取阻塞套接字操作的超时时间</li>
-</ul></li>
-<li>面向文件的套接字方法
-
-<ul>
-<li>s.fileno(): 套接字文件描述符</li>
-<li>s.makefile(): 创建于套接字关联的文件对象</li>
-</ul></li>
-<li>数据属性
-
-<ul>
-<li>s.family: 套接字家族</li>
-<li>s.type: 套接字类型</li>
-<li>s.proto: 套接字协议</li>
-</ul></li>
-</ul>
-
-<div class="footnotes">
-<hr/>
-<ol>
-
-<li id="fn1">
-<p>在服务器响应客户端请求之前，必须进行一些初步的设置流程来为之后的工作准备。首先会创造一个通信端点，它能够使服务器监听请求。&nbsp;<a href="#fnref1" rev="footnote">&#8617;</a></p>
-</li>
-
-</ol>
-</div>
 
 ]]></content>
   </entry>
