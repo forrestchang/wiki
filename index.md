@@ -1,4 +1,16 @@
-Hello world
+# Hello world
+
+## Test code
+
+```python
+def hello(name):
+  return f'Hello, {name}'
+```
 
 
-Update
+## Test LaTex
+
+$$
+P(n) = f(x) + f(x+1)
+$$
+
