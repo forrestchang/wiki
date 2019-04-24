@@ -14,3 +14,7 @@ $$
 P(n) = f(x) + f(x+1)
 $$
 
+
+## Test HTML tags
+
+This is a <span style="color: red">red text</span>.
