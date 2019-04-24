@@ -1,23 +1,6 @@
 # Index
 
-## Getting Super Powers
-
-Becoming a super hero is a fairly straight forward process:
-
-```
-$ give me super-powers
-```
-
-{% hint style="info" %}
- Super-powers are granted randomly so please submit an issue if you're not happy with yours.
-{% endhint %}
-
-Once you're strong enough, save the world:
-
-```
-// Ain't no code for that yet, sorry
-echo 'You got to trust me on this, I saved the world'
-```
+这里是我的个人 Wiki，主要存放一些个人的笔记，如果想看系统化的文章，可以访问[我的博客][1]。
 
 
-
+[1]:	http://blog.jiayuanzhang.com
