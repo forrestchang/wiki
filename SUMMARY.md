@@ -1,7 +1,7 @@
 # Table of contents
 
 * [Index](README.md)
-* [Programming Language](programming-language)
-	* [Python](programming-language/python/Python.md)
-		* [IPython](programming-language/python/IPython.md)
-	* [JavaScript](programming-language/JavaScript.md)
+* [Programming Language](programming-language/readme.md)
+  * [Python](programming-language/python/readme.md)
+    * [IPython](programming-language/python/ipython.md)
+  * [JavaScript](programming-language/readme.md)
