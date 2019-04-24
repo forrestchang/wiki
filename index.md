@@ -17,6 +17,4 @@ $$
 
 This is a red text.
 
-[Blog][1]
-
-[1]:	http://blog.jiayuanzhang.com
+[Blog](http://blog.jiayuanzhang.com)
