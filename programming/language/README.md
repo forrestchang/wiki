@@ -1,6 +1,0 @@
-# Language
-
-* Python
-* JavaScript
-* Golang
-
