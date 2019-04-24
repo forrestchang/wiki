@@ -1,5 +1,7 @@
 # IPython
 
+## 自动加载模块
+
 在 IPython 中，有时候我们需要自动加载改动的一些模块，`autoreload` 提供了这种功能。
 
 	# 在 Ipython 中引入自动加载模块
